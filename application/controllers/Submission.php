@@ -78,10 +78,16 @@ class Submission extends MY_Controller
         'pengajuan'           => $this->input->post('pengajuan'),
         'realisasi_pengajuan' => date('Y-m-d', strtotime($this->input->post('realisasi_pengajuan'))),
         'jenis_pengajuan'     => $this->input->post('jenis_pengajuan'),
-        'nama_project'        => ($this->input->post('project_id') == "new_project" ?
-          $this->input->post('nama_project') :
-          $this->appModel->getNamaProject($this->input->post('project_id'))
-        ),
+        'nama_project'        => (
+                                  $this->input->post('project_id') == "" ?
+                                    ""
+                                    :
+                                    (
+                                      $this->input->post('project_id') == "new_project" ?
+                                      $this->input->post('nama_project') :
+                                      $this->appModel->getNamaProject($this->input->post('project_id'))
+                                    )
+                                 ),
         'nilai_sph'           => $this->input->post('nilai_sph'),
         'nilai_corr'          => $this->input->post('nilai_corr'),
         'nilai_po'            => $this->input->post('nilai_po'),
@@ -104,10 +110,16 @@ class Submission extends MY_Controller
                                       $this->input->post('project_id')
                                     )
                                  ),
-        'site_id'             => ($this->input->post('site_id') == "new_site" ?
-          $this->appModel->getNewSiteID($this->input->post('id_site')) :
-          $this->input->post('site_id')
-        ),
+        'site_id'             => (
+                                  $this->input->post('site_id') == "" ?
+                                    ""
+                                    :
+                                    (
+                                      $this->input->post('site_id') == "new_site" ?
+                                      $this->input->post('site_id') :
+                                      $this->appModel->getNewSiteID($this->input->post('id_site'))
+                                    )
+                                 ),
         'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL)
       );
       $this->appModel->subSave($data_pengajuan);
@@ -166,10 +178,16 @@ class Submission extends MY_Controller
                                       $this->input->post('project_id')
                                     )
                                  ),
-        'site_id'             => ($this->input->post('site_id') == "new_site" ?
-          $this->appModel->getNewSiteID($this->input->post('id_site')) :
-          $this->input->post('site_id')
-        ),
+        'site_id'             => (
+                                  $this->input->post('site_id') == "" ?
+                                    ""
+                                    :
+                                    (
+                                      $this->input->post('site_id') == "new_site" ?
+                                      $this->input->post('site_id') :
+                                      $this->appModel->getNewSiteID($this->input->post('id_site'))
+                                    )
+                                 ),
         'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL)
       );
 

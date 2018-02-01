@@ -671,10 +671,7 @@
                 '    </div>\n' +
                 '    {progress}\n{indicator}\n{actions}\n' +
                 '</div>';
-            tActions = '<div class="file-actions">\n' +
-                '    <div class="file-footer-buttons">\n' +
-                '        {download} {upload} {delete} {zoom} {other}' +
-                '    </div>\n' +
+            tActions = '' +
                 '</div>\n' +
                 '{drag}\n' +
                 '<div class="clearfix"></div>';
@@ -838,9 +835,9 @@
                     downloadIcon: '<i class="glyphicon glyphicon-download"></i>',
                     downloadClass: 'btn  btn-default btn-outline-secondary',
                     downloadTitle: 'Download file',
-                    zoomIcon: '<i class="fas fa-search-plus"></i>',
-                    zoomClass: 'btn  btn-default btn-outline-secondary',
-                    zoomTitle: 'View Details',
+                    zoomIcon: '',
+                    zoomClass: '',
+                    zoomTitle: '',
                     dragIcon: '<i class="glyphicon glyphicon-move"></i>',
                     dragClass: 'text-info',
                     dragTitle: 'Move / Rearrange',

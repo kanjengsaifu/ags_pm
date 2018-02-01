@@ -133,7 +133,7 @@
 
 														<!-- SITE -->
 														<hr>
-														<div class="form-group">
+														<div class="form-group" id="site_id_div">
 															<label for="">Pilih Site</label>
 															<select class="selectpicker form-control" name="site_id" id="site_id" data-live-search="true">
 																<option selected disabled readonly>PILIH SITE</option>
@@ -171,21 +171,11 @@
 														</div>
 
 														<div class="form-group">
-															<label for="">Jenis Pengajuan <i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="
-																	<p align='left'>
-																		PROJECT : PBB MINUT, PERBAIKAN PAGAR <br>
-																		NON PROJECT : awdawdawd <br>
-																		OPERASIONAL : awdawdawd <br>
-																		OPERASIONAL : awdawdawd <br>
-																		COMMCASE : awdawdawd <br>
-																		GAJI PJS : awdawdawd <br>
-																		IMBAS PETIR : awdawdawd
-																	</span>
-															"></i></label>
+															<label for="">Jenis Pengajuan </label>
 															<select id="jenis_pengajuan" style="width:100%;" class="form-control selectpicker" style="width:100% !important;" name="jenis_pengajuan">
 																<option value="" selected disabled readonly>PILIH JENIS PENGAJUAN</option>
 																<?php foreach ($kategori_pengajuan as $data_k): ?>
-																	<option value="<?=$data_k?>"><?=strtoupper($data_k)?><sup>tes</sup></option>
+																	<option value="<?=$data_k?>"><?=strtoupper($data_k)?></option>
 																<?php endforeach; ?>
 															</select>
 														</div>
@@ -691,6 +681,10 @@
 						submission = $('#submission').DataTable({
 								"processing": true,
 								"serverSide": true,
+								// rowReorder: {
+				        // 	selector: 'td:nth-child(2)'
+				        // },
+								// "responsive": true,
 								// "language"	: {
 								// 	"info": "Menampilkan halaman _PAGE_ of _PAGES_"
 								// },
@@ -863,6 +857,7 @@
 				$('#new_project_div').hide();
 				$('#project_id_div').hide();
 				$('#custom_filter').hide();
+				$('#site_id_div').hide();
 
 				// CURRENCY SEPARATOR
 				webshims.setOptions('forms-ext', {
@@ -971,6 +966,7 @@
 							$('#jenis_nilai_div').show();
 							$('#start_penawaran_dmt_div').show();
 							$('#no_spk_div').show();
+							$('#site_id_div').show();
 						} else if ($(this).val() === 'non_project') {
 							$('#start_penawaran_dmt_div').hide();
 							$('#no_spk_div').hide();
@@ -982,6 +978,7 @@
 							$('#nilai_sph_div').hide();
 							$('#nilai_po_div').hide();
 							$('#nilai_corr_div').hide();
+							$('#site_id_div').hide();
 
 							$('#project_id').val("");
 							$('[name=project_id]').val("");

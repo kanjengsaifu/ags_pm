@@ -23,10 +23,6 @@
   firstDay: 0
 }; })(jQuery);
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-
 function savefeed() {
   $('#btnAddFeed').text('Saving...');
   $('#btnAddFeed').attr('disabled', true);
