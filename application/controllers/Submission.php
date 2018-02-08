@@ -60,6 +60,7 @@ class Submission extends MY_Controller
       if ($this->input->post('site_id')=="new_site") {
         $data_site = array(
           'id_site'           => $this->input->post('id_site'),
+          'id_site_telkom'    => $this->input->post('id_site_telkom'),
           'nama_site'         => $this->input->post('nama_site'),
           'lokasi'            => $this->input->post('lokasi_site'),
           'keterangan_site'   => $this->input->post('keterangan_site')
@@ -116,8 +117,8 @@ class Submission extends MY_Controller
                                     :
                                     (
                                       $this->input->post('site_id') == "new_site" ?
-                                      $this->input->post('site_id') :
-                                      $this->appModel->getNewSiteID($this->input->post('id_site'))
+                                      $this->appModel->getNewSiteID($this->input->post('id_site')) :
+                                      $this->input->post('site_id')
                                     )
                                  ),
         'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL)
@@ -129,6 +130,7 @@ class Submission extends MY_Controller
       if ($this->input->post('site_id')=="new_site") {
         $data_site = array(
           'id_site'           => $this->input->post('id_site'),
+          'id_site_telkom'    => $this->input->post('id_site_telkom'),
           'nama_site'         => $this->input->post('nama_site'),
           'lokasi'            => $this->input->post('lokasi_site'),
           'keterangan_site'   => $this->input->post('keterangan_site')
@@ -184,8 +186,8 @@ class Submission extends MY_Controller
                                     :
                                     (
                                       $this->input->post('site_id') == "new_site" ?
-                                      $this->input->post('site_id') :
-                                      $this->appModel->getNewSiteID($this->input->post('id_site'))
+                                      $this->appModel->getNewSiteID($this->input->post('id_site')) :
+                                      $this->input->post('site_id')
                                     )
                                  ),
         'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL)
@@ -254,7 +256,7 @@ class Submission extends MY_Controller
       // $row[]  = ($stfd->is_bayarclient == "N" ? "&#x2714" : '');
       $row[]  = '
                   <button type="button" href="" onclick="detailPengajuan('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailPengajuan">
-                    DETAIL
+                    <i class="fas fa-search"></i>
                   </button>
                   '.
                     (isApproval() || isAdministrator() ?
@@ -416,6 +418,15 @@ class Submission extends MY_Controller
       'is_checked'       => 'N'
     );
     $this->appModel->approveTerpilih(array('is_checked' => 'Y', 'tanggal_approval' => NULL), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function updateNilaiPengajuan($id) {
+    // echo $this->input->post('np');
+    $data = array(
+      'nilai_pengajuan' => $this->input->post('np')
+    );
+    $this->appModel->updateNilaiPengajuan(array('pengajuan_id' => $id), $data);
     echo json_encode(array("status" => TRUE));
   }
 }

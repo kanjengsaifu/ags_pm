@@ -359,9 +359,7 @@ class AppModel extends CI_Model
     }
 
     $this->db->from($table);
-    if (isAdminJakarta()) {
-      $this->db->where('tanggal_approval !=', NULL);
-    }
+
 
 
     if ($this->input->post('on_progress') != 'N') {
@@ -387,6 +385,17 @@ class AppModel extends CI_Model
 
     if ($this->input->post('belum_diapprove') != 'N') {
       $this->db->where('tanggal_approval', NULL);
+    }
+
+    if ($this->input->post('sudah_diapprove') != 'N') {
+      $this->db->where('tanggal_approval !=', NULL);
+    } else {
+      if (isAdminJakarta()) {
+        $this->db->where('tanggal_approval !=', NULL);
+      }
+      if (isApproval()) {
+        $this->db->where('tanggal_approval', NULL);
+      }
     }
 
     if ($this->input->post('progress_project') != 'N') {
@@ -483,10 +492,18 @@ class AppModel extends CI_Model
   }
 
   public function getPengajuanByID($id) {
+    $this->db->select('site_id');
+    $this->db->from('pengajuan');
+    $this->db->where('pengajuan_id', $id);
+    $query_get_siteid = $this->db->get();
+    $row = $query_get_siteid->row();
+
     $this->db->select('*');
     $this->db->from('pengajuan');
     $this->db->join('users', 'pengajuan.pengaju_id = users.user_id');
-    $this->db->join('site', 'pengajuan.site_id = site.site_id');
+    if ($row->site_id != "") {
+      $this->db->join('site', 'pengajuan.site_id = site.site_id');
+    }
     $this->db->where('pengajuan.pengajuan_id', $id);
     $query = $this->db->get();
     return $query->row();
@@ -629,7 +646,7 @@ class AppModel extends CI_Model
       $no = 1;
       foreach ($data->result() as $row) {
         $this->db->from('pengajuan');
-        $this->db->join('site', 'pengajuan.site_id = site.site_id');
+        $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
         $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
         $this->db->where('pengajuan.tanggal_approval !=', NULL);
         $this->db->where('pengajuan.success_print', 'N');
@@ -660,14 +677,14 @@ class AppModel extends CI_Model
               <td style="width:20px;">'.$no.'</td>
               <td style="width:70px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
               <td>'.$row2->pengajuan.'</td>
-              <td style="width:70px;text-align:center">'.$row2->id_site.'</td>
-              <td style="width:90px;text-align:center">'.$row2->nama_site.'</td>
+              <td style="width:70px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site).'</td>
+              <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
               <td style="width:90px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
-              <td style="width:120px;text-align:center">'.$row2->keterangan.'</td>
+              <td style="width:120px;text-align:center">'.($row2->keterangan == "" ? "-" : $row2->keterangan).'</td>
             <tr>
           </tbody>';
           $no++;
@@ -765,7 +782,7 @@ class AppModel extends CI_Model
     $no = 1;
     foreach ($data->result() as $row) {
       $this->db->from('pengajuan');
-      $this->db->join('site', 'pengajuan.site_id = site.site_id');
+      $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
       $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
       $this->db->where('pengajuan.is_printed', 'Y');
@@ -799,14 +816,14 @@ class AppModel extends CI_Model
             <td style="width:20px;">'.$no.'</td>
             <td style="width:50px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
             <td>'.$row2->pengajuan.'</td>
-            <td style="width:30px;text-align:center">'.$row2->id_site.'</td>
-            <td style="width:90px;text-align:center">'.$row2->nama_site.'</td>
+            <td style="width:30px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site).'</td>
+            <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
             <td style="width:60px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
-            <td style="width:120px;text-align:center">'.$row2->keterangan.'</td>
+            <td style="width:120px;text-align:center">'.($row2->keterangan == "" ? "-" : $row2->keterangan).'</td>
           <tr>
         </tbody>';
         $no++;
@@ -896,7 +913,7 @@ class AppModel extends CI_Model
     $no = 1;
     foreach ($data->result() as $row) {
       $this->db->from('pengajuan');
-      $this->db->join('site', 'pengajuan.site_id = site.site_id');
+      $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
       $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
       $this->db->where('pengajuan.is_printed', 'Y');
@@ -929,14 +946,14 @@ class AppModel extends CI_Model
             <td style="width:20px;">'.$no.'</td>
             <td style="width:50px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
             <td>'.$row2->pengajuan.'</td>
-            <td style="width:30px;text-align:center">'.$row2->id_site.'</td>
-            <td style="width:90px;text-align:center">'.$row2->nama_site.'</td>
+            <td style="width:30px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site ).'</td>
+            <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site ).'</td>
             <td style="width:60px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
-            <td style="width:120px;text-align:center">'.$row2->keterangan.'</td>
+            <td style="width:120px;text-align:center">'.($row2->keterangan == "" ? "-" : $row2->keterangan).'</td>
           <tr>
         </tbody>';
         $no++;
@@ -1124,6 +1141,11 @@ class AppModel extends CI_Model
   public function countProgressData() {
     $this->db->from('staff');
     return $this->db->count_all_results();
+  }
+
+  public function updateNilaiPengajuan($id, $data) {
+    $this->db->update('pengajuan', $data, $id);
+    return $this->db->affected_rows();
   }
 
 }

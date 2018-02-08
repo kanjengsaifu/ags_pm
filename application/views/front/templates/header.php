@@ -42,6 +42,10 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script> -->
     <style media="screen">
 
+      .caret {
+        visibility: hidden;
+      }
+
       .input-group-btn {
         width: auto;
         display: inline-flex;

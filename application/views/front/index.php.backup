@@ -350,17 +350,18 @@
 											<thead>
 												<tr>
 													<th class="text-center" style="width:30px">NO</th>
+													<th class="text-center" style="width:100px">KODE<br>PENGAJUAN</th>
 													<th class="text-center">Pengajuan</th>
-													<th class="text-center">Jenis<br>Pengajuan</th>
+	                        <th class="text-center">Tanggal<br>Pengajuan</th>
+													<?php if (!(isAdminJakarta() || isApproval())): ?>
+														<th class="text-center">Tanggal<br>Approval</th>
+														<th class="text-center">Tanggal<br>Approval Keuangan</th>
+													<?php endif; ?>
 	                        <th class="text-center">Realisasi<br>Pengajuan</th>
-													<th class="text-center" style="width:100px">Nilai SPH</th>
-													<th class="text-center" style="width:100px">Nilai Corr</th>
-													<th class="text-center" style="width:100px">Nilai PO</th>
-													<th class="text-center" style="width:100px">Nilai Pengajuan</th>
 													<!-- <th class="text-center" id="invoiced_stat">Invoiced</th>
 													<th class="text-center" id="bayar_stat">Bayar</th>
 													<th class="text-center" id="client_stat">Bayar<br>Client</th> -->
-	                        <th class="text-center" style="width:70px;">ACTION</th>
+	                        <th class="text-center" style="width:200px;">ACTION</th>
 												</tr>
 											</thead>
 										</table>
@@ -422,7 +423,7 @@
 										"orderable": false
 									}, {
 										"className"	: "dt-center",
-										"targets"		: [2, 4, 5, 6, 7, 8]
+										"targets"		: [1, 2, 4, 5, 6, 7]
 									}
 								],
 						});

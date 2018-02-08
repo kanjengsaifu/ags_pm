@@ -19,22 +19,26 @@ class Admin extends MY_Controller
       $no++;
       $row = array();
       $row[]  = $no;
-      $row[]  = "#ADP".sprintf('%04d', $stfd->pengajuan_id);
       $row[]  = $stfd->pengajuan;
-      $row[]  = date('l, d-m-Y H:m:s', strtotime($stfd->tanggal_pengajuan));
-      if (!(isAdminJakarta() || isApproval())) {
-        $row[]  = ($stfd->tanggal_approval != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval)) : "<span class=\"btn btn-outline-danger\">BELUM DIAPPROVE</span>");
-        $row[]  = ($stfd->status_admin_dmt != "" ?
-                    ($stfd->tanggal_approval_keuangan != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_keuangan)) : "<span class=\"btn btn-outline-danger\">ON PROGRESS</span>")
-                    :
-                    "<span class=\"btn btn-outline-danger\">". (!isAdminJakarta() ? 'PENDING' : 'BELUM DI PRINT') ."</span>"
-                  );
-      }
-      $row[]  = ($stfd->realisasi_pengajuan <= date('Y-m-d') ?
-                  '<span class="btn btn-outline-danger">'.date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan)).'</span>'
-                  :
-                  date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan))
-                );
+      $row[]  = strtoupper($stfd->jenis_pengajuan);
+      $row[]  = date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan));
+      $row[]  = ($stfd->nilai_sph == "0" ? "-" : number_format($stfd->nilai_sph, '0','.','.'));
+      $row[]  = ($stfd->nilai_corr == "0" ? "-" : number_format($stfd->nilai_corr, '0','.','.'));
+      $row[]  = ($stfd->nilai_po == "0" ? "-" : number_format($stfd->nilai_po, '0','.','.'));
+      $row[]  = ($stfd->nilai_pengajuan == "0" ? "-" : number_format($stfd->nilai_pengajuan, '0','.','.'));
+      // if (!(isAdminJakarta() || isApproval())) {
+      //   $row[]  = ($stfd->tanggal_approval != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval)) : "<span class=\"btn btn-outline-danger\">BELUM DIAPPROVE</span>");
+      //   $row[]  = ($stfd->status_admin_dmt != "" ?
+      //               ($stfd->tanggal_approval_keuangan != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_keuangan)) : "<span class=\"btn btn-outline-danger\">ON PROGRESS</span>")
+      //               :
+      //               "<span class=\"btn btn-outline-danger\">". (!isAdminJakarta() ? 'PENDING' : 'BELUM DI PRINT') ."</span>"
+      //             );
+      // }
+      // $row[]  = ($stfd->realisasi_pengajuan <= date('Y-m-d') ?
+      //             '<span class="btn btn-outline-danger">'.date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan)).'</span>'
+      //             :
+      //             date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan))
+      //           );
       // $row[]  = ($stfd->is_invoiced == "N" ? "&#x2714" : '');
       // $row[]  = ($stfd->is_bayar == "N" ? "&#x2714" : '');
       // $row[]  = ($stfd->is_bayarclient == "N" ? "&#x2714" : '');
@@ -81,6 +85,10 @@ class Admin extends MY_Controller
     );
 
     echo json_encode($output);
+  }
+
+  public function cron() {
+    $this->load->view('cron');
   }
 
 }

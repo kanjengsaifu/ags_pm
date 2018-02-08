@@ -40,6 +40,11 @@ class Progress extends MY_Controller
 
     $data_progress = array(
       'tanggal_mulai' => date('Y-m-d', time()),
+      'keterangan'    => $this->input->post('keterangan'),
+      'no_corr'    => $this->input->post('no_corr'),
+      'no_po'      => $this->input->post('no_po'),
+      'tanggal_corr'  => $this->input->post('tanggal_corr'),
+      'tanggal_po'    => $this->input->post('tanggal_po'),
       'project_id'    => ($this->input->post('project_id') == "new_project" ?
         $this->appModel->getNewProjectID($this->input->post('nama_project')) :
         $this->input->post('project_id')
@@ -63,9 +68,10 @@ class Progress extends MY_Controller
       $row[]  = $no;
       $row[]  = $stfd->nama_project;
       $row[]  = $stfd->id_site;
-      $row[]  = ($stfd->no_po != NULL ? number_format($stfd->no_po, '0','.','.'): '-');
-      $row[]  = ($stfd->tanggal_po != NULL ? number_format($stfd->tanggal_po, '0','.','.'): '-');
-      $row[]  = ($stfd->nilai_po != NULL ? number_format($stfd->nilai_po, '0','.','.'): '-');
+      $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
+      $row[]  = ($stfd->no_corr != null ? $stfd->no_corr : '-');
+      $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
+      $row[]  = ($stfd->no_po != null ? $stfd->no_po : '-');
       $row[]  = ($stfd->is_bayar != NULL ? date('Y-m-d', strtotime($stfd->is_bayar)) : 'PROGRESS');
       $row[]  = ($stfd->is_bayarclient != NULL ? date('Y-m-d', strtotime($stfd->is_bayarclient)) : 'PROGRESS');
       $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
@@ -74,7 +80,7 @@ class Progress extends MY_Controller
                   UPDATE
                 </button>
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
-                  DETAIL
+                  <i class="fas fa-search"></i>
                 </button>';
       $data[]  = $row;
     }

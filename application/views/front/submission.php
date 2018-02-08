@@ -6,10 +6,12 @@
                 <div class="peer">
                   <?php if (isAdminTasik() || isAdministrator() || isApproval()): ?>
 										<button type="button" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
-	                    Buat Pengajuan Baru
+	                  	<i class="fas fa-plus"></i>&nbsp; Buat Pengajuan Baru
 	                  </button>
                   <?php endif; ?>
-									<button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn">SHOW CUSTOM FILTER</button>
+									<button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn">
+										<i class="fas fa-filter"></i>&nbsp; SHOW CUSTOM FILTER
+									</button>
 									<br>
                   <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog" tabindex="-1">
                 		<div class="modal-dialog modal-lg" role="document">
@@ -120,7 +122,7 @@
 
 
 														<div class="form-group" id="start_penawaran_dmt_div">
-															<label for="">Start Penawaran DMT</label>
+															<label for="">Start Penawaran DMT</label> <i>*optional</i>
 															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="start_penawaran_dmt" placeholder="Start Penawaran DMT" />
 														</div>
 
@@ -133,37 +135,43 @@
 
 														<!-- SITE -->
 														<hr>
-														<div class="form-group" id="site_id_div">
-															<label for="">Pilih Site</label>
-															<select class="selectpicker form-control" name="site_id" id="site_id" data-live-search="true">
-																<option selected disabled readonly>PILIH SITE</option>
-																<option value="new_site">New Site</option>
-																<?php foreach ($site_list->result() as $site_data): ?>
-																	<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
-																<?php endforeach; ?>
-															</select>
-														</div>
-														<div class="" id="new_site_div">
+														<div id="site_id_div">
 															<div class="form-group">
-																<label for="">Site ID</label>
-																<input type="text" class="form-control" name="id_site" value="" placeholder="ID Site">
+																<label for="">Pilih Site</label>
+																<select class="selectpicker form-control" name="site_id" id="site_id" data-live-search="true">
+																	<option selected disabled readonly>PILIH SITE</option>
+																	<option value="new_site">New Site</option>
+																	<?php foreach ($site_list->result() as $site_data): ?>
+																		<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+																	<?php endforeach; ?>
+																</select>
 															</div>
-															<div class="form-group">
-																<label for="">Nama Site</label>
-																<input type="text" class="form-control" name="nama_site" value="" placeholder="Nama Site">
+															<div class="" id="new_site_div">
+																<div class="form-group">
+																	<label for="">Site ID</label>
+																	<input type="text" class="form-control" name="id_site" value="" placeholder="ID Site">
+																</div>
+																<div class="form-group">
+																	<label for="">Site ID Telkom</label> <i>*optional</i>
+																	<input type="text" class="form-control" name="id_site_telkom" value="" placeholder="ID Site Telkom">
+																</div>
+																<div class="form-group">
+																	<label for="">Nama Site</label>
+																	<input type="text" class="form-control" name="nama_site" value="" placeholder="Nama Site">
+																</div>
+																<div class="form-group">
+																	<label for="">Lokasi</label>
+																	<input type="text" class="form-control" name="lokasi_site" value="" placeholder="Lokasi Site">
+																</div>
+																<div class="form-group">
+																	<label for="">Keterangan Site</label>
+																	<textarea name="keterangan_site" class="form-control" rows="8" cols="80" placeholder="Keterangan Site"></textarea>
+																</div>
 															</div>
-															<div class="form-group">
-																<label for="">Lokasi</label>
-																<input type="text" class="form-control" name="lokasi_site" value="" placeholder="Lokasi Site">
-															</div>
-															<div class="form-group">
-																<label for="">Keterangan Site</label>
-																<textarea name="keterangan_site" class="form-control" rows="8" cols="80" placeholder="Keterangan Site"></textarea>
-															</div>
-														</div>
 
-														<!-- PENGAJUAN -->
-														<hr>
+															<!-- PENGAJUAN -->
+															<hr>
+														</div>
 
 														<div class="form-group">
 															<label for="">Nama Pengajuan</label>
@@ -204,7 +212,7 @@
 															</div>
 														</div> -->
 				                    <div class="form-group">
-															 <label for="">Bukti (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt) *optional</label>
+															 <label for="">Bukti (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label> <i>*optional</i>
 															 <!-- <div class="input-files">
 															 	<input type="file" name="file_upload-1">
 															 </div>
@@ -235,6 +243,7 @@
                 				<div class="modal-body">
 													<table class="table">
 														<tbody>
+															<input id="id_val" type="hidden" value="">
 															<tr>
 																<th width="250">Kategori Pengajuan</th>
 																<td><span id="kategori_pengajuan_val"></span></td>
@@ -289,7 +298,16 @@
 															</tr>
 															<tr id="nilai_pengajuan_div_det">
 																<th width="250">Nilai Pengajuan</th>
-																<td><span id="nilai_pengajuan_val"></span></td>
+																<td>
+																	<span id="nilai_pengajuan_val"></span>
+																	<?php if (isApproval()): ?>
+																		<a id="editNilaiPengajuan" href="#" style="float:right;text-decoration:underline;">edit</a>
+																		<a id="doneNilaiPengajuan" href="#" style="float:right;text-decoration:underline;">done</a>
+																		<div id="nilai_pengajuan_val_edit" style="width:100% !important">
+																			<input style="width:100%;" name="nilai_pengajuan_edit" type="number" class="form-control currency" id="c1" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai Pengajuan">
+																		</div>
+																	<?php endif; ?>
+																</td>
 															</tr>
 															<tr id="pid_div_det">
 																<th width="250">PID (Site ID)</th>
@@ -404,6 +422,7 @@
 				                <form id="form-filter" class="form-horizontal">
 
 														<input type="hidden" name="belum_diapprove_val" id="belum_diapprove_val" value="N">
+														<input type="hidden" name="sudah_diapprove_val" id="sudah_diapprove_val" value="N">
 														<input type="hidden" name="belum_diprint_val" id="belum_diprint_val" value="N">
 														<input type="hidden" name="on_progress_val" id="on_progress_val" value="N">
 														<input type="hidden" name="semua_pengajuan_val" id="semua_pengajuan_val" value="N">
@@ -514,7 +533,10 @@
 									</div>
 								<?php endif; ?>
 								<div class="bgc-white bd bdrs-3 p-20 mB-20">
-									<?php if (!isAdminTasik()): ?>
+									<button type="button" class="btn cur-p btn-outline-primary" style="" onclick="reload_table()">
+										<i class="fas fa-sync-alt"></i>
+                  </button>
+									<?php if (isAdminJakarta()): ?>
 										<button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
 	                    SEMUA PENGAJUAN
 	                  </button>
@@ -522,6 +544,9 @@
 									<?php if (isApproval()): ?>
 										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
 	                    BELUM DIAPPROVE
+	                  </button>
+										<button type="button" class="btn cur-p btn-success" id="sudah_diapprove">
+	                    SUDAH DIAPPROVE
 	                  </button>
 									<?php endif; ?>
 									<?php if (isAdminJakarta()): ?>
@@ -538,30 +563,33 @@
 											HISTORY
 										</button>
 									<?php endif; ?>
-									<button type="button" class="btn cur-p btn-outline-primary" onclick="reload_table()">
-                    Reload Data
-                  </button>
 									<?php if (isApproval()): ?>
-										<br><br>
-										<button type="button" class="btn cur-p btn-success" onclick="approveTerpilih()">
-	                    APPROVE YANG TERPILIH
-	                  </button>
+										<div class="" id="approve_terpilih">
+											<br>
+											<button type="button" class="btn cur-p btn-success" onclick="approveTerpilih()">
+		                    APPROVE YANG TERPILIH
+		                  </button>
+										</div>
 										<!-- <button type="button" class="btn cur-p btn-success" onclick="approveSemuaPengajuan()">
 	                    APPROVE SEMUA PENGAJUAN
 	                  </button> -->
 									<?php endif; ?>
 									<br>
 									<?php if (isAdminJakarta()): ?>
-										<br>
 										<!-- <button type="button" class="btn cur-p btn-secondary" onclick="reload_table()">
 	                    EXPORT TO EXCEL
 	                  </button> -->
-										<a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print')?>">PRINT</a>
-										<a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/printTerpilih')?>">PRINT ULANG YANG TERPILIH</a>
+										<br>
+										<a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
+										<a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT ULANG YANG TERPILIH</a>
 										<a id="acc" class="btn btn-outline-primary" onclick="accTerpilih()">ACC YANG TERPILIH</a>
 									<?php endif; ?>
 									<hr>
-									Menampilkan <span id="menampilkan">Semua Pengajuan <?php if(isApproval()) { echo "Anda"; } ?></span>
+									<?php if (isApproval() || isAdminJakarta()) { ?>
+										Menampilkan <span id="menampilkan">Pengajuan yang Belum <?php if(isApproval()) { echo "diApprove"; } else { echo "diPrint"; } ?></span>
+									<?php } else { ?>
+										Menampilkan Pengajuan Anda
+									<?php } ?>
 									<br><br>
 									<table cellspacing="0" class="table table-striped table-bordered" id="submission" width="100%">
 										<thead>
@@ -673,7 +701,7 @@
 				$('#tanggal_pengajuan_range').hide();
 				$('#realisasi_pengajuan_satuan').hide();
 				$('#realisasi_pengajuan_range').hide();
-				$('#print').hide();
+				$('#print').show();
 				$('#print_c').hide();
 				$('#acc').hide();
 
@@ -699,6 +727,7 @@
 											data.progress_project = $('#progress_project_val').val();
 											data.semua_pengajuan = $('#semua_pengajuan_val').val();
 											data.belum_diapprove = $('#belum_diapprove_val').val();
+											data.sudah_diapprove = $('#sudah_diapprove_val').val();
 
 											data.is_printed = $('#hold').val();
 											data.pengajuan = $('#pengajuan_filter').val();
@@ -741,20 +770,18 @@
 								],
 						});
 
-						// $(document).ready(function() {
-						// 	if (!isAdminTasik()) {
-						// 		document.getElementById("belum_diprint_val").value = "Y";
-						// 	}
-						// 	submission.ajax.reload();  //just reload table
-						// });
+						$(document).ready(function() {
+							<?php if(isAdminJakarta()) { ?>
+								document.getElementById("belum_diprint_val").value = "Y";
+							<?php } ?>
+							submission.ajax.reload();  //just reload table
+						});
 
 						$('#on_progress').click(function() {
-							$('#menampilkan').text("Pengajuan yang Belum Di ACC");
+							$('#menampilkan').text("Pengajuan yang Terhold");
 							$("input[type=hidden]").val("N");
 							document.getElementById("on_progress_val").value = "Y";
-							<?php //if (!isAdminTasik()) { ?>
-								// document.getElementById("print").href = "<?=site_url('submission/re-print')?>";
-							<?php //} ?>
+							document.getElementById("print").href = "<?=site_url('submission/re-print')?>";
 							$('#print').show();
 							$('#print_c').show();
 							$('#acc').show();
@@ -769,6 +796,7 @@
 							document.getElementById("on_progress_val").value = "N";
 							document.getElementById("progress_project_val").value = "N";
 							document.getElementById("belum_diapprove_val").value = "N";
+							document.getElementById("sudah_diapprove_val").value = "N";
 							document.getElementById("semua_pengajuan_val").value = "N";
 							submission.ajax.reload();  //just reload table
 							$('#print_c').hide();
@@ -789,9 +817,18 @@
 						});
 
 						$('#belum_diapprove').click(function() {
-							$('#menampilkan').text("Pengajuan yang Belum Diapprove");
+							$('#menampilkan').text("Pengajuan yang Belum diApprove");
 							$("input[type=hidden]").val("N");
 							document.getElementById("belum_diapprove_val").value = "Y";
+							$('#approve_terpilih').show();
+							submission.ajax.reload();  //just reload table
+						});
+
+						$('#sudah_diapprove').click(function() {
+							$('#menampilkan').text("Pengajuan yang Sudah diApprove");
+							$("input[type=hidden]").val("N");
+							document.getElementById("sudah_diapprove_val").value = "Y";
+							$('#approve_terpilih').hide();
 							submission.ajax.reload();  //just reload table
 						});
 
@@ -831,6 +868,10 @@
 							$("#kategori_pengajuan_filter").selectpicker("refresh");
 							$("#jenis_pengajuan_filter").val('default');
 							$("#jenis_pengajuan_filter").selectpicker("refresh");
+							$("#tanggal_pengajuan_jns_op").val('default');
+							$("#tanggal_pengajuan_jns_op").selectpicker("refresh");
+							$("#realisasi_pengajuan_jns_op").val('default');
+							$("#realisasi_pengajuan_jns_op").selectpicker("refresh");
 							$('#tanggal_pengajuan_satuan').hide();
 							$('#tanggal_pengajuan_range').hide();
 							$('#realisasi_pengajuan_satuan').hide();
@@ -858,6 +899,8 @@
 				$('#project_id_div').hide();
 				$('#custom_filter').hide();
 				$('#site_id_div').hide();
+				$('#pid_div_det').hide();
+				$('#start_penawaran_dmt_div_det').hide();
 
 				// CURRENCY SEPARATOR
 				webshims.setOptions('forms-ext', {
@@ -868,14 +911,14 @@
 
 				$(document).ready(function() {
 					$('#custom_filter_btn').click(function() {
-						if ($('#custom_filter_btn').text() === "SHOW CUSTOM FILTER") {
-							$('#custom_filter').show();
-						} else {
+						if ($('#custom_filter_btn').html() === '<i class="fas fa-filter"></i>&nbsp; HIDE CUSTOM FILTER') {
 							$('#custom_filter').hide();
+						} else {
+							$('#custom_filter').show();
 						}
 
-						$('#custom_filter_btn').text(function(i, v) {
-							return v === 'SHOW CUSTOM FILTER' ? 'HIDE CUSTOM FILTER' : 'SHOW CUSTOM FILTER'
+						$('#custom_filter_btn').html(function(i, v) {
+							return v === '<i class="fas fa-filter"></i>&nbsp; HIDE CUSTOM FILTER' ? '<i class="fas fa-filter"></i>&nbsp; SHOW CUSTOM FILTER' : '<i class="fas fa-filter"></i>&nbsp; HIDE CUSTOM FILTER'
 						});
 					});
 				});
@@ -967,6 +1010,15 @@
 							$('#start_penawaran_dmt_div').show();
 							$('#no_spk_div').show();
 							$('#site_id_div').show();
+
+							$('#jenis_pengajuan option[value="Project"]').show();
+							$('#jenis_pengajuan option[value="Corrective"]').show();
+							$('#jenis_pengajuan option[value="Commcase"]').show();
+							$('#jenis_pengajuan option[value="Gaji PJS"]').show();
+							$('#jenis_pengajuan option[value="Imbas Petir"]').show();
+							$('#jenis_pengajuan option[value="Non Project"]').hide();
+							$('#jenis_pengajuan option[value="Operasional"]').hide();
+							$('#jenis_pengajuan').selectpicker('refresh')
 						} else if ($(this).val() === 'non_project') {
 							$('#start_penawaran_dmt_div').hide();
 							$('#no_spk_div').hide();
@@ -986,6 +1038,15 @@
 							$('[name=nilai_sph]').val("");
 							$('[name=nilai_po]').val("");
 							$('[name=nilai_corr]').val("");
+
+							$('#jenis_pengajuan option[value="Project"]').hide();
+							$('#jenis_pengajuan option[value="Corrective"]').hide();
+							$('#jenis_pengajuan option[value="Commcase"]').hide();
+							$('#jenis_pengajuan option[value="Gaji PJS"]').hide();
+							$('#jenis_pengajuan option[value="Imbas Petir"]').hide();
+							$('#jenis_pengajuan option[value="Non Project"]').show();
+							$('#jenis_pengajuan option[value="Operasional"]').show();
+							$('#jenis_pengajuan').selectpicker('refresh')
 						}
 					});
 				});
@@ -1301,6 +1362,60 @@
 					return months <= 0 ? 0 : months;
 				}
 
+				$('#nilai_pengajuan_val_edit').hide();
+				$('#editNilaiPengajuan').show();
+				$('#doneNilaiPengajuan').hide();
+
+				$(document).ready(function() {
+					$('#editNilaiPengajuan').click(function() {
+						$('#nilai_pengajuan_val_edit').show();
+						$('#nilai_pengajuan_val').hide();
+						$('#editNilaiPengajuan').hide();
+						$('#doneNilaiPengajuan').show();
+
+						$.ajax({
+							url: "<?=site_url('submission/getPengajuanDetail/')?>/" + $('#id_val').val(),
+							type: "GET",
+							dataType: "json",
+							success: function(data) {
+								$('[name=nilai_pengajuan_edit]').val(data.nilai_pengajuan);
+							}
+						});
+					});
+				});
+
+				$(document).ready(function() {
+					$('#doneNilaiPengajuan').click(function() {
+						$('#nilai_pengajuan_val_edit').hide();
+						$('#nilai_pengajuan_val').show();
+						$('#doneNilaiPengajuan').hide();
+						$('#editNilaiPengajuan').show();
+
+						$.ajax({
+							url: "<?=site_url('submission/updateNilaiPengajuan/')?>" + $('#id_val').val(),
+							type: "POST",
+							data: {np: $('[name=nilai_pengajuan_edit]').val()},
+							success: function(data) {
+								if (data.status = 'true') {
+									$.ajax({
+										url: "<?=site_url('submission/getPengajuanDetail/')?>/" + $('#id_val').val(),
+										type: "GET",
+										dataType: "json",
+										success: function(data) {
+											$('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.nilai_pengajuan));
+										}
+									});
+									swal("Success!", "Nilai pengajuan berhasil dirubah!", "success");
+									reload_table();
+								}
+							}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+								 console.log(errorThrown);
+							}
+						});
+					});
+				});
+
+
 				function detailPengajuan(id) {
 					$('#mult_img_row1').html("");
 					$('#mult_img_row2').html("");
@@ -1311,7 +1426,7 @@
 						type: "GET",
 						dataType: "json",
 						success: function(data) {
-							$('id').html(data.pengajuan_id);
+							document.getElementById("id_val").value = data.pengajuan_id;
 							if (data.jenis_pengajuan == "Non Project" || data.jenis_pengajuan == "Operasional") {
 								$('[id=kategori_pengajuan_val]').html("NON-PROJECT");
 								$('[id=jenis_pengajuan_val]').html(data.jenis_pengajuan);
@@ -1334,6 +1449,8 @@
 								if (data.nilai_sph != "0") {
 									$('[id=nilai_sph_val]').html("Rp. " + currency_format(data.nilai_sph));
 									$('[id=no_sph_val]').html(data.no_sph);
+									$('#nilai_sph_div_det').show();
+									$('#no_sph_div_det').show();
 								} else {
 									$('#nilai_sph_div_det').hide();
 									$('#no_sph_div_det').hide();
@@ -1341,6 +1458,8 @@
 								if (data.nilai_corr != "0") {
 									$('[id=nilai_corr_val]').html("Rp. " + currency_format(data.nilai_corr));
 									$('[id=no_corr_val]').html(data.no_corr);
+									$('#nilai_corr_div_det').show();
+									$('#no_corr_div_det').show();
 								} else {
 									$('#nilai_corr_div_det').hide();
 									$('#no_corr_div_det').hide();
@@ -1348,6 +1467,8 @@
 								if (data.nilai_po != "0") {
 									$('[id=nilai_po_val]').html("Rp. " + currency_format(data.nilai_po));
 									$('[id=no_po_val]').html(data.no_po);
+									$('#nilai_po_div_det').show();
+									$('#no_po_div_det').show();
 								} else {
 									$('#nilai_po_div_det').hide();
 									$('#no_po_div_det').hide();
@@ -1366,7 +1487,12 @@
 							} else {
 								$('#tanggal_approval_keuangan_div').hide();
 							}
-							$('[id=pid_val]').html(data.id_site + ' / ' + data.nama_site);
+							if (data.site_id != "") {
+								$('[id=pid_val]').html(data.id_site + ' / ' + data.nama_site);
+								$("#pid_div_det").show();
+							} else {
+								$("#pid_div_det").hide();
+							}
 							if (data.no_spk != "") {
 								$('#no_spk_div_det').show();
 								$('[id=no_spk_val]').html(data.no_spk);
@@ -1376,11 +1502,13 @@
 							if (data.start_penawaran_dmt != null) {
 								$('#start_penawaran_dmt_div_det').show();
 								$('[id=start_penawaran_dmt_val]').html(moment(data.start_penawaran_dmt).format('dddd, D MMMM Y') + " (Lama Progress : " +
-								monthDiff(
-									new Date(data.start_penawaran_dmt),
-									new Date(data.tanggal_pengajuan)
-								) + " bulan)"
-							);
+									monthDiff(
+										new Date(data.start_penawaran_dmt),
+										new Date(data.tanggal_pengajuan)
+									) + " bulan)"
+								);
+							} else {
+								$('#start_penawaran_dmt_div_det').hide();
 							}
 							if (data.keterangan != "") {
 								$('[id=keterangan]').html(data.keterangan);

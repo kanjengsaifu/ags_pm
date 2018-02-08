@@ -20,8 +20,8 @@ class AdminModel extends CI_Model
     $table = 'pengajuan';
     $column_order = array(null, 'pengajuan_id', 'pengajuan', 'tanggal_pengajuan', 'tanggal_approval', 'tanggal_approval_keuangan');
     $column_search = array('pengajuan_id', 'pengajuan_id', 'pengajuan');
+    $order = array('realisasi_pengajuan' => 'asc');
     // if (isAdminJakarta()) {
-    //   $order = array('realisasi_pengajuan' => 'asc');
     // } else {
     //   $order = array('tanggal_pengajuan' => 'desc');
     // }

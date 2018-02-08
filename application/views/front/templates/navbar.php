@@ -44,7 +44,7 @@
       <li class="dropdown">
         <a class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown" href="#">
         <div class="peer mR-10">
-          <?=img('theme/adminator/randomuser.me/api/portraits/men/paluki.jpg', array('class'=>'w-2r bdrs-50p'))?>
+          <?=img('theme/adminator/randomuser.me/api/portraits/men/Whitehat.png', array('class'=>'w-2r bdrs-50p'))?>
         </div>
         <div class="peer">
           <span class="fsz-sm c-grey-900"><?=$this->session->userdata('name')?></span>
@@ -56,11 +56,11 @@
           <li>
             <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="#"><i class="ti-user mR-10"></i> <span>Profile</span></a>
           </li>
-          <!-- <li class="divider" role="separator"></li> -->
+          <li class="divider" role="separator"></li>
+          <li>
+            <a class="d-b td-n bgcH-grey-100 c-grey-700" href="<?=site_url('logout')?>"><i class="ti-power-off mR-10"></i> <span>Logout</span></a>
+          </li>
         </ul>
-      </li>
-      <li>
-        <a class="d-b td-n bgcH-grey-100 c-grey-700" href="<?=site_url('logout')?>"><i class="ti-power-off mR-10"></i> <span>Logout</span></a>
       </li>
     </ul>
   </div>
