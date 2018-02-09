@@ -1478,6 +1478,11 @@
 								$('#nama_project_div').show();
 							}
 							$('[id=pengajuan]').html(data.pengajuan);
+							if (data.tanggal_approval != null) {
+								$('#editNilaiPengajuan').hide();
+							} else {
+								$('#editNilaiPengajuan').show();
+							}
 							$('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.nilai_pengajuan));
 							$('[id=tanggal_pengajuan]').html(moment(data.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
 							$('[id=realisasi_pengajuan]').html(moment(data.realisasi_pengajuan).format('dddd, D MMMM Y'));

@@ -50,13 +50,13 @@
           <span class="fsz-sm c-grey-900"><?=$this->session->userdata('name')?></span>
         </div></a>
         <ul class="dropdown-menu fsz-sm">
-          <li>
+          <!-- <li>
             <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="#"><i class="ti-settings mR-10"></i> <span>Setting</span></a>
           </li>
           <li>
             <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="#"><i class="ti-user mR-10"></i> <span>Profile</span></a>
-          </li>
-          <li class="divider" role="separator"></li>
+          </li> -->
+          <!-- <li class="divider" role="separator"></li> -->
           <li>
             <a class="d-b td-n bgcH-grey-100 c-grey-700" href="<?=site_url('logout')?>"><i class="ti-power-off mR-10"></i> <span>Logout</span></a>
           </li>

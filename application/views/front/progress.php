@@ -5,68 +5,102 @@
         <div class="col-md-12">
           <div class="peer">
             <button type="button" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createProgress">
-              Progress Baru
+              <i class="fas fa-plus"></i> &nbsp;Progress Baru
             </button>
-            <button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn">SHOW CUSTOM FILTER</button>
+            <button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn"><i class="fas fa-filter"></i> &nbsp;SHOW CUSTOM FILTER</button>
             <br><br>
             <!-- CUSTOM FILTER -->
             <div id="custom_filter" class="bgc-white bd bdrs-3 p-20 mB-20">
               <h4 class="c-grey-900 mB-20">Custom Filter : </h4>
                     <form id="form-filter" class="form-horizontal">
 
-                        <input type="hidden" name="belum_diapprove_val" id="belum_diapprove_val" value="N">
-                        <input type="hidden" name="belum_diprint_val" id="belum_diprint_val" value="N">
-                        <input type="hidden" name="on_progress_val" id="on_progress_val" value="N">
-                        <input type="hidden" name="semua_pengajuan_val" id="semua_pengajuan_val" value="N">
-                        <input type="hidden" name="history_val" id="history_val" value="N">
-                        <input type="hidden" name="progress_project_val" id="progress_project_val" value="N">
+                        <input type="hidden" name="belum_selesai_val" id="belum_selesai_val" value="N">
+                        <input type="hidden" name="sudah_selesai_val" id="sudah_selesai_val" value="N">
+
 
                         <div class="form-group">
-                            <label for="FirstName" class="col-sm-2 control-label">Nama Project</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Keterangan Progress</label>
                             <div class="col-sm-6">
-                                <input type="text" name="pengajuan" class="form-control" id="pengajuan_filter">
+                                <input type="text" name="keterangan_filter" class="form-control" id="keterangan_filter">
                             </div>
                         </div>
                         <div class="form-group">
-                          <label for="LastName" class="col-sm-2 control-label">Kategori Pengajuan</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Project</label>
+                            <div class="col-sm-6">
+                              <select class="selectpicker form-control" name="project_filter" id="project_filter" data-live-search="true">
+                                <option selected disabled readonly>PILIH PROJECT</option>
+                                <?php foreach ($project_list->result() as $project_data): ?>
+                                  <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
+                                <?php endforeach; ?>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName" class="col-sm-2 control-label">Site ID</label>
+                            <div class="col-sm-6">
+                              <select class="selectpicker form-control" name="site_id_filter" id="site_id_filter" data-live-search="true">
+                                <option selected disabled readonly>PILIH SITE</option>
+                                <?php foreach ($site_list->result() as $site_data): ?>
+                                  <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+                                <?php endforeach; ?>
+                              </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                          <label for="LastName" class="col-sm-2 control-label">Tanggal COR</label>
                           <div class="col-sm-6">
-                            <select id="kategori_pengajuan_filter" style="width:100%;" class="form-control" name="kategori_pengajuan_filter">
-                              <option value="" selected disabled readonly>KATEGORI PENGAJUAN</option>
-                              <option value="Project">Project</option>
-                              <option value="Non Project">Non Project</option>
+                            <select class="form-control selectpicker" name="" id="tanggal_corr_jns_op">
+                              <option value="" selected disabled readonly>JENIS SELECTOR</option>
+                              <option value="satuan_val">Per Tanggal</option>
+                              <option value="range_val">Range</option>
                             </select>
+                            <div style="padding:5px 0px;" id="tanggal_corr_satuan">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_corr_filter" id="tanggal_corr_filter">
+                            </div>
+                            <div style="padding:5px 0px;" id="tanggal_corr_range">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_corr_first_filter" id="tanggal_corr_first_filter" placeholder="Dari Tanggal">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;margin-top:5px;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_corr_last_filter" id="tanggal_corr_last_filter" placeholder="ke Tanggal">
+                            </div>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label for="LastName" class="col-sm-2 control-label">Jenis Pengajuan</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Nomor COR</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="no_corr_filter" class="form-control" id="no_corr_filter">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="LastName" class="col-sm-2 control-label">Tanggal PO</label>
                           <div class="col-sm-6">
-                            <select id="jenis_pengajuan_filter" style="width:100%;" class="form-control" name="jenis_pengajuan_filter">
-                              <option value="" selected disabled readonly>JENIS PENGAJUAN</option>
-                              <?php foreach ($kategori_pengajuan as $data_k): ?>
-                                <option value="<?=$data_k?>"><?=strtoupper($data_k)?></option>
-                              <?php endforeach; ?>
+                            <select class="form-control selectpicker" name="" id="tanggal_po_jns_op">
+                              <option value="" selected disabled readonly>JENIS SELECTOR</option>
+                              <option value="satuan_val">Per Tanggal</option>
+                              <option value="range_val">Range</option>
                             </select>
+                            <div style="padding:5px 0px;" id="tanggal_po_satuan">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_po_filter" id="tanggal_po_filter">
+                            </div>
+                            <div style="padding:5px 0px;" id="tanggal_po_range">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_po_first_filter" id="tanggal_po_first_filter" placeholder="Dari Tanggal">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;margin-top:5px;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_po_last_filter" id="tanggal_po_last_filter" placeholder="ke Tanggal">
+                            </div>
                           </div>
                         </div>
-                        <?php if (!isAdminTasik()): ?>
-                          <div class="form-group">
-                              <label for="LastName" class="col-sm-2 control-label">Nama Pengaju</label>
-                              <div class="col-sm-6">
-                                  <select class="form-control" name="">
-                                    <option value="" selected disabled readonly>SELECT PENGAJU</option>
-                                    <option value="">Ahmad Fauzi</option>
-                                  </select>
-                              </div>
-                          </div>
-                        <?php endif; ?>
-                        <!-- <div class="form-group">
+                        <div class="form-group">
+                            <label for="FirstName" class="col-sm-2 control-label">Nomor PO</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="no_po" class="form-control" id="no_po_filter">
+                            </div>
+                        </div>
+                        <div class="form-group">
                           <label for="LastName" class="col-sm-2 control-label">Progress Pengajuan</label>
                           <div class="col-sm-6">
                             <label for=""> <input type="checkbox" id="check_invoiced" name="check_invoiced" value="Y"> Invoiced </label> &nbsp;&nbsp;&nbsp;
-                            <label for=""> <input type="checkbox" id="check_bayar" name="check_bayar" value="Y"> Sudah Dibayar </label> &nbsp;&nbsp;&nbsp;
+                            <label for=""> <input type="checkbox" id="check_bayar" name="check_bayar" value="Y"> Sudah Dibayar AG </label> &nbsp;&nbsp;&nbsp;
                             <label for=""> <input type="checkbox" id="check_bayarclient" name="check_bayarclient" value="Y"> Sudah Dibayar Client </label> &nbsp;&nbsp;&nbsp;
                           </div>
-                        </div> -->
+                        </div>
                         <div class="form-group">
                             <label for="LastName" class="col-sm-2 control-label"></label>
                             <div class="col-sm-4">
@@ -86,16 +120,23 @@
                   </div>
                   <div class="modal-body">
                     <form class="" method="post" action="<?=site_url('progress/save')?>">
-                      <div class="">
-                        <div class="form-group">
-                          <label for="">Keterangan Progress</label>
-                          <input type="text" class="form-control" name="keterangan" value="" placeholder="Keterangan Progress">
-                        </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Mulai Progress</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Progress">
+                      </div>
+                      <hr>
+                      <div class="form-group">
+                        <label for="">Keterangan Progress</label>
+                        <input type="text" class="form-control" name="keterangan" value="" placeholder="Keterangan Progress">
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Kontrak</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Kontrak">
                       </div>
                       <div class="form-group" id="project_id_div">
                         <label for="">Pilih Project</label>
                         <select class="selectpicker form-control" name="project_id" id="project_id" data-live-search="true">
-                          <option selected disabled readonly>SELECT PROJECT</option>
+                          <option selected disabled readonly>PILIH PROJECT</option>
                           <option value="new_project">New Project</option>
                           <?php foreach ($project_list->result() as $project_data): ?>
                             <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
@@ -155,7 +196,11 @@
                         <label for="">Tanggal PO</label>
                         <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_po" placeholder="Tanggal PO">
                       </div>
-
+                      <hr>
+                      <div class="form-group">
+                        <label for="">Deskripsi Progress</label>
+                        <textarea name="deskripsi" rows="8" cols="80" class="form-control" placeholder="Deskripsi Progress"></textarea>
+                      </div>
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
@@ -179,6 +224,14 @@
                         <tr>
                           <th width="250">Tanggal Mulai Progress</th>
                           <td><span id="tanggal_mulai_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Keterangan Progress</th>
+                          <td><span id="keterangan_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal Kontrak</th>
+                          <td><span id="tanggal_kontrak_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Project</th>
@@ -212,22 +265,22 @@
                           <th width="250">Nomor PO</th>
                           <td><span id="no_po_val"></span></td>
                         </tr>
+                        <tr>
+                          <th width="250">Deskripsi</th>
+                          <td><span id="deskripsi_val"></span></td>
+                        </tr>
 
                         <tr>
-                          <th width="250">Sudah Dibayarkan</th>
+                          <th width="250">Tanggal Pembayaran</th>
                           <td><span id="sudah_dibayarkan_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Sudah Dibayar Client</th>
+                          <th width="250">Tanggal Pembayaran Client</th>
                           <td><span id="sudah_dibayar_client_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Sudah Invoice</th>
+                          <th width="250">Tanggal Invoice</th>
                           <td><span id="sudah_invoice_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Keterangan</th>
-                          <td><span id="keterangan_val"></span></td>
                         </tr>
 
                       </tbody>
@@ -251,9 +304,64 @@
                     <form class="" id="form_update" action="#">
                       <input type="hidden" name="id" value="">
                       <div class="form-group">
-                        <label for="inputAddress2"></label>
-                        <input type="text" class="form-control" name="no_po" placeholder="Nomor PO" required>
+                        <label for="">Tanggal Corr</label>
+                        <input id="tanggal_corr_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_corr_vale" placeholder="Tanggal Corr">
                       </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Nomor CORMO</label>
+                        <input id="no_corr_vale" type="text" class="form-control" name="no_corr_vale" placeholder="Nomor CORMO" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal PO</label>
+                        <input id="tanggal_po_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_po_vale" placeholder="Tanggal PO">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Nomor PO</label>
+                        <input id="no_po_vale" type="text" class="form-control" name="no_po_vale" placeholder="Nomor PO" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Kontrak</label>
+                        <input id="tanggal_kontrak_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak_vale" placeholder="Tanggal Kontrak">
+                      </div>
+                      <hr>
+                      <div class="form-group">
+                        <label for="">Tanggal BAPP</label>
+                        <input id="tanggal_bapp_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_bapp_vale" placeholder="Tanggal BAPP">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Nomor BAPP</label>
+                        <input id="no_bapp_vale" type="text" class="form-control" name="no_bapp_vale" placeholder="Nomor BAPP" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal BAST</label>
+                        <input id="tanggal_bast_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_bast_vale" placeholder="Tanggal BAST">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Nomor BAST</label>
+                        <input id="no_bast_vale" type="text" class="form-control" name="no_bast_vale" placeholder="Nomor BAST" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Deskripsi</label>
+                        <textarea id="deskripsi_vale" name="deskripsi_vale" rows="8" cols="80" class="form-control" placeholder="Deskripsi Progress"></textarea>
+                      </div>
+                      <hr>
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <td style="width:100px;text-align:center;">INVOICED</td>
+                            <td style="width:100px;text-align:center;">SUDAH DIBAYAR</td>
+                            <td style="width:100px;text-align:center;">SUDAH DIBAYAR CLIENT</td>
+                          </tr>
+                          <tr>
+                            <form class="" action="index.html" method="post">
+                              <input type="hidden" name="id" value="">
+                              <td style="text-align:center;"> <label><input type="checkbox" style="text-align:center" class="" id="invoiced_vale" name="invoiced_vale" value="<?=date('Y-m-d', time())?>"></label> <br> <span id="tanggal_invoiced"></span> </td>
+                              <td style="text-align:center;"> <label><input type="checkbox" style="text-align:center" class="" id="bayar_vale" name="bayar_vale" value="<?=date('Y-m-d', time())?>"></label> <br> <span id="tanggal_bayar"></span> </td>
+                              <td style="text-align:center;"> <label><input type="checkbox" style="text-align:center" class="" id="bayarclient_vale" name="bayarclient_vale" value="<?=date('Y-m-d', time())?>"></label> <br> <span id="tanggal_bayarclient"></span> </td>
+                            </form>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                     </form>
                     <div class="modal-footer">
@@ -276,6 +384,12 @@
             <button type="button" class="btn cur-p btn-outline-primary" style="" onclick="reload_table()">
 							<i class="fas fa-sync-alt"></i>
             </button>
+            <button type="button" class="btn cur-p btn-outline-danger" style="" id="belum_selesai">
+							BELUM SELESAI
+            </button>
+            <button type="button" class="btn cur-p btn-outline-success" style="" id="sudah_selesai">
+							SUDAH SELESAI
+            </button>
             <hr>
             <table cellspacing="0" class="table table-striped table-bordered" id="progress" width="100%">
               <thead>
@@ -287,10 +401,10 @@
                   <th class="text-center">Nomor Corr</th>
                   <th class="text-center">Tanggal PO</th>
                   <th class="text-center">Nomor PO</th>
-                  <th class="text-center">Sudah<br>Dibayarkan<br>AG</th>
-                  <th class="text-center">Sudah<br>Dibayarkan<br>Client</th>
-                  <th class="text-center">Sudah<br>Invoice</th>
-                  <th style="white-space:nowrap;" class="text-center" width="150">Action</th>
+                  <th class="text-center">Tanggal<br>Pembayaran<br>AG</th>
+                  <th class="text-center">Tanggal<br>Pembayaran<br>Client</th>
+                  <th class="text-center">Tanggal<br>Invoice</th>
+                  <th style="white-space:nowrap;" class="text-center" width="250">Action</th>
                 </tr>
               </thead>
             </table>
@@ -314,6 +428,8 @@
               "type": "POST",
               "data": function(data) {
                 // data.kategori_pengajuan = $('#kategori_pengajuan_filter').val();
+                data.belum_selesai = $('#belum_selesai_val').val();
+                data.sudah_selesai = $('#sudah_selesai_val').val();
               }
           }, "columnDefs": [
             {
@@ -343,7 +459,24 @@
   $('#new_project_div').hide();
   $('#custom_filter').hide();
   $('#new_site_div').hide();
+  $('#tanggal_corr_satuan').hide();
+  $('#tanggal_corr_range').hide();
+  $('#tanggal_po_satuan').hide();
+  $('#tanggal_po_range').hide();
 
+  $('#belum_selesai').click(function() {
+    $('#menampilkan').text("Progress yang Belum Selesai");
+    $("input[type=hidden]").val("N");
+    document.getElementById("belum_selesai_val").value = "Y";
+    progress.ajax.reload();
+  });
+
+  $('#sudah_selesai').click(function() {
+    $('#menampilkan').text("Progress yang Sudah Selesai");
+    $("input[type=hidden]").val("N");
+    document.getElementById("sudah_selesai_val").value = "Y";
+    progress.ajax.reload();
+  });
 
   $(document).ready(function() {
     $('#site_id').change(function() {
@@ -357,15 +490,51 @@
 
   $(document).ready(function() {
     $('#custom_filter_btn').click(function() {
-      if ($('#custom_filter_btn').text() === "SHOW CUSTOM FILTER") {
-        $('#custom_filter').show();
-      } else {
+      if ($('#custom_filter_btn').html() === '<i class="fas fa-filter"></i>&nbsp; HIDE CUSTOM FILTER') {
         $('#custom_filter').hide();
+      } else {
+        $('#custom_filter').show();
       }
 
-      $('#custom_filter_btn').text(function(i, v) {
-        return v === 'SHOW CUSTOM FILTER' ? 'HIDE CUSTOM FILTER' : 'SHOW CUSTOM FILTER'
+      $('#custom_filter_btn').html(function(i, v) {
+        return v === '<i class="fas fa-filter"></i>&nbsp; HIDE CUSTOM FILTER' ? '<i class="fas fa-filter"></i>&nbsp; SHOW CUSTOM FILTER' : '<i class="fas fa-filter"></i>&nbsp; HIDE CUSTOM FILTER'
       });
+    });
+  });
+
+  $(document).ready(function() {
+    $('#tanggal_corr_jns_op').change(function() {
+      if ($(this).val() === 'satuan_val') {
+        $('#tanggal_corr_satuan').show();
+        $('#tanggal_corr_range').hide();
+        document.getElementById('tanggal_corr_filter').value = "";
+        document.getElementById('tanggal_corr_first_filter').value = "";
+        document.getElementById('tanggal_corr_last_filter').value = "";
+      } else {
+        $('#tanggal_corr_satuan').hide();
+        $('#tanggal_corr_range').show();
+        document.getElementById('tanggal_corr_filter').value = "";
+        document.getElementById('tanggal_corr_first_filter').value = "";
+        document.getElementById('tanggal_corr_last_filter').value = "";
+      }
+    });
+  });
+
+  $(document).ready(function() {
+    $('#tanggal_po_jns_op').change(function() {
+      if ($(this).val() === 'satuan_val') {
+        $('#tanggal_po_satuan').show();
+        $('#tanggal_po_range').hide();
+        document.getElementById('tanggal_po_filter').value = "";
+        document.getElementById('tanggal_po_first_filter').value = "";
+        document.getElementById('tanggal_po_last_filter').value = "";
+      } else {
+        $('#tanggal_po_satuan').hide();
+        $('#tanggal_po_range').show();
+        document.getElementById('tanggal_po_filter').value = "";
+        document.getElementById('tanggal_po_first_filter').value = "";
+        document.getElementById('tanggal_po_last_filter').value = "";
+      }
     });
   });
 
@@ -418,6 +587,23 @@
     });
   });
 
+  $('#btn-reset').click(function() { //button reset event click
+    $('#form-filter')[0].reset();
+    $("#project_filter").val('default');
+    $("#project_filter").selectpicker("refresh");
+    $("#site_id_filter").val('default');
+    $("#site_id_filter").selectpicker("refresh");
+    $("#tanggal_corr_jns_op").val('default');
+    $("#tanggal_corr_jns_op").selectpicker("refresh");
+    $("#tanggal_po_jns_op").val('default');
+    $("#tanggal_po_jns_op").selectpicker("refresh");
+    $("#tanggal_corr_satuan").hide();
+    $("#tanggal_corr_range").hide();
+    $("#tanggal_po_satuan").hide();
+    $("#tanggal_po_range").hide();
+    progress.ajax.reload();  //just reload table
+  });
+
   function detailProgress(id) {
     $.ajax({
       url: "<?=site_url('progress/getProgressDetail/')?>/" + id,
@@ -431,6 +617,16 @@
           $('[id=tanggal_mulai_val]').html("-");
         }
         $('[id=project_val]').html(data.nama_project);
+        if (data.tanggal_kontrak != null) {
+          $('[id=tanggal_kontrak_val]').html(moment(data.tanggal_kontrak).format('dddd, D MMMM Y'));
+        } else {
+          $('[id=tanggal_kontrak_val]').html("-");
+        }
+        if (data.deskripsi != null) {
+          $('[id=deskripsi_val]').html(data.deskripsi);
+        } else {
+          $('[id=deskripsi_val]').html("-");
+        }
         $('[id=pid_val]').html(data.id_site);
         $('[id=nama_site_val]').html(data.nama_site);
         $('[id=lokasi_site_val]').html(data.lokasi);
@@ -485,6 +681,63 @@
     });
   }
 
+  function deleteProgress(id) {
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this progress data!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn-danger",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel pls!",
+      closeOnConfirm: false,
+      closeOnCancel: false
+    },
+    function(isConfirm) {
+      if (isConfirm) {
+        $.ajax({
+          url: "<?=site_url('progress/deleteProgress/')?>" + id,
+          type: "POST",
+          data: {id: id},
+          success: function(data) {
+            swal("Deleted!", "Progress berhasil dihapus.", "success");
+            reload_table();
+          }
+        });
+      } else {
+        swal("Cancelled", "Progress batal dihapus", "error");
+      }
+    });
+  }
+
+  function update() {
+    $('#btnUpdate').text('Updating...');
+    $('#btnUpdate').attr('disabled', true);
+    var url;
+
+    url = "<?=site_url('progress/update')?>";
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: $('#form_update').serialize(),
+      success: function(data) {
+        if (data.status = 'true') {
+          $('.modal').removeClass('show');
+          $('.modal').removeClass('in');
+          $('.modal').attr("aria-hidden","true");
+          $('.modal-backdrop').remove();
+          $('body').removeClass('modal-open');
+          $('#alert').modal('show');
+          swal("Success!", "Data staff berhasil diupdate!", "success");
+          reload_table();
+        }
+        $('#btnUpdate').text('Update');
+        $('#btnUpdate').attr('disabled', false);
+      }
+    });
+  }
+
   function updateProgress(id) {
     $.ajax({
       url: "<?=site_url('progress/getProgressDetail/')?>/" + id,
@@ -492,14 +745,95 @@
       dataType: "json",
       success: function(data) {
         $('[name=id]').val(data.progress_id);
-        $('[name=no_po]').val(data.no_po);
-        if (data.tanggal_po != null) {
-          $('[name=tanggal_po]').val(data.tanggal_po);
+        if (data.no_po != null) {
+          $('[name=no_po_vale]').val(data.no_po);
+        } else {
+          $('[name=no_po_vale]').val("");
         }
-        $('[name=nilai_po]').val(data.nilai_po);
-        $('[name=keterangan]').val(data.keterangan);
+        if (data.no_corr != null) {
+          $('[name=no_corr_vale]').val(data.no_corr);
+        } else {
+          $('[name=no_corr_vale]').val("");
+        }
+        if (data.no_bapp != null) {
+          $('[name=no_bapp_vale]').val(data.no_bapp);
+        } else {
+          $('[name=no_bapp_vale]').val("");
+        }
+        if (data.no_bast != null) {
+          $('[name=no_bast_vale]').val(data.no_bast);
+        } else {
+          $('[name=no_bast_vale]').val("");
+        }
+        if (data.tanggal_po != null) {
+          $('[name=tanggal_po_vale]').val(data.tanggal_po);
+        } else {
+          $('[name=tanggal_po_vale]').val("");
+        }
+        if (data.tanggal_corr != null) {
+          $('[name=tanggal_corr_vale]').val(data.tanggal_corr);
+        } else {
+          $('[name=tanggal_corr_vale]').val("");
+        }
+        if (data.tanggal_bapp != null) {
+          $('[name=tanggal_bapp_vale]').val(data.tanggal_bapp);
+        } else {
+          $('[name=tanggal_bapp_vale]').val("");
+        }
+        if (data.tanggal_bast != null) {
+          $('[name=tanggal_bast_vale]').val(data.tanggal_bast);
+        } else {
+          $('[name=tanggal_bast_vale]').val("");
+        }
+        if (data.no_bapp != null) {
+          $('[name=no_bapp_vale]').val(data.no_bapp);
+        } else {
+          $('[name=no_bapp_vale]').val("");
+        }
+        if (data.no_bast != null) {
+          $('[name=no_bast_vale]').val(data.no_bast);
+        } else {
+          $('[name=no_bast_vale]').val("");
+        }
+        if (data.tanggal_kontrak != null) {
+          $('[name=tanggal_kontrak_vale]').val(data.tanggal_kontrak);
+        } else {
+          $('[name=tanggal_kontrak_vale]').val("");
+        }
+        if (data.tanggal_bapp != null) {
+          $('[name=tanggal_bapp_vale]').val(data.tanggal_bapp);
+        } else {
+          $('[name=tanggal_bapp_vale]').val("");
+        }
+        if (data.tanggal_bast != null) {
+          $('[name=tanggal_bast_vale]').val(data.tanggal_bast);
+        } else {
+          $('[name=tanggal_bast_vale]').val("");
+        }
+        if (data.is_invoiced != null) {
+          document.getElementById("invoiced_vale").checked = true;
+          $('#tanggal_invoiced').html(data.is_invoiced);
+        } else {
+          document.getElementById("invoiced_vale").checked = false;
+          $('#tanggal_invoiced').html("");
+        }
+        if (data.is_bayar != null) {
+          document.getElementById("bayar_vale").checked = true;
+          $('#tanggal_bayar').html(data.is_bayar);
+        } else {
+          document.getElementById("bayar_vale").checked = false;
+          $('#tanggal_bayar').html("");
+        }
+        if (data.is_bayarclient != null) {
+          document.getElementById("bayarclient_vale").checked = true;
+          $('#tanggal_bayarclient').html(data.is_bayarclient);
+        } else {
+          document.getElementById("bayarclient_vale").checked = false;
+          $('#tanggal_bayarclient').html("");
+        }
         $('#updateProgress').modal('show');
         $('.modal-title').text('Update Progress ' + "#ADPR" + pad(data.progress_id, 4));
+        reload_table();
       }, error: function(jqXHR, textStatus, errorThrown) {
         alert('Error get data from ajax');
       }

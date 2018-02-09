@@ -40,13 +40,19 @@ class Team extends MY_Controller
       $row[]  = $stfd->genset_mobile_10;
       $row[]  = $stfd->genset_mobile_12;
       $row[]  = '
-                  <a href="'.site_url("delete_team&pid?='.$stfd->staff_id").'">
+                  <!--<a href="'.site_url("delete_team&pid?='.$stfd->staff_id").'">
                     <i class="far fa-edit"></i>
                   </a>
                    /
                   <a href="'.site_url("delete_team&pid?='.$stfd->staff_id").'">
                      <i class="fas fa-trash"></i>
-                  </a>
+                  </a>-->
+                  <button type="button" href="" onclick="edit_staff('."'".$stfd->staff_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editStaff">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button type="button" href="" onclick="removeStaff('."'".$stfd->staff_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
+                    <i class="fas fa-trash"></i>
+                  </button>
                 ';
       $data[]  = $row;
     }

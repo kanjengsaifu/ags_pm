@@ -268,6 +268,18 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
+  public function removeStaff($where) {
+    $this->db->where('staff_id', $where);
+    $this->db->delete('staff');
+    return $this->db->affected_rows();
+  }
+
+  public function deleteProgress($where) {
+    $this->db->where('progress_id', $where);
+    $this->db->delete('progress');
+    return $this->db->affected_rows();
+  }
+
   public function removeFromTeam($where) {
     $this->db->set('team_id', "");
     $this->db->where('staff_id', $where);
@@ -275,18 +287,18 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
-  public function removeStaff($where) {
-    $this->db->where('staff_id', $where);
-    $delete = $this->db->delete('staff');
-
-    if ($delete) {
-      $this->session->set_flashdata('notification', "Staff berhasil dihapus!");
-      redirect('/staff');
-    } else {
-      $this->session->set_flashdata('notification', "Staff gagal dihapus!");
-      redirect('/staff');
-    }
-  }
+  // public function removeStaff($where) {
+  //   $this->db->where('staff_id', $where);
+  //   $delete = $this->db->delete('staff');
+  //
+  //   if ($delete) {
+  //     $this->session->set_flashdata('notification', "Staff berhasil dihapus!");
+  //     redirect('/staff');
+  //   } else {
+  //     $this->session->set_flashdata('notification', "Staff gagal dihapus!");
+  //     redirect('/staff');
+  //   }
+  // }
 
   public function getPengajuUser() {
     $this->db->from('users');
@@ -1059,7 +1071,7 @@ class AppModel extends CI_Model
   }
 
   public function updateProgress($where, $data) {
-    $this->db->update('pengajuan', $data, $where);
+    $this->db->update('progress', $data, $where);
     return $this->db->affected_rows();
   }
 
@@ -1107,6 +1119,15 @@ class AppModel extends CI_Model
     $this->db->from($table);
     $this->db->join('project', 'progress.project_id = project.project_id');
     $this->db->join('site', 'progress.site_id = site.site_id');
+
+
+    if ($this->input->post('sudah_selesai') != "N") {
+      $this->db->where('progress.is_bayarclient !=', NULL);
+    }
+
+    if ($this->input->post('belum_selesai') != "N") {
+      $this->db->where('progress.is_bayarclient', NULL);
+    }
 
     $i = 0;
     foreach ($column_search as $item) {

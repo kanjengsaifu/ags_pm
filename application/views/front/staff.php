@@ -5,10 +5,7 @@
 							<div class="col-md-12">
                 <div class="peer">
                   <button type="button" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createStaff">
-                    Add New Staff
-                  </button>
-									<button type="button" class="btn cur-p btn-outline-primary" onclick="reload_table()">
-                    Reload Data
+                    <i class="fas fa-plus"></i> &nbsp;Add New Staff
                   </button>
                   <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createStaff" role="dialog" tabindex="-1">
                 		<div class="modal-dialog modal-lg" role="document">
@@ -68,14 +65,17 @@
 									</div>
 								<?php endif; ?>
 								<div class="bgc-white bd bdrs-3 p-20 mB-20">
-									<h4 class="c-grey-900 mB-20">Staff</h4>
+									<button type="button" class="btn cur-p btn-outline-primary" style="" onclick="reload_table()">
+										<i class="fas fa-sync-alt"></i>
+                  </button>
+									<hr>
 									<table cellspacing="0" class="table table-bordered" id="staff" width="100%">
 										<thead>
 											<tr>
-												<th>No</th>
+												<th width="30">No</th>
 												<th>Full Name</th>
 												<th>Position</th>
-												<th style="white-space:nowrap;" width="350">Action</th>
+												<th style="white-space:nowrap;" width="250">Action</th>
 											</tr>
 										</thead>
 									</table>
@@ -271,6 +271,10 @@
 					            "targets": [ -1 ],
 					            "orderable": false
 					        },
+									{
+										"class": "dt-center",
+										"targets": [3]
+									}
 				        ],
 				    });
 				});
@@ -441,7 +445,7 @@
 							$('[id=dob]').html(data.dob);
 							$('[id=kybd]').html(data.keluarga_yg_bisa_dihub);
 							$('[id=telp_kybd]').html(data.telp_keluarga_yg_bisa_dihub);
-							if (data.team_id != "") {
+							if (data.team_id != null) {
 								$('[id=team_pos]').html("#ADT" + pad(data.team_id, 3));
 							} else {
 								$('[id=team_pos]').html("-");
@@ -465,6 +469,35 @@
 						}, error: function(jqXHR, textStatus, errorThrown) {
 							alert('Error get data from ajax');
 						}
+					});
+				}
+
+				function removeStaff(id) {
+					swal({
+					  title: "Are you sure?",
+					  text: "You will not be able to recover this staff data!",
+					  type: "warning",
+					  showCancelButton: true,
+					  confirmButtonClass: "btn-danger",
+					  confirmButtonText: "Yes, delete it!",
+					  cancelButtonText: "No, cancel pls!",
+					  closeOnConfirm: false,
+					  closeOnCancel: false
+					},
+					function(isConfirm) {
+					  if (isConfirm) {
+							$.ajax({
+								url: "<?=site_url('staff/removeStaff/')?>" + id,
+								type: "POST",
+								data: {id: id},
+								success: function(data) {
+									swal("Deleted!", "Staff berhasil dihapus.", "success");
+									reload_table();
+								}
+							});
+					  } else {
+					    swal("Cancelled", "Staff batal dihapus", "error");
+					  }
 					});
 				}
 

@@ -89,8 +89,11 @@
 									</div>
 								<?php endif; ?>
 								<div class="bgc-white bd bdrs-3 p-20 mB-20">
-									<h4 class="c-grey-900 mB-20">Team</h4>
-									<table cellspacing="0" class="table table-striped table-bordered" id="team_table" width="100%">
+									<button type="button" class="btn cur-p btn-outline-primary" style="" onclick="reload_table()">
+										<i class="fas fa-sync-alt"></i>
+                  </button>
+									<hr>
+									<table cellspacing="0" class="table table-striped table-bordered" id="team" width="100%">
 										<thead>
                       <tr>
                         <th style="border:#fff"></th>
@@ -101,7 +104,7 @@
                         <th style="border:#fff"></th>
                       </tr>
 											<tr>
-												<th class="text-center">NO</th>
+												<th class="text-center" width="30">NO</th>
                         <th class="text-center">TEAM ID</th>
 												<th class="text-center">Total<br>Genset</th>
                         <th class="text-center">Genset<br>7,5 KVA</th>
@@ -110,8 +113,8 @@
                         <!-- <th class="text-center">Genset<br>7,5 KVA</th>
                         <th class="text-center">Genset<br>10 KVA</th>
 												<th class="text-center">Genset<br>12 KVA</th> -->
-												<?php if (isAdministrator()): ?>
-                          <th class="text-center">MODIFY</th>
+												<?php if (isAdministrator() || isApproval()): ?>
+                          <th class="text-center" width="80">MODIFY</th>
                         <?php endif; ?>
 											</tr>
 										</thead>
@@ -140,4 +143,32 @@
 						placeholder: "Pilih Kendaraan"
 					});
 				});
+
+				var team;
+
+				$(document).ready(function() {
+				    team = $('#team').DataTable({
+				        "processing": true,
+				        "serverSide": true,
+				        "order": [],
+								"ajax": {
+				            "url": "<?php echo site_url('team/data')?>",
+				            "type": "POST"
+				        },
+								"columnDefs": [
+						      {
+						          "targets": [ -1 ],
+						          "orderable": false
+						      },
+									{
+										"class": "dt-center",
+										"targets": [1, 2, 3, 4, 5, 6]
+									}
+				        ],
+				    });
+				});
+
+				function reload_table() {
+					team.ajax.reload(null, false);
+				}
 			</script>

@@ -58,7 +58,7 @@ class Staff extends MY_Controller
       $row[]  = $stfd->nama;
       $row[]  = $stfd->posisi;
       $row[]  = ' <button type="button" href="" onclick="viewStaffDetail('."'".$stfd->staff_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailStaff">
-                    DETAIL
+                    <i class="fas fa-search"></i>
                   </button>
                   '.
                     ($stfd->team_id != "" ?
@@ -72,11 +72,15 @@ class Staff extends MY_Controller
                     )
                   .'
                   <button type="button" href="" onclick="edit_staff('."'".$stfd->staff_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editStaff">
-                    EDIT
+                    <i class="fas fa-edit"></i>
                   </button>
-                  <a href="'.site_url('staff/removeStaff/'.$stfd->staff_id).'" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
-                    DELETE
-                  </a>';
+                  <button type="button" href="" onclick="removeStaff('."'".$stfd->staff_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <!--<a href="'.site_url('staff/removeStaff/'.$stfd->staff_id).'" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
+                    <i class="fas fa-trash"></i>
+                  </a>-->
+                  ';
       $data[]  = $row;
     }
 
@@ -129,7 +133,9 @@ class Staff extends MY_Controller
   }
 
   public function removeStaff() {
-    $id = $this->uri->segment(3);
-    $remove_staff = $this->appModel->removeStaff($id);
+    // $id = $this->uri->segment(3);
+    // $remove_staff = $this->appModel->removeStaff($id);
+    $delete_staff = $this->appModel->removeStaff($this->input->post('id'));
+    echo json_encode(array("status" => TRUE));
   }
 }
