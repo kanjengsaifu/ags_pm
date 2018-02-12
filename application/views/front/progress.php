@@ -283,6 +283,43 @@
                           <td><span id="sudah_invoice_val"></span></td>
                         </tr>
 
+                        <tr id="bukti_src_div">
+                          <th width="250">Bukti</th>
+                          <td>
+                            <div class="" id="bukti">
+
+                              <div id="bukti_dokumen"></div>
+
+                              <div class="" id="mult_img_row1">
+                              </div>
+
+                              <div id="myModal" style="height:100%" class="modal" data-backdrop="static" data-keyboard="false">
+                                <span class="close cursor" onclick="closeModal()">&times;</span>
+                                <div class="modal-content">
+
+                                  <div class="" id="mult_img_row2">
+                                  </div>
+
+                                  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                                  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+                                  <div class="caption-container">
+                                    <p id="caption"></p>
+                                  </div>
+
+
+                                  <div class="" id="mult_img_row3">
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button class="btn btn-secondary" onclick="closeModal()" type="button">Close</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- <button type="button" name="button" class="btn btn-outline-primary" id="print_bukti">PRINT BUKTI</button> -->
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -373,6 +410,36 @@
               </div>
             </div>
             <!-- END OF UPDATE PROGRESS -->
+            <!-- EVIDENCE PROGRESS -->
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="uploadBuktiProgress" role="dialog" tabindex="-1">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="" id="form_updatep" action="<?=site_url('progress/saveEvidence')?>" method="post"  enctype="multipart/form-data">
+                      <input type="hidden" name="idp" value="">
+                      <div class="form-group">
+                         <label for="">Bukti (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label> <i>*optional</i>
+                         <!-- <div class="input-files">
+                          <input type="file" name="file_upload-1">
+                         </div>
+                         <a id="add_more"><i class="fas fa-plus"></i> Add More</a> -->
+                         <div class="file-loading">
+                           <input id="input-ke-1" name="bukti[]" type="file" multiple>
+                         </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <input type="submit" name="" value="Upload Evidence" class="btn btn-outline-primary">
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END OF EVIDENCE PROGRESS -->
           </div>
           <?php if (isNotification()): ?>
             <div class="alert alert-success alert-dismissable">
@@ -414,7 +481,16 @@
     </div>
   </div>
 </main>
-<script type="text/javascript">
+<script>
+
+  $("#input-ke-1").fileinput({
+    theme: "explorer",
+    minFileCount: 0,
+    showUpload: false,
+    showCancel: false,
+    overwriteInitial: true
+  });
+
   $(document).ready(function() {
       progress = $('#progress').DataTable({
           "processing": true,
@@ -674,6 +750,68 @@
         } else {
           $('[id=keterangan_val]').html("-");
         }
+
+        $.ajax({
+          url: "<?=site_url('progress/getEvidenceProgressbyIDDokumen')?>/" + data.progress_id,
+          type: "GET",
+          dataType: "json",
+          success: function(evi) {
+            var img = '';
+            var row4 = '';
+            var angka = 1;
+            for (var i = 0; i < evi[0][0].length; i++) {
+              // console.log(evi[0][i].url)
+              if (evi[0][0][i] != null) {
+                row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
+              }
+              angka++;
+            }
+
+            $('#bukti_dokumen').html(row4);
+          }, error: function(jqXHR, textStatus, errorThrown) {
+            var err = eval("(" + jqXHR.responseText + ")");
+            alert(err.Message);
+          }
+        });
+
+        $.ajax({
+          url: "<?=site_url('progress/getEvidenceProgressbyID')?>/" + data.progress_id,
+          type: "GET",
+          dataType: "json",
+          success: function(evi) {
+            var img = '';
+            var row1 = '';
+            var row2 = '';
+            var row3 = '';
+            var angka = 1;
+              for (var i = 0; i < evi[0][0].length; i++) {
+                // console.log(evi[0][i].url)
+                if (evi[0][0][i] != null) {
+
+                  row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
+                    '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
+                  '</div>';
+
+                  row2+='<div class="mySlides">'+
+                      '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
+                    '</div>';
+
+                  row3+='<div class="column">'+
+                      '<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+                    '</div>';
+                }
+                angka++;
+              }
+
+            $('#mult_img_row1').html(row1);
+            $('#mult_img_row2').html(row2);
+            $('#mult_img_row3').html(row3);
+          }, error: function(jqXHR, textStatus, errorThrown) {
+            var err = eval("(" + jqXHR.responseText + ")");
+            alert(err.Message);
+          }
+        });
+
         $('.modal-title').text('Progress ' + "#ADPR" + pad(data.progress_id, 4));
       }, error: function(jqXHR, textStatus, errorThrown) {
         alert('Error get data from ajax');
@@ -710,6 +848,34 @@
     });
   }
 
+  function saveEvidence() {
+    $('#btnUpdate').text('Uploading...');
+    $('#btnUpdate').attr('disabled', true);
+    var url;
+
+    url = "<?=site_url('progress/saveEvidence')?>";
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: $('#form_updatep').serialize(),
+      success: function(data) {
+        if (data.status = 'tru') {
+          $('.modal').removeClass('show');
+          $('.modal').removeClass('in');
+          $('.modal').attr("aria-hidden","true");
+          $('.modal-backdrop').remove();
+          $('body').removeClass('modal-open');
+          $('#alert').modal('show');
+          swal("Success!", "Evidence berhasil diupload!", "success");
+          reload_table();
+        }
+        $('#btnUpdate').text('Upload Evidence');
+        $('#btnUpdate').attr('disabled', false);
+      }
+    });
+  }
+
   function update() {
     $('#btnUpdate').text('Updating...');
     $('#btnUpdate').attr('disabled', true);
@@ -734,6 +900,22 @@
         }
         $('#btnUpdate').text('Update');
         $('#btnUpdate').attr('disabled', false);
+      }
+    });
+  }
+
+  function pad(num, places) {
+    var zero = places - num.toString().length + 1;
+    return Array(+(zero > 0 && zero)).join("0") + num;
+  }
+
+  function uploadBuktiProgress(id) {
+    $.ajax({
+      url: "<?=site_url('progress/getProgressDetail/')?>/" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        $('[name=idp]').val(data.progress_id);
       }
     });
   }
@@ -838,5 +1020,43 @@
         alert('Error get data from ajax');
       }
     });
+  }
+</script>
+<script>
+  function openModal() {
+    document.getElementById('myModal').style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById('myModal').style.display = "none";
+  }
+
+  var slideIndex = 1;
+  showSlides(slideIndex);
+
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("demo");
+    var captionText = document.getElementById("caption");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";
+    dots[slideIndex-1].className += " active";
+    captionText.innerHTML = dots[slideIndex-1].alt;
   }
 </script>

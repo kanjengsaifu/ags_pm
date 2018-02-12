@@ -133,14 +133,14 @@ class Progress extends MY_Controller
 
   public function update() {
     $data = array(
-      'tanggal_corr'      => $this->input->post('tanggal_corr_vale'),
+      'tanggal_corr'      => ($this->input->post('tanggal_corr_vale') != null ? $this->input->post('tanggal_corr_vale') : NULL),
       'no_corr'           => $this->input->post('no_corr_vale'),
-      'tanggal_po'        => $this->input->post('tanggal_po_vale'),
+      'tanggal_po'        => ($this->input->post('tanggal_po_vale') != null ? $this->input->post('tanggal_po_vale') : NULL),
       'no_po'             => $this->input->post('no_po_vale'),
-      'tanggal_kontrak'   => $this->input->post('tanggal_kontrak_vale'),
-      'tanggal_bapp'      => $this->input->post('tanggal_bapp_vale'),
+      'tanggal_kontrak'   => ($this->input->post('tanggal_kontrak_vale') != null ? $this->input->post('tanggal_kontrak_vale') : NULL),
+      'tanggal_bapp'      => ($this->input->post('tanggal_bapp_vale') != null ? $this->input->post('tanggal_bapp_vale') : NULL),
       'no_bapp'           => $this->input->post('no_bapp_vale'),
-      'tanggal_bast'      => $this->input->post('tanggal_bast_vale'),
+      'tanggal_bast'      => ($this->input->post('tanggal_bast_vale') != null ? $this->input->post('tanggal_bast_vale') : NULL),
       'no_bast'           => $this->input->post('no_bast_vale'),
       'deskripsi'         => $this->input->post('deskripsi_vale'),
       'is_invoiced'       => ($this->input->post('invoiced_vale') != null ? $this->input->post('invoiced_vale') : NULL),
@@ -154,5 +154,56 @@ class Progress extends MY_Controller
   public function deleteProgress() {
     $delete_staff = $this->appModel->deleteProgress($this->input->post('id'));
     echo json_encode(array("status" => TRUE));
+  }
+
+  public function saveEvidence() {
+    if ($_FILES['bukti']['name']['0'] != "") {
+      $filesCount = count($_FILES['bukti']['name']);
+
+      for ($i=0; $i < $filesCount; $i++) {
+        unset($config);
+        $config = array();
+        $config['upload_path']    = './public/assets/evidence/';
+        $config['allowed_types']  = 'jpg|jpeg|png|pdf|xlsx|xls|doc|docx';
+        $config['overwrite']      = FALSE;
+        $config['file_name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
+
+        $_FILES['f']['name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
+        $_FILES['f']['type']      = $_FILES['bukti']['type'][$i];
+        $_FILES['f']['tmp_name']  = $_FILES['bukti']['tmp_name'][$i];
+        $_FILES['f']['error']     = $_FILES['bukti']['error'][$i];
+        $_FILES['f']['size']      = $_FILES['bukti']['size'][$i];
+        // $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload('f')) {
+          echo $this->upload->display_errors();
+        } else {
+          $data = $this->upload->data();
+          $data_evidence = array(
+            'progress_id'     => $this->input->post('idp'),
+            'url'             => $config['file_name'],
+            'keterangan'      => '',
+            'extension'       => pathinfo($config['file_name'], PATHINFO_EXTENSION),
+            'uploaded_at'     => date('Y-m-d', time()),
+            'uploaded_by'     => $this->session->userdata('useractive_id')
+          );
+          $this->appModel->evidenceProgressSave($data_evidence);
+        }
+      }
+
+      // echo "sukses";
+    }
+  }
+
+  public function getEvidenceProgressbyID($id) {
+    $data = $this->appModel->getEvidenceProgressbyID($id);
+    echo json_encode(array($data));
+  }
+
+  public function getEvidenceProgressbyIDDokumen($id) {
+    $data = $this->appModel->getEvidenceProgressbyIDDokumen($id);
+    echo json_encode(array($data));
   }
 }

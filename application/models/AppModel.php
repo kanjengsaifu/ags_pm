@@ -333,6 +333,18 @@ class AppModel extends CI_Model
     $insert = $this->db->insert_id();
   }
 
+  public function evidenceProgressSave($data) {
+    $this->db->insert('evidence_progress', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Evidence berhasil diupload!");
+      redirect('/progress');
+    } else {
+      $this->session->set_flashdata('notification', "Evidence gagal diupload!");
+      redirect('/progress');
+    }
+  }
+
   public function siteSave($data) {
     $this->db->insert('site', $data);
     $insert = $this->db->insert_id();
@@ -546,6 +558,22 @@ class AppModel extends CI_Model
       $arr[] = $queryvi->row();
     }
     return $arr;
+  }
+
+  public function getEvidenceProgressbyID($id) {
+    $this->db->from('evidence_progress');
+    $this->db->where('progress_id', $id);
+    $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $evidence_q[] = $this->db->get()->result();
+    return $evidence_q;
+  }
+
+  public function getEvidenceProgressbyIDDokumen($id) {
+    $this->db->from('evidence_progress');
+    $this->db->where('progress_id', $id);
+    $this->db->where_not_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $evidence_q[] = $this->db->get()->result();
+    return $evidence_q;
   }
 
   public function getEvidencebyIDDokumen($id) {

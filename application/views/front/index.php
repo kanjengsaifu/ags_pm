@@ -195,12 +195,13 @@
 										<h4 class="c-grey-900 mB-20">Custom Filter : </h4>
 					                <form id="form-filter" class="form-horizontal">
 
-															<input type="hidden" name="belum_diapprove_val" id="belum_diapprove_val" value="N">
 															<input type="hidden" name="belum_diprint_val" id="belum_diprint_val" value="N">
 															<input type="hidden" name="on_progress_val" id="on_progress_val" value="N">
-															<input type="hidden" name="semua_pengajuan_val" id="semua_pengajuan_val" value="N">
+															<input type="hidden" name="semua_pengajuan_val" id="semua_pengajuan_val" value="Y">
 															<input type="hidden" name="history_val" id="history_val" value="N">
 															<input type="hidden" name="progress_project_val" id="progress_project_val" value="N">
+															<input type="hidden" name="belum_diapprove_val" id="belum_diapprove_val" value="N">
+															<input type="hidden" name="sudah_diapprove_val" id="sudah_diapprove_val" value="N">
 
 					                    <div class="form-group">
 					                        <label for="FirstName" class="col-sm-2 control-label">Pengajuan</label>
@@ -301,38 +302,37 @@
 										</div>
 									<?php endif; ?>
 									<div class="bgc-white bd bdrs-3 p-20 mB-20">
-
-										<?php if (isApproval()): ?>
-											<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
-		                    BELUM DIAPPROVE
-		                  </button>
-										<?php endif; ?>
-										<?php if (isAdminJakarta()): ?>
-											<button type="button" class="btn cur-p btn-success" id="belum_diprint">
-		                    BELUM DIPRINT
-		                  </button>
-											<button type="button" class="btn cur-p btn-secondary" id="on_progress">
-		                    ON PROGRESS
-		                  </button>
-											<!-- <button type="button" class="btn cur-p btn-success" id="progress_project_btn">
-		                    PROGRESS PROJECT
-		                  </button> -->
-											<button type="button" class="btn cur-p btn-success" id="history_btn">
-												HISTORY
-											</button>
-										<?php endif; ?>
 										<button type="button" class="btn cur-p btn-outline-primary" onclick="reload_table()">
-	                    Reload Data
+	                    <i class="fas fa-sync-alt"></i>
 	                  </button>
-										<?php if (isApproval()): ?>
-											<br><br>
-											<button type="button" class="btn cur-p btn-success" onclick="approveTerpilih()">
-		                    APPROVE YANG TERPILIH
-		                  </button>
-											<button type="button" class="btn cur-p btn-success" onclick="approveSemuaPengajuan()">
-		                    APPROVE SEMUA PENGAJUAN
-		                  </button>
-										<?php endif; ?>
+										<button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
+											SEMUA PENGAJUAN
+										</button>
+										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
+	                    BELUM DIAPPROVE
+	                  </button>
+										<button type="button" class="btn cur-p btn-success" id="sudah_diapprove">
+	                    SUDAH DIAPPROVE
+	                  </button>
+										<button type="button" class="btn cur-p btn-success" id="belum_diprint">
+											BELUM DIPRINT
+										</button>
+										<button type="button" class="btn cur-p btn-secondary" id="on_progress">
+											ON PROGRESS
+										</button>
+										<button type="button" class="btn cur-p btn-success" id="history_btn">
+											HISTORY
+										</button>
+										<div class="" style="float:right">
+											<button type="button" class="btn cur-p btn-outline-default" name="button">
+												<a class="" href="#" target="_blank" id="exportExcel" style="text-decoration:none;color:inherit;">
+													<i class="fas fa-file-excel"></i>
+												</a>
+											</button>
+											<button type="button" class="btn cur-p btn-outline-default" id="export_print" onclick="exportPrint()">
+												<i class="fas fa-print"></i>
+											</button>
+										</div>
 										<br>
 										<?php if (isAdminJakarta()): ?>
 											<br>
@@ -391,6 +391,7 @@
 											data.progress_project = $('#progress_project_val').val();
 											data.semua_pengajuan = $('#semua_pengajuan_val').val();
 											data.belum_diapprove = $('#belum_diapprove_val').val();
+											data.sudah_diapprove = $('#sudah_diapprove_val').val();
 
 											data.is_printed = $('#hold').val();
 											data.pengajuan = $('#pengajuan_filter').val();
@@ -422,16 +423,91 @@
 										"orderable": false
 									}, {
 										"className"	: "dt-center",
-										"targets"		: [2, 4, 5, 6, 7, 8]
+										"targets"		: [2, 3, 4, 5, 6, 7, 8]
 									}
 								],
 						});
+
+						$('#on_progress').click(function() {
+							$('#menampilkan').text("Pengajuan yang Terhold");
+							$("input[type=hidden]").val("N");
+							document.getElementById("on_progress_val").value = "Y";
+							$('#print').show();
+							$('#print_c').show();
+							$('#acc').show();
+							submission_admin.ajax.reload();  //just reload table
+						});
+
+						$('#semua_pengajuan').click(function() {
+							$('#print').hide();
+							$('#menampilkan').text("Semua Pengajuan <?php if(isApproval()) { echo "Anda"; } ?>");
+							document.getElementById("belum_diprint_val").value = "N";
+							document.getElementById("history_val").value = "N";
+							document.getElementById("on_progress_val").value = "N";
+							document.getElementById("progress_project_val").value = "N";
+							document.getElementById("belum_diapprove_val").value = "N";
+							document.getElementById("sudah_diapprove_val").value = "N";
+							document.getElementById("semua_pengajuan_val").value = "Y";
+							submission_admin.ajax.reload();  //just reload table
+							$('#print_c').hide();
+							$('#acc').hide();
+						});
+
+						$('#belum_diprint').click(function() {
+							$('#menampilkan').text("Pengajuan yang Belum Diprint");
+							$("input[type=hidden]").val("N");
+							document.getElementById("belum_diprint_val").value = "Y";
+							$('#print').show();
+							$('#print_c').hide();
+							$('#acc').hide();
+							submission_admin.ajax.reload();  //just reload table
+						});
+
+						$('#belum_diapprove').click(function() {
+							$('#menampilkan').text("Pengajuan yang Belum diApprove");
+							$("input[type=hidden]").val("N");
+							document.getElementById("belum_diapprove_val").value = "Y";
+							$('#approve_terpilih').show();
+							submission_admin.ajax.reload();  //just reload table
+						});
+
+						$('#sudah_diapprove').click(function() {
+							$('#menampilkan').text("Pengajuan yang Sudah diApprove");
+							$("input[type=hidden]").val("N");
+							document.getElementById("sudah_diapprove_val").value = "Y";
+							$('#approve_terpilih').hide();
+							submission_admin.ajax.reload();  //just reload table
+						});
+
+						$('#history_btn').click(function() {
+							$('#menampilkan').text("History Pengajuan");
+							$("input[type=hidden]").val("N");
+							document.getElementById("history_val").value = "Y";
+							$('#print').hide();
+							$('#print_c').hide();
+							$('#acc').hide();
+							submission_admin.ajax.reload();  //just reload table
+						});
+
+						$('#progress_project_btn').click(function() {
+							$('.stat').hide();
+							$('#invoiced_stat').show();
+							$('#bayar_stat').show();
+							$('#client_stat').show();
+							$('#print_c').hide();
+							$('#acc').hide();
+
+							$("input[type=hidden]").val("N");
+							document.getElementById("progress_project_val").value = "Y";
+							$('#print').hide();
+							submission_admin.ajax.reload();  //just reload table
+						})
 
 						// $(document).ready(function() {
 						// 	if (!isAdminTasik()) {
 						// 		document.getElementById("belum_diprint_val").value = "Y";
 						// 	}
-						// 	submission.ajax.reload();  //just reload table
+						// 	submission_admin.ajax.reload();  //just reload table
 						// });
 
 						$('#btn-filter').click(function() { //button filter event click
@@ -496,6 +572,74 @@
 						}
 					});
 				});
+
+				$(document).ready(function() {
+					$('#exportExcel').click(function() {
+						var on_progress = document.getElementById('on_progress_val').value;
+						var belum_diprint = document.getElementById('belum_diprint_val').value;
+						var history = document.getElementById('history_val').value;
+						var progress_project = document.getElementById('progress_project_val').value;
+						var semua_pengajuan = document.getElementById('semua_pengajuan_val').value;
+						var belum_diapprove = document.getElementById('belum_diapprove_val').value;
+						var sudah_diapprove = document.getElementById('sudah_diapprove_val').value;
+						var pengajuan = document.getElementById('pengajuan_filter').value;
+						var kategori_pengajuan = document.getElementById('kategori_pengajuan_filter').value;
+						var jenis_pengajuan = document.getElementById('jenis_pengajuan_filter').value;
+						var tanggal_pengajuan = document.getElementById('tanggal_pengajuan_filter').value;
+						var tanggal_pengajuan_first = document.getElementById('tanggal_pengajuan_first_filter').value;
+						var tanggal_pengajuan_last = document.getElementById('tanggal_pengajuan_last_filter').value;
+						var realisasi_pengajuan = document.getElementById('realisasi_pengajuan_filter').value;
+						var realisasi_pengajuan_first = document.getElementById('realisasi_pengajuan_first_filter').value;
+						var realisasi_pengajuan_last = document.getElementById('realisasi_pengajuan_last_filter').value;
+						var nama_pengaju = document.getElementById('nama_pengaju_filter').value;
+
+						var field = {
+							on_progress: on_progress,
+							belum_diprint: belum_diprint,
+							history: history,
+							progress_project: progress_project,
+							semua_pengajuan: semua_pengajuan,
+							belum_diapprove: belum_diapprove,
+							sudah_diapprove: sudah_diapprove
+						};
+
+						$.ajax({
+							url: "<?=site_url('admin/exportExcel')?>",
+							type: "POST",
+							data: field,
+							dataType: "json",
+							beforeSend: function() {
+								window.open("<?=site_url('admin/exportExcel')?>
+										?on_progress="+on_progress+
+										"&belum_diprint="+belum_diprint+
+										"&history="+history+
+										"&progress_project="+progress_project+
+										"&semua_pengajuan="+semua_pengajuan+
+										"&belum_diapprove="+belum_diapprove+
+										"&sudah_diapprove="+sudah_diapprove+
+										"&pengajuan="+pengajuan+
+										"&kategori_pengajuan="+kategori_pengajuan+
+										"&jenis_pengajuan="+jenis_pengajuan+
+										"&tanggal_pengajuan="+tanggal_pengajuan+
+										"&tanggal_pengajuan_first="+tanggal_pengajuan_first+
+										"&tanggal_pengajuan_last="+tanggal_pengajuan_last+
+										"&realisasi_pengajuan="+realisasi_pengajuan+
+										"&realisasi_pengajuan_first="+realisasi_pengajuan_first+
+										"&realisasi_pengajuan_last="+realisasi_pengajuan_last+
+										"&nama_pengaju="+nama_pengaju
+										,'_blank');
+							},
+							success: function(result) {
+
+							}
+						});
+						return false;
+					});
+				});
+
+				function exportPrint() {
+
+				}
 
 				function monthDiff(d1, d2) {
 					var months;
