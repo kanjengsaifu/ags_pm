@@ -376,7 +376,31 @@
                 		</div>
                 	</div>
 									<!-- END OF PENGAJUAN DETAIL -->
-
+									<!-- CAPTURE EVIDENCE -->
+									<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="captureEvidence" role="dialog" tabindex="-1">
+                		<div class="modal-dialog modal-lg" role="document" id="modalDetail">
+                			<div class="modal-content">
+                				<div class="modal-header">
+                					<h5 class="modal-title" id="exampleModalLabel">Capture Evidence</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                				</div>
+                				<div class="modal-body">
+													<div class="text-center">
+														<div id="my_camera" style="margin: 0 auto;"></div>
+														<br>
+														<div class="">
+															<input class="btn btn-outline-primary" type=button value="Take Snapshot" onClick="take_snapshot()">
+															<input class="btn btn-outline-primary" type=button value="Upload Evidence" onClick="saveSnap()">
+														</div>
+														<div id="results"></div>
+													</div>
+                				</div>
+                				<div class="modal-footer">
+                					<button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                				</div>
+                			</div>
+                		</div>
+                	</div>
+									<!-- END OF CAPTURE EVIDENCE -->
 									<!-- UPDATE PROGRESS -->
 									<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="updateProgress" role="dialog" tabindex="-1">
                 		<div class="modal-dialog modal-lg" role="document" id="modalDetail">
@@ -1008,7 +1032,6 @@
 							$('#project_id_div').show();
 							$('#jenis_nilai_div').show();
 							$('#start_penawaran_dmt_div').show();
-							$('#no_spk_div').show();
 							$('#site_id_div').show();
 
 							$('#jenis_pengajuan option[value="Project"]').show();
@@ -1060,6 +1083,7 @@
 							$('#no_sph_div').show();
 							$('#no_po_div').hide();
 							$('#no_corr_div').hide();
+							$('#no_spk_div').hide();
 
 							$('[name=nilai_sph]').val("");
 							$('[name=nilai_po]').val("");
@@ -1070,10 +1094,11 @@
 						} else if ($(this).val() === 'jenis_po') {
 							$('#nilai_sph_div').hide();
 							$('#nilai_po_div').show();
-							$('#nilai_corr_div').hide();
+							$('#nilai_corr_div').show();
 							$('#no_sph_div').hide();
 							$('#no_po_div').show();
-							$('#no_corr_div').hide();
+							$('#no_corr_div').show();
+							$('#no_spk_div').show();
 
 							$('[name=nilai_sph]').val("");
 							$('[name=nilai_po]').val("");
@@ -1088,6 +1113,7 @@
 							$('#no_sph_div').hide();
 							$('#no_po_div').hide();
 							$('#no_corr_div').show();
+							$('#no_spk_div').show();
 
 							$('[name=nilai_sph]').val("");
 							$('[name=nilai_po]').val("");
@@ -1767,4 +1793,7 @@
 				  dots[slideIndex-1].className += " active";
 				  captionText.innerHTML = dots[slideIndex-1].alt;
 				}
+
+
+
 			</script>

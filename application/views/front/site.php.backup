@@ -1,0 +1,167 @@
+			<main class="main-content bgc-grey-100">
+				<div id="mainContent">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+                <div class="peer">
+                  <button type="button" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
+                    Tambah Site
+                  </button>
+                  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" role="dialog" tabindex="-1">
+                		<div class="modal-dialog modal-lg" role="document">
+                			<div class="modal-content">
+                				<div class="modal-header">
+                					<h5 class="modal-title" id="exampleModalLabel">New Site</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                				</div>
+                				<div class="modal-body">
+                					<form class="" action="<?=site_url('site/save')?>" method="post">
+														<div class="form-group">
+															<label for="">Site ID</label>
+															<input type="text" class="form-control" name="id_site" value="" placeholder="Site ID">
+														</div>
+                            <div class="form-group">
+															<label for="">ID Telkom</label><i>*optional</i>
+															<input type="text" class="form-control" name="id_site_telkom" value="" placeholder="ID Telkom">
+														</div>
+                            <div class="form-group">
+															<label for="">Nama Site</label>
+															<input type="text" class="form-control" name="nama_site" value="" placeholder="Nama Site">
+														</div>
+                            <div class="form-group">
+															<label for="">Lokasi</label>
+															<input type="text" class="form-control" name="lokasi" value="" placeholder="Lokasi Site">
+														</div>
+                            <div class="form-group">
+															<label for="">Keterangan</label>
+															<textarea name="keterangan" rows="8" cols="80" placeholder="Keterangan Site" class="form-control"></textarea>
+														</div>
+                				</div>
+                				<div class="modal-footer">
+                					<button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button> <input type="submit" name="" value="Save" class="btn btn-primary">
+                				</div>
+												</form>
+                			</div>
+                		</div>
+                	</div>
+                </div>
+                <br>
+								<?php if (isNotification()): ?>
+									<div class="alert alert-success alert-dismissable">
+									  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+									  <strong>Success!</strong> <?=notificationMessage()?>
+									</div>
+								<?php endif; ?>
+								<div class="bgc-white bd bdrs-3 p-20 mB-20">
+									<button type="button" class="btn cur-p btn-outline-primary" style="" onclick="reload_table()">
+										<i class="fas fa-sync-alt"></i>
+                  </button>
+									<hr>
+									<table cellspacing="0" class="table table-striped table-bordered" id="site" width="100%">
+										<thead>
+											<tr>
+												<th class="text-center" width="30">NO</th>
+                        <th class="text-center">SITE ID</th>
+												<th class="text-center">Nama Site</th>
+                        <th class="text-center">Lokasi</th>
+                        <th class="text-center">Keterangan</th>
+												<?php if (isAdministrator() || isApproval()): ?>
+                          <th class="text-center" width="80">Action</th>
+                        <?php endif; ?>
+											</tr>
+										</thead>
+									</table>
+                  <!-- EDIT SITE -->
+                  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editSite" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Edit Site</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="" id="form_update" action="#">
+                            <input type="hidden" name="id" value="">
+                            <div class="form-group">
+                              <label for="inputAddress2">Site ID</label>
+                              <input type="text" class="form-control" name="id_site_e" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Site ID Telkom</label>
+                              <input type="text" class="form-control" name="id_site_telkom_e" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Nama Site</label>
+                              <input type="text" class="form-control" name="nama_site_e" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Lokasi Site</label>
+                              <input type="text" class="form-control" name="lokasi_e" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Keterangan Site</label>
+                              <input type="text" class="form-control" name="keterangan_e" placeholder="Full Name" required>
+                            </div>
+                          </div>
+                          </form>
+                          <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnUpdate" onclick="update()">Update</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- END OF EDIT SITE -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			<script type="text/javascript">
+
+				var site;
+
+				$(document).ready(function() {
+				    site = $('#site').DataTable({
+				        "processing": true,
+				        "serverSide": true,
+				        "order": [],
+								"ajax": {
+				            "url": "<?php echo site_url('site/data')?>",
+				            "type": "POST"
+				        },
+								"columnDefs": [
+						      {
+						          "targets": [ -1 ],
+						          "orderable": false
+						      },
+									{
+										"class": "dt-center",
+										"targets": [1, 2, 3, 4]
+									}
+				        ],
+				    });
+				});
+
+        function edit_site(id) {
+					$.ajax({
+						url: "<?=site_url('site/getSiteEditData/')?>/" + id,
+						type: "GET",
+						dataType: "json",
+						success: function(data) {
+							$('[name=id]').val(data.site_id);
+              $('[name=site_id_e]').val(data.id_site);
+              $('[name=nama_site_e]').val(data.nama_site);
+              $('[name=lokasi_e]').val(data.lokasi);
+              $('[name=keterangan_e]').val(data.keterangan_site);
+							$('#editSite').modal('show');
+							$('.modal-title').text('Update Data Site ' + data.nama);
+						}, error: function(jqXHR, textStatus, errorThrown) {
+							alert('Error get data from ajax');
+						}
+					});
+				}
+
+				function reload_table() {
+					site.ajax.reload(null, false);
+				}
+			</script>

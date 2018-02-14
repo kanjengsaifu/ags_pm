@@ -278,4 +278,48 @@ class AdminModel extends CI_Model
     $objWriter->save('php://output');
     echo "<script>window.close();</script>";
   }
+
+  public function countBlmSelesai() {
+    $this->db->from('progress');
+    $this->db->where('is_bayarclient', NULL);
+    return $this->db->count_all_results();
+  }
+
+  public function countSdhSelesai() {
+    $this->db->from('progress');
+    $this->db->where('is_bayarclient !=', NULL);
+    return $this->db->count_all_results();
+  }
+
+  public function countisbayar() {
+    $this->db->from('progress');
+    $this->db->where('is_invoiced !=', NULL);
+    $this->db->where('is_bayar !=', NULL);
+    $this->db->where('is_bayarclient', NULL);
+    return $this->db->count_all_results();
+  }
+
+  public function countisbayarclient() {
+    $this->db->from('progress');
+    $this->db->where('is_invoiced !=', NULL);
+    $this->db->where('is_bayar !=', NULL);
+    $this->db->where('is_bayarclient !=', NULL);
+    return $this->db->count_all_results();
+  }
+
+  public function countinvoiced() {
+    $this->db->from('progress');
+    $this->db->where('is_invoiced !=', NULL);
+    $this->db->where('is_bayar', NULL);
+    $this->db->where('is_bayarclient', NULL);
+    return $this->db->count_all_results();
+  }
+
+  public function countbelumsemua() {
+    $this->db->from('progress');
+    $this->db->where('is_invoiced=', NULL);
+    $this->db->where('is_bayar', NULL);
+    $this->db->where('is_bayarclient', NULL);
+    return $this->db->count_all_results();
+  }
 }

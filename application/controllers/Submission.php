@@ -275,7 +275,9 @@ class Submission extends MY_Controller
                     (isAdminJakarta() || isAdministrator() ?
                       ($stfd->is_printed == "Y" ?
                         ($stfd->tanggal_approval_keuangan != NULL ?
-                          '' :
+                          '<button onclick="reset_cam('."'".$stfd->pengajuan_id."'".')" type="button" href="" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#captureEvidence">
+                            <i class="fa fa-camera"></i>
+                          </button>' :
                           ($stfd->is_printed == "Y" ?
                             '<button type="button" href="" onclick="'. ($stfd->nama_project != "" ? 'accBos('."'".$stfd->pengajuan_id."'".')' : 'accLangsung('."'".$stfd->pengajuan_id."'".')') .'" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
                               ACC
@@ -428,5 +430,24 @@ class Submission extends MY_Controller
     );
     $this->appModel->updateNilaiPengajuan(array('pengajuan_id' => $id), $data);
     echo json_encode(array("status" => TRUE));
+  }
+
+  public function capture($id) {
+    $filename = 'pic_'.date('YmdHis') . '.jpeg';
+
+    $url = '';
+    if( move_uploaded_file($_FILES['webcam']['tmp_name'], './public/assets/evidence/transaksi/'.$filename) ){
+     $url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/upload/' . $filename;
+    }
+
+    $data = array(
+      'pengajuan_id'    => $id,
+      'url'             => $filename,
+      'keterangan'      => '',
+      'extension'       => pathinfo($filename, PATHINFO_EXTENSION),
+      'uploaded_at'     => date('Y-m-d', time()),
+      'uploaded_by'     => $this->session->userdata('useractive_id')
+    );
+    $this->appModel->uploadEvidenceTransaksi($data);
   }
 }

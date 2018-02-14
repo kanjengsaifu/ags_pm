@@ -4,8 +4,8 @@
 						<div class="row">
 							<div class="col-md-12">
                 <div class="peer">
-                  <button type="button" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createStaff">
-                    <i class="fas fa-plus"></i> &nbsp;Add New Staff
+                  <button type="button" href="" onclick="add_staff()" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createStaff">
+                    <i class="fas fa-plus"></i> &nbsp;Tambah Staff
                   </button>
                   <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createStaff" role="dialog" tabindex="-1">
                 		<div class="modal-dialog modal-lg" role="document">
@@ -145,8 +145,8 @@
 														<input type="hidden" name="id" value="">
 														<div class="form-group">
 															<label for="">Select Team</label>
-															<select style="width:100%;" class="form-control" id="team_id" name="team_id">
-																<option value="" selected>SELECT TEAM</option>
+															<select style="width:100%;" class="form-control selectpicker" id="team_id" name="team_id" data-live-search="true">
+																<option value="" selected disabled readonly>SELECT TEAM</option>
 																<?php foreach ($team_list->result() as $team_data): ?>
 																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?></option>
 																<?php endforeach; ?>
@@ -175,7 +175,7 @@
 														<input type="hidden" name="id" value="">
 														<div class="form-group">
 															<label for="">Select Team</label>
-															<select style="width:100%;" class="form-control" id="team_id" name="team_id">
+															<select style="width:100%;" class="form-control selectpicker" id="team_id" name="team_id" data-live-search="true">
 																<option value="" selected>SELECT TEAM</option>
 																<?php foreach ($team_list->result() as $team_data): ?>
 																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?></option>
@@ -207,35 +207,35 @@
 														<input type="hidden" name="id" value="">
                             <div class="form-group">
                               <label for="inputAddress2">Full Name</label>
-                              <input type="text" class="form-control" name="nama" placeholder="Full Name" required>
+                              <input type="text" class="form-control" name="nama_e" placeholder="Full Name" required>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Telp</label>
-                              <input type="text" class="form-control" name="telp" placeholder="Telp" required>
+                              <input type="text" class="form-control" name="telp_e" placeholder="Telp" required>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Position</label>
-                              <input type="text" class="form-control" name="posisi" placeholder="Position" required>
+                              <input type="text" class="form-control" name="posisi_e" placeholder="Position" required>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Date of Birth</label>
-															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="dob"/>
+															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="dob_e"/>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Address</label>
-                              <textarea class="form-control" name="alamat" rows="8" cols="80" placeholder="Address" required></textarea>
+                              <textarea class="form-control" name="alamat_e" rows="8" cols="80" placeholder="Address" required></textarea>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Additional Information</label>
-                              <input type="text" class="form-control" name="keterangan" placeholder="Additional Information" required>
+                              <input type="text" class="form-control" name="keterangan_e" placeholder="Additional Information" required>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Keluarga yang Bisa Dihubungi</label>
-                              <input type="text" class="form-control" name="keluarga_yg_bisa_dihub" placeholder="Nama Kelurga yang Bisa Dihubungi" required>
+                              <input type="text" class="form-control" name="keluarga_yg_bisa_dihub_e" placeholder="Nama Kelurga yang Bisa Dihubungi" required>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Kontak Keluarga</label>
-                              <input type="text" class="form-control" name="telp_keluarga_yg_bisa_dihub" placeholder="Kontak Keluarga" required>
+                              <input type="text" class="form-control" name="telp_keluarga_yg_bisa_dihub_e" placeholder="Kontak Keluarga" required>
                             </div>
 	                				</div>
 													</form>
@@ -445,7 +445,7 @@
 							$('[id=dob]').html(data.dob);
 							$('[id=kybd]').html(data.keluarga_yg_bisa_dihub);
 							$('[id=telp_kybd]').html(data.telp_keluarga_yg_bisa_dihub);
-							if (data.team_id != null) {
+							if (data.team_id != "") {
 								$('[id=team_pos]').html("#ADT" + pad(data.team_id, 3));
 							} else {
 								$('[id=team_pos]').html("-");
@@ -524,14 +524,14 @@
 						dataType: "json",
 						success: function(data) {
 							$('[name=id]').val(data.staff_id);
-							$('[name=nama]').val(data.nama);
-							$('[name=posisi]').val(data.posisi);
-							$('[name=telp]').val(data.telp);
-							$('[name=alamat]').val(data.alamat);
-							$('[name=keterangan]').val(data.keterangan);
-							$('[name=dob]').val(data.dob);
-							$('[name=keluarga_yg_bisa_dihub]').val(data.keluarga_yg_bisa_dihub);
-							$('[name=telp_keluarga_yg_bisa_dihub]').val(data.telp_keluarga_yg_bisa_dihub);
+							$('[name=nama_e]').val(data.nama);
+							$('[name=posisi_e]').val(data.posisi);
+							$('[name=telp_e]').val(data.telp);
+							$('[name=alamat_e]').val(data.alamat);
+							$('[name=keterangan_e]').val(data.keterangan);
+							$('[name=dob_e]').val(data.dob);
+							$('[name=keluarga_yg_bisa_dihub_e]').val(data.keluarga_yg_bisa_dihub);
+							$('[name=telp_keluarga_yg_bisa_dihub_e]').val(data.telp_keluarga_yg_bisa_dihub);
 							$('#editStaff').modal('show');
 							$('.modal-title').text('Update Data Staff ' + data.nama);
 						}, error: function(jqXHR, textStatus, errorThrown) {

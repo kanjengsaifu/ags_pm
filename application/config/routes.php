@@ -56,8 +56,11 @@ $route['translate_uri_dashes'] = FALSE;
 $route['logout']  = 'app/destroy_session';
 $route['staff']   = 'staff/main';
 $route['team']    = 'team/main';
+$route['site']    = 'site/main';
 $route['submission'] = 'submission/main';
 $route['progress'] = 'progress/main';
+$route['progress/chart'] = 'progress/chart';
+$route['cluster'] = 'cluster/main';
 
 $route['submission/print'] = 'submission/printed';
 $route['submission/re-print'] = 'submission/reprinted';

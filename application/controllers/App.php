@@ -19,6 +19,12 @@ class App extends MY_Controller
       $config['kategori_pengajuan'] = $this->appModel->getEnumKategoriPengajuan();
       $config['getPengajuUser']     = $this->appModel->getPengajuUser();
     }
+    $config['belumSelesai'] = $this->adminModel->countBlmSelesai();
+    $config['sudahSelesai'] = $this->adminModel->countSdhSelesai();
+    $config['isbayar'] = $this->adminModel->countisbayar();
+    $config['isbayarclient'] = $this->adminModel->countisbayarclient();
+    $config['invoiced'] = $this->adminModel->countinvoiced();
+    $config['belumsemua'] = $this->adminModel->countbelumsemua();
     $this->loadPage($page, $config);
   }
 

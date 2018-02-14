@@ -101,14 +101,14 @@ class Staff extends MY_Controller
 
   public function update() {
     $data = array(
-      'telp'                         => $this->input->post('telp'),
-      'nama'                         => $this->input->post('nama'),
-      'posisi'                       => $this->input->post('posisi'),
-      'dob'                          => $this->input->post('dob'),
-      'alamat'                       => $this->input->post('alamat'),
-      'keterangan'                   => $this->input->post('keterangan'),
-      'keluarga_yg_bisa_dihub'       => $this->input->post('keluarga_yg_bisa_dihub'),
-      'telp_keluarga_yg_bisa_dihub'  => $this->input->post('telp_keluarga_yg_bisa_dihub')
+      'telp'                         => $this->input->post('telp_e'),
+      'nama'                         => $this->input->post('nama_e'),
+      'posisi'                       => $this->input->post('posisi_e'),
+      'dob'                          => $this->input->post('dob_e'),
+      'alamat'                       => $this->input->post('alamat_e'),
+      'keterangan'                   => $this->input->post('keterangan_e'),
+      'keluarga_yg_bisa_dihub'       => $this->input->post('keluarga_yg_bisa_dihub_e'),
+      'telp_keluarga_yg_bisa_dihub'  => $this->input->post('telp_keluarga_yg_bisa_dihub_e')
     );
     $insert = $this->appModel->updateStaff(array('staff_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));

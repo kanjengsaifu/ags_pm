@@ -39,34 +39,35 @@ class Progress extends MY_Controller
     }
 
     $data_progress = array(
-      'tanggal_mulai'   => $this->input->post('tanggal_mulai'),
-      'keterangan'      => $this->input->post('keterangan'),
-      'no_corr'         => $this->input->post('no_corr'),
-      'no_po'           => $this->input->post('no_po'),
-      'tanggal_corr'    => $this->input->post('tanggal_corr'),
-      'tanggal_po'      => $this->input->post('tanggal_po'),
-      'tanggal_kontrak' => $this->input->post('tanggal_kontrak'),
-      'deskripsi'       => $this->input->post('deskripsi'),
-      'project_id'      => (
-                            $this->input->post('project_id') == "" ?
-                              ""
-                              :
-                              (
-                                $this->input->post('project_id') == "new_project" ?
-                                $this->appModel->getNewProjectID($this->input->post('nama_project')) :
-                                $this->input->post('project_id')
-                              )
-                            ),
-      'site_id'       => (
-                           $this->input->post('site_id') == "" ?
-                             ""
-                             :
-                             (
-                               $this->input->post('site_id') == "new_site" ?
-                               $this->appModel->getNewSiteID($this->input->post('id_site')) :
-                               $this->input->post('site_id')
-                             )
-                          )
+      'tanggal_mulai'         => ($this->input->post('tanggal_mulai') != "" ? $this->input->post('tanggal_mulai') : NULL),
+      'keterangan'            => ($this->input->post('keterangan') != "" ? $this->input->post('keterangan') : NULL),
+      'no_corr'               => ($this->input->post('no_corr') != "" ? $this->input->post('no_corr') : NULL),
+      'no_po'                 => ($this->input->post('no_po') != "" ? $this->input->post('no_po') : NULL),
+      'tanggal_corr'          => ($this->input->post('tanggal_corr') != "" ? $this->input->post('tanggal_corr') : NULL),
+      'tanggal_po'            => ($this->input->post('tanggal_po') != "" ? $this->input->post('tanggal_po') : NULL),
+      'tanggal_kontrak'       => ($this->input->post('tanggal_kontrak') != "" ? $this->input->post('tanggal_kontrak') : NULL),
+      'tanggal_akhir_kontrak' => ($this->input->post('tanggal_akhir_kontrak') != "" ? $this->input->post('tanggal_akhir_kontrak') : NULL),
+      'deskripsi'             => ($this->input->post('deskripsi') != "" ? $this->input->post('deskripsi') : NULL),
+      'project_id'            => (
+                                  $this->input->post('project_id') == "" ?
+                                    ""
+                                    :
+                                    (
+                                      $this->input->post('project_id') == "new_project" ?
+                                      $this->appModel->getNewProjectID($this->input->post('nama_project')) :
+                                      $this->input->post('project_id')
+                                    )
+                                  ),
+      'site_id'               => (
+                                   $this->input->post('site_id') == "" ?
+                                     ""
+                                     :
+                                     (
+                                       $this->input->post('site_id') == "new_site" ?
+                                       $this->appModel->getNewSiteID($this->input->post('id_site')) :
+                                       $this->input->post('site_id')
+                                     )
+                                  )
     );
     $this->appModel->addProgress($data_progress);
   }
@@ -205,5 +206,17 @@ class Progress extends MY_Controller
   public function getEvidenceProgressbyIDDokumen($id) {
     $data = $this->appModel->getEvidenceProgressbyIDDokumen($id);
     echo json_encode(array($data));
+  }
+
+  public function chart($page = "progress_chart") {
+    isLoggedIn();
+    $config['title']  = "Progress Graph" . $this->title;
+    $config['belumSelesai'] = $this->adminModel->countBlmSelesai();
+    $config['sudahSelesai'] = $this->adminModel->countSdhSelesai();
+    $config['isbayar'] = $this->adminModel->countisbayar();
+    $config['isbayarclient'] = $this->adminModel->countisbayarclient();
+    $config['invoiced'] = $this->adminModel->countinvoiced();
+    $config['belumsemua'] = $this->adminModel->countbelumsemua();
+    $this->loadPage($page, $config);
   }
 }

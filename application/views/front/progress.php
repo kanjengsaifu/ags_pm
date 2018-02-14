@@ -130,8 +130,12 @@
                         <input type="text" class="form-control" name="keterangan" value="" placeholder="Keterangan Progress">
                       </div>
                       <div class="form-group">
-                        <label for="">Tanggal Kontrak</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Kontrak">
+                        <label for="">Tanggal Awal Kontrak</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
                       </div>
                       <div class="form-group" id="project_id_div">
                         <label for="">Pilih Project</label>

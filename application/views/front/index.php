@@ -50,6 +50,14 @@
 									</div>
 									<br>
 									<?php if (isViewer()): ?>
+										<!-- <div class="col-md-12" id="chart">
+											<div class="col-md-6">
+												<canvas id="myChart" width="400" height="200"></canvas>
+											</div>
+											<div class="col-md-6">
+												<canvas id="myChart2" width="400" height="200"></canvas>
+											</div>
+										</div> -->
 										<button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn">SHOW CUSTOM FILTER</button>
 										<br>
 
@@ -329,9 +337,9 @@
 													<i class="fas fa-file-excel"></i>
 												</a>
 											</button>
-											<button type="button" class="btn cur-p btn-outline-default" id="export_print" onclick="exportPrint()">
+											<!-- <button type="button" class="btn cur-p btn-outline-default" id="export_print" onclick="exportPrint()">
 												<i class="fas fa-print"></i>
-											</button>
+											</button> -->
 										</div>
 										<br>
 										<?php if (isAdminJakarta()): ?>
@@ -371,6 +379,73 @@
 					</div>
 				</div>
 			</main>
+			<?php
+			?>
+			<script>
+				var ctx = document.getElementById("myChart").getContext('2d');
+				var myChart = new Chart(ctx, {
+				    type: 'bar',
+				    data: {
+				        labels: ["Belum Selesai", "Sudah Selesai"],
+				        datasets: [{
+				            label: '# Progress',
+				            data: ["<?=json_encode($belumSelesai)?>", <?=json_encode($sudahSelesai)?>],
+				            backgroundColor: [
+				                'rgba(255, 99, 132, 0.2)',
+				                'rgba(54, 162, 235, 0.2)'
+				            ],
+				            borderColor: [
+				                'rgba(255,99,132,1)',
+				                'rgba(54, 162, 235, 1)'
+				            ],
+				            borderWidth: 1
+				        }]
+				    },
+				    options: {
+				        scales: {
+				            yAxes: [{
+				                ticks: {
+				                    beginAtZero:true
+				                }
+				            }]
+				        }
+				    }
+				});
+
+				var ctx = document.getElementById("myChart2").getContext('2d');
+				var myChart = new Chart(ctx, {
+				    type: 'bar',
+				    data: {
+				        labels: ["Invoiced", "Sudah Dibayar", "Sudah Dibayar Client", "Belum Semua"],
+				        datasets: [{
+				            label: '# Progress',
+				            data: ["<?=json_encode($invoiced)?>", <?=json_encode($isbayar)?>, <?=json_encode($isbayarclient)?>, <?=json_encode($belumsemua)?>],
+				            backgroundColor: [
+				                'rgba(255, 99, 132, 0.2)',
+				                'rgba(54, 162, 235, 0.2)',
+				                'rgba(144, 219, 132, 0.2)',
+				                'rgba(54, 162, 235, 0.2)'
+				            ],
+				            borderColor: [
+				                'rgba(255,99,132,1)',
+				                'rgba(54, 162, 235, 1)',
+				                'rgba(144, 219, 132, 1)',
+				                'rgba(54, 162, 235, 1)'
+				            ],
+				            borderWidth: 1
+				        }]
+				    },
+				    options: {
+				        scales: {
+				            yAxes: [{
+				                ticks: {
+				                    beginAtZero:true
+				                }
+				            }]
+				        }
+				    }
+				});
+			</script>
 
 			<script type="text/javascript">
 				$(document).ready(function() {
