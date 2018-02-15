@@ -121,7 +121,8 @@ class Submission extends MY_Controller
                                       $this->input->post('site_id')
                                     )
                                  ),
-        'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL)
+        'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL),
+        'approved_by'         => (isApproval() ? $this->session->userdata('useractive_id') : NULL)
       );
       $this->appModel->subSave($data_pengajuan);
       echo "sukses";
@@ -190,7 +191,8 @@ class Submission extends MY_Controller
                                       $this->input->post('site_id')
                                     )
                                  ),
-        'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL)
+        'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL),
+        'approved_by'         => (isApproval() ? $this->session->userdata('useractive_id') : NULL)
       );
 
       $insert = $this->appModel->subSave($data);
@@ -318,7 +320,8 @@ class Submission extends MY_Controller
 
   public function approve() {
     $data = array(
-      'tanggal_approval'  => date('Y-m-d', time())
+      'tanggal_approval'  => date('Y-m-d', time()),
+      'approved_by'      => $this->session->userdata('useractive_id')
     );
     $insert = $this->appModel->accPengajuan(array('pengajuan_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));
@@ -417,7 +420,8 @@ class Submission extends MY_Controller
   public function approveTerpilih() {
     $data = array(
       'tanggal_approval' => date('Y-m-d', time()),
-      'is_checked'       => 'N'
+      'is_checked'       => 'N',
+      'approved_by'      => $this->session->userdata('useractive_id')
     );
     $this->appModel->approveTerpilih(array('is_checked' => 'Y', 'tanggal_approval' => NULL), $data);
     echo json_encode(array("status" => TRUE));
@@ -449,5 +453,10 @@ class Submission extends MY_Controller
       'uploaded_by'     => $this->session->userdata('useractive_id')
     );
     $this->appModel->uploadEvidenceTransaksi($data);
+  }
+
+  public function getEvidenceTransaksi($id) {
+    $data = $this->appModel->getEvidenceTransaksi($id);
+    echo json_encode(array($data));
   }
 }

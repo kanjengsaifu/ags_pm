@@ -622,6 +622,7 @@ class AppModel extends CI_Model
     if ($update) {
       $this->db->distinct();
       $this->db->select('jenis_pengajuan');
+      $this->db->where('success_print', 'N');
       $data = $this->db->get('pengajuan');
 
       echo '
@@ -674,8 +675,8 @@ class AppModel extends CI_Model
             <td style="width:70px;text-align:center"><b>ID SITE</b></td>
             <td style="width:90px;text-align:center"><b>NAMA SITE</b></td>
             <td style="width:90px;text-align:center"><b>REALISASI</b></td>
-            <td style="width:90px;text-align:center"><b>NILAI SPH</b></td>
-            <td style="width:90px;text-align:center"><b>NILAI CORR</b></td>
+            <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
+            <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
             <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
             <td style="width:90px;text-align:center"><b>PENGAJUAN</b></td>
             <td style="width:120px;text-align:center"><b>KET</b></td>
@@ -686,7 +687,7 @@ class AppModel extends CI_Model
       $no = 1;
       foreach ($data->result() as $row) {
         $this->db->from('pengajuan');
-        $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
+        $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
         $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
         $this->db->where('pengajuan.tanggal_approval !=', NULL);
         $this->db->where('pengajuan.success_print', 'N');
@@ -720,7 +721,7 @@ class AppModel extends CI_Model
               <td style="width:70px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site).'</td>
               <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
               <td style="width:90px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
-              <td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>
+              <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
               <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
@@ -733,7 +734,7 @@ class AppModel extends CI_Model
         echo '<tbody>
           <tr style="background-color:#fff;">
             <td colspan="6"></td>
-            <td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>
+            <!--<td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>-->
             <td style="width:90px;text-align:right"><b>'.($nilai_corr == '0' ? '' : number_format($nilai_corr, '0','.','.')).'</b></td>
             <td style="width:90px;text-align:right"><b>'.($nilai_po == '0' ? '' : number_format($nilai_po, '0','.','.')).'</b></td>
             <td style="width:90px;text-align:right"><b>'.($pengajuan_total == '0' ? '' : number_format($pengajuan_total, '0','.','.')).'</b></td>
@@ -810,8 +811,8 @@ class AppModel extends CI_Model
           <td style="width:30px;text-align:center"><b>ID SITE</b></td>
           <td style="width:90px;text-align:center"><b>NAMA SITE</b></td>
           <td style="width:60px;text-align:center"><b>REALISASI</b></td>
-          <td style="width:90px;text-align:center"><b>NILAI SPH</b></td>
-          <td style="width:90px;text-align:center"><b>NILAI CORR</b></td>
+          <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
+          <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
           <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
           <td style="width:90px;text-align:center"><b>PENGAJUAN</b></td>
           <td style="width:120px;text-align:center"><b>KET</b></td>
@@ -859,7 +860,7 @@ class AppModel extends CI_Model
             <td style="width:30px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site).'</td>
             <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
             <td style="width:60px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
-            <td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>
+            <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
@@ -872,7 +873,7 @@ class AppModel extends CI_Model
       echo '<tbody>
         <tr style="background-color:#fff;">
           <td colspan="6"></td>
-          <td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>
+          <!--<td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>-->
           <td style="width:90px;text-align:right"><b>'.($nilai_corr == '0' ? '' : number_format($nilai_corr, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($nilai_po == '0' ? '' : number_format($nilai_po, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($pengajuan_total == '0' ? '' : number_format($pengajuan_total, '0','.','.')).'</b></td>
@@ -941,8 +942,8 @@ class AppModel extends CI_Model
           <td style="width:30px;text-align:center"><b>ID SITE</b></td>
           <td style="width:90px;text-align:center"><b>NAMA SITE</b></td>
           <td style="width:60px;text-align:center"><b>REALISASI</b></td>
-          <td style="width:90px;text-align:center"><b>NILAI SPH</b></td>
-          <td style="width:90px;text-align:center"><b>NILAI CORR</b></td>
+          <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
+          <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
           <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
           <td style="width:90px;text-align:center"><b>PENGAJUAN</b></td>
           <td style="width:120px;text-align:center"><b>KET</b></td>
@@ -953,7 +954,7 @@ class AppModel extends CI_Model
     $no = 1;
     foreach ($data->result() as $row) {
       $this->db->from('pengajuan');
-      $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
+      $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
       $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
       $this->db->where('pengajuan.is_printed', 'Y');
@@ -989,7 +990,7 @@ class AppModel extends CI_Model
             <td style="width:30px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site ).'</td>
             <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site ).'</td>
             <td style="width:60px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
-            <td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>
+            <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
@@ -1002,7 +1003,7 @@ class AppModel extends CI_Model
       echo '<tbody>
         <tr style="background-color:#fff;">
           <td colspan="6"></td>
-          <td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>
+          <!--<td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>-->
           <td style="width:90px;text-align:right"><b>'.($nilai_corr == '0' ? '' : number_format($nilai_corr, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($nilai_po == '0' ? '' : number_format($nilai_po, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($pengajuan_total == '0' ? '' : number_format($pengajuan_total, '0','.','.')).'</b></td>
@@ -1146,6 +1147,8 @@ class AppModel extends CI_Model
 
     if ($this->input->post('sudah_selesai') != "N") {
       $this->db->where('progress.is_bayarclient !=', NULL);
+    } else {
+      $this->db->where('progress.is_bayarclient', NULL);
     }
 
     if ($this->input->post('belum_selesai') != "N") {
@@ -1347,6 +1350,14 @@ class AppModel extends CI_Model
   public function uploadEvidenceTransaksi($data) {
     $this->db->insert('evidence_transaksi', $data);
     $insert = $this->db->insert_id();
+  }
+
+  public function getEvidenceTransaksi($id) {
+    $this->db->from('evidence_transaksi');
+    $this->db->where('pengajuan_id', $id);
+    $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $evidence_q[] = $this->db->get()->result();
+    return $evidence_q;
   }
 
 }

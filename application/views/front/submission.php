@@ -79,8 +79,8 @@
 															<label for="">Jenis Nilai</label>
 															<select style="width:100%;" class="form-control selectpicker" id="jenis_nilai" name="jenis_nilai">
 																<option value="" selected disabled readonly>PILIH JENIS NILAI</option>
-																<option id="jenis_sph" value="jenis_sph">SPH</option>
-																<option id="jenis_corr" value="jenis_corr">Corr</option>
+																<!-- <option id="jenis_sph" value="jenis_sph">SPH</option> -->
+																<option id="jenis_corr" value="jenis_corr">Corr / SPH</option>
 																<option id="jenis_po" value="jenis_po">PO</option>
 															</select>
 														</div>
@@ -120,18 +120,15 @@
 															<input type="text" class="form-control" name="no_po" value="" placeholder="Nomor PO" >
 														</div>
 
-
-														<div class="form-group" id="start_penawaran_dmt_div">
-															<label for="">Start Penawaran DMT</label> <i>*optional</i>
-															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="start_penawaran_dmt" placeholder="Start Penawaran DMT" />
-														</div>
-
 														<div class="form-group" id="no_spk_div">
 															<label for="">Nomor SPK</label>
 															<input type="text" class="form-control" name="no_spk" placeholder="Nomor SPK" >
 														</div>
 
-
+														<div class="form-group" id="start_penawaran_dmt_div">
+															<label for="">Start Penawaran DMT</label> <i>*optional</i>
+															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="start_penawaran_dmt" placeholder="Start Penawaran DMT" />
+														</div>
 
 														<!-- SITE -->
 														<hr>
@@ -366,6 +363,41 @@
 																	<!-- <button type="button" name="button" class="btn btn-outline-primary" id="print_bukti">PRINT BUKTI</button> -->
 																</td>
 															</tr>
+															<tr id="buktit_src_div">
+																<th width="250">Bukti Transaksi</th>
+																<td>
+																	<div class="" id="buktit">
+
+																		<div class="" id="tmult_img_row1">
+																		</div>
+
+																		<!-- <div id="myModal2" style="height:100%" class="modal" data-backdrop="static" data-keyboard="false">
+																		  <span class="close cursor" onclick="closeModal2()">&times;</span>
+																		  <div class="modal-content">
+
+																		    <div class="" id="tmult_img_row2">
+																		    </div>
+
+																		    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+																		    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+																		    <div class="caption-container">
+																		      <p id="caption"></p>
+																		    </div>
+
+
+																		    <div class="" id="tmult_img_row3">
+																		    </div>
+
+																				<div class="modal-footer">
+																					<button class="btn btn-secondary" onclick="closeModal2()" type="button">Close</button>
+																				</div>
+																		  </div>
+																		</div> -->
+																	</div>
+																	<!-- <button type="button" name="button" class="btn btn-outline-primary" id="print_bukti">PRINT BUKTI</button> -->
+																</td>
+															</tr>
 														</tbody>
 													</table>
                 				</div>
@@ -388,6 +420,8 @@
 														<div id="my_camera" style="margin: 0 auto;"></div>
 														<br>
 														<div class="">
+															<i>*take snapshot first</i>
+															<br>
 															<input class="btn btn-outline-primary" type=button value="Take Snapshot" onClick="take_snapshot()">
 															<input class="btn btn-outline-primary" type=button value="Upload Evidence" onClick="saveSnap()">
 														</div>
@@ -1113,7 +1147,7 @@
 							$('#no_sph_div').hide();
 							$('#no_po_div').hide();
 							$('#no_corr_div').show();
-							$('#no_spk_div').show();
+							$('#no_spk_div').hide();
 
 							$('[name=nilai_sph]').val("");
 							$('[name=nilai_po]').val("");
@@ -1618,6 +1652,46 @@
 								$('#bukti_src_div').hide();
 								$('#print_bukti').hide();
 							}
+
+							$.ajax({
+								url: "<?=base_url('submission/getEvidenceTransaksi')?>/" + data.pengajuan_id,
+								type: "GET",
+								dataType: "json",
+								success: function(evi) {
+									var img = '';
+									var trow1 = '';
+									var trow2 = '';
+									var trow3 = '';
+									var tangka = 1;
+									if (evi[0][0].length > 0) {
+										$('#buktit_src_div').show();
+										for (var i = 0; i < evi[0][0].length; i++) {
+											// console.log(evi[0][i].url)
+												trow1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
+													'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="openModal2();tcurrentSlide(\''+ tangka +'\')" class="hover-shadow cursor">'+
+												'</div>';
+
+												trow2+='<div class="mySlides">'+
+														'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%">'+
+													'</div>';
+
+												trow3+='<div class="column">'+
+														'<img class="demo cursor" src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="tcurrentSlide(\''+ tangka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+													'</div>';
+											tangka++;
+										}
+									} else {
+										$('#buktit_src_div').hide();
+									}
+
+									$('#tmult_img_row1').html(trow1);
+									$('#tmult_img_row2').html(trow2);
+									$('#tmult_img_row3').html(trow3);
+								}, error: function(jqXHR, textStatus, errorThrown) {
+									var err = eval("(" + jqXHR.responseText + ")");
+									alert(err.Message);
+								}
+							});
 							$('.modal-title').text('Pengajuan ' + "#ADP" + pad(data.pengajuan_id, 4));
 						}, error: function(jqXHR, textStatus, errorThrown) {
 							alert('Error get data from ajax');
@@ -1763,6 +1837,14 @@
 
 				function closeModal() {
 				  document.getElementById('myModal').style.display = "none";
+				}
+
+				function openModal2() {
+				  document.getElementById('myModal2').style.display = "block";
+				}
+
+				function closeModal2() {
+				  document.getElementById('myModal2').style.display = "none";
 				}
 
 				var slideIndex = 1;

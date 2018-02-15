@@ -364,6 +364,10 @@
                         <label for="">Tanggal Kontrak</label>
                         <input id="tanggal_kontrak_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak_vale" placeholder="Tanggal Kontrak">
                       </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Akhir Kontrak</label>
+                        <input id="tanggal_akhir_kontrak_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak_vale" placeholder="Tanggal Akhir Kontrak">
+                      </div>
                       <hr>
                       <div class="form-group">
                         <label for="">Tanggal BAPP</label>
@@ -461,6 +465,13 @@
             <button type="button" class="btn cur-p btn-outline-success" style="" id="sudah_selesai">
 							SUDAH SELESAI
             </button>
+            <div class="" style="float:right ">
+              <button type="button" class="btn cur-p btn-outline-default" name="button">
+                <a class="" href="#" target="_blank" id="exportExcel" style="text-decoration:none;color:inherit;">
+                  <i class="fas fa-file-excel"></i>
+                </a>
+              </button>
+            </div>
             <hr>
             <table cellspacing="0" class="table table-striped table-bordered" id="progress" width="100%">
               <thead>
@@ -468,10 +479,10 @@
                   <th class="text-center">No</th>
                   <th class="text-center">Nama Project</th>
                   <th class="text-center">PID</th>
-                  <th class="text-center">Tanggal COR</th>
-                  <th class="text-center">Nomor Corr</th>
-                  <th class="text-center">Tanggal PO</th>
-                  <th class="text-center">Nomor PO</th>
+                  <th class="text-center">Tanggal<br>COR</th>
+                  <th class="text-center">Nomor<br>Corr</th>
+                  <th class="text-center">Tanggal<br>PO</th>
+                  <th class="text-center">Nomor<br>PO</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>AG</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>Client</th>
                   <th class="text-center">Tanggal<br>Invoice</th>
@@ -698,7 +709,7 @@
         }
         $('[id=project_val]').html(data.nama_project);
         if (data.tanggal_kontrak != null) {
-          $('[id=tanggal_kontrak_val]').html(moment(data.tanggal_kontrak).format('dddd, D MMMM Y'));
+          $('[id=tanggal_kontrak_val]').html(moment(data.tanggal_kontrak).format('dddd, D MMMM Y') + (data.tanggal_akhir_kontrak != null ? " - " + moment(data.tanggal_akhir_kontrak).format('dddd, D MMMM Y') : ""));
         } else {
           $('[id=tanggal_kontrak_val]').html("-");
         }
@@ -788,24 +799,28 @@
             var row2 = '';
             var row3 = '';
             var angka = 1;
-              for (var i = 0; i < evi[0][0].length; i++) {
-                // console.log(evi[0][i].url)
-                if (evi[0][0][i] != null) {
-
-                  row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
-                    '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
-                  '</div>';
-
-                  row2+='<div class="mySlides">'+
-                      '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
+              if (evi[0][0].length > 0) {
+                $('#bukti_src_div').show();
+                for (var i = 0; i < evi[0][0].length; i++) {
+                  // console.log(evi[0][i].url)
+                    row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
+                      '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
                     '</div>';
 
-                  row3+='<div class="column">'+
-                      '<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
-                    '</div>';
+                    row2+='<div class="mySlides">'+
+                        '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
+                      '</div>';
+
+                    row3+='<div class="column">'+
+                        '<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+                      '</div>';
+                  angka++;
                 }
-                angka++;
+              } else {
+                $('#bukti_src_div').hide();
               }
+
+            console.log(evi[0][0].length);
 
             $('#mult_img_row1').html(row1);
             $('#mult_img_row2').html(row2);
@@ -985,6 +1000,11 @@
           $('[name=tanggal_kontrak_vale]').val(data.tanggal_kontrak);
         } else {
           $('[name=tanggal_kontrak_vale]').val("");
+        }
+        if (data.tanggal_akhir_kontrak != null) {
+          $('[name=tanggal_akhir_kontrak_vale]').val(data.tanggal_akhir_kontrak);
+        } else {
+          $('[name=tanggal_akhir_kontrak_vale]').val("");
         }
         if (data.tanggal_bapp != null) {
           $('[name=tanggal_bapp_vale]').val(data.tanggal_bapp);

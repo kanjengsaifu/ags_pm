@@ -4,6 +4,14 @@
 						<div class="row">
 							<div class="col-md-12">
                 <div class="peer">
+									<?php if (isViewer() || isAdministrator()): ?>
+										<div class="">
+											<a href="<?=site_url('app/backupdb')?>" class="btn btn-outline-primary">
+												BACKUP DATABASE
+											</a>
+										</div>
+										<br>
+									<?php endif; ?>
 									<div class="row gap-20">
 										<div class="col-md-3">
 											<div class="layers bd bgc-white p-20">

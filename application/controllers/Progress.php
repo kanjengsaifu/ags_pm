@@ -134,19 +134,20 @@ class Progress extends MY_Controller
 
   public function update() {
     $data = array(
-      'tanggal_corr'      => ($this->input->post('tanggal_corr_vale') != null ? $this->input->post('tanggal_corr_vale') : NULL),
-      'no_corr'           => $this->input->post('no_corr_vale'),
-      'tanggal_po'        => ($this->input->post('tanggal_po_vale') != null ? $this->input->post('tanggal_po_vale') : NULL),
-      'no_po'             => $this->input->post('no_po_vale'),
-      'tanggal_kontrak'   => ($this->input->post('tanggal_kontrak_vale') != null ? $this->input->post('tanggal_kontrak_vale') : NULL),
-      'tanggal_bapp'      => ($this->input->post('tanggal_bapp_vale') != null ? $this->input->post('tanggal_bapp_vale') : NULL),
-      'no_bapp'           => $this->input->post('no_bapp_vale'),
-      'tanggal_bast'      => ($this->input->post('tanggal_bast_vale') != null ? $this->input->post('tanggal_bast_vale') : NULL),
-      'no_bast'           => $this->input->post('no_bast_vale'),
-      'deskripsi'         => $this->input->post('deskripsi_vale'),
-      'is_invoiced'       => ($this->input->post('invoiced_vale') != null ? $this->input->post('invoiced_vale') : NULL),
-      'is_bayar'          => ($this->input->post('bayar_vale') != null ? $this->input->post('bayar_vale') : NULL),
-      'is_bayarclient'    => ($this->input->post('bayarclient_vale') != null ? $this->input->post('bayarclient_vale') : NULL)
+      'tanggal_corr'            => ($this->input->post('tanggal_corr_vale') != null ? $this->input->post('tanggal_corr_vale') : NULL),
+      'no_corr'                 => $this->input->post('no_corr_vale'),
+      'tanggal_po'              => ($this->input->post('tanggal_po_vale') != null ? $this->input->post('tanggal_po_vale') : NULL),
+      'no_po'                   => $this->input->post('no_po_vale'),
+      'tanggal_kontrak'         => ($this->input->post('tanggal_kontrak_vale') != null ? $this->input->post('tanggal_kontrak_vale') : NULL),
+      'tanggal_akhir_kontrak'   => ($this->input->post('tanggal_akhir_kontrak_vale') != null ? $this->input->post('tanggal_akhir_kontrak_vale') : NULL),
+      'tanggal_bapp'            => ($this->input->post('tanggal_bapp_vale') != null ? $this->input->post('tanggal_bapp_vale') : NULL),
+      'no_bapp'                 => $this->input->post('no_bapp_vale'),
+      'tanggal_bast'            => ($this->input->post('tanggal_bast_vale') != null ? $this->input->post('tanggal_bast_vale') : NULL),
+      'no_bast'                 => $this->input->post('no_bast_vale'),
+      'deskripsi'               => $this->input->post('deskripsi_vale'),
+      'is_invoiced'             => ($this->input->post('invoiced_vale') != null ? $this->input->post('invoiced_vale') : NULL),
+      'is_bayar'                => ($this->input->post('bayar_vale') != null ? $this->input->post('bayar_vale') : NULL),
+      'is_bayarclient'          => ($this->input->post('bayarclient_vale') != null ? $this->input->post('bayarclient_vale') : NULL)
     );
     $insert = $this->appModel->updateProgress(array('progress_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));

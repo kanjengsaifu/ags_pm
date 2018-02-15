@@ -35,7 +35,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/locales/id.min.js"></script>
     <script type="text/javascript" src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
     <?=js('theme/air-datepicker/datepicker.min.js')?>
-    <script type="text/javascript" src="http://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
+    <script type="text/javascript" src="https://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -450,12 +450,12 @@
               <?php endif; ?>
               <?php if (isAdm()): ?>
                 <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('progress')?>"><span class="icon-holder"><i class="fas fa-file"></i></span> <span class="title">Progress</span></a>
+                  <a class="sidebar-link" href="<?=site_url('progress')?>"><span class="icon-holder"><i class="fas fa-tasks"></i></span> <span class="title">Progress</span></a>
                 </li>
               <?php endif; ?>
               <?php if (isViewer() || isAdministrator() || isAdm()): ?>
                 <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('progress/chart')?>"><span class="icon-holder"><i class="fas fa-file"></i></span> <span class="title">Progress Chart</span></a>
+                  <a class="sidebar-link" href="<?=site_url('progress/chart')?>"><span class="icon-holder"><i class="far fa-chart-bar"></i></span> <span class="title">Progress Chart</span></a>
                 </li>
               <?php endif; ?>
               <li class="nav-item">

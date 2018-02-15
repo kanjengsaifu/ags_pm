@@ -39,4 +39,15 @@ class App extends MY_Controller
     $this->session->sess_destroy();
     redirect('');
   }
+
+  public function backupdb() {
+    $this->load->dbutil();
+    $backup = $this->dbutil->backup();
+
+    $this->load->helper('file');
+    write_file('/public/database.zip', $backup);
+
+    $this->load->helper('download');
+    force_download('database.zip', $backup);
+  }
 }
