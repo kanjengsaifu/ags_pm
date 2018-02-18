@@ -4,59 +4,27 @@
 						<div class="row">
 							<div class="col-md-12">
                 <div class="peer">
-                  <button type="button" href="" onclick="add_cluster()" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createcluster">
-                    <i class="fas fa-plus"></i> &nbsp;Tambah cluster
+                  <button type="button" href="" onclick="add_cluster()" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createvehicles">
+                    <i class="fas fa-plus"></i> &nbsp;Tambah Data Kendaraan
                   </button>
-                  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createcluster" role="dialog" tabindex="-1">
+                  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createvehicles" role="dialog" tabindex="-1">
                 		<div class="modal-dialog modal-lg" role="document">
                 			<div class="modal-content">
                 				<div class="modal-header">
-                					<h5 class="modal-title" id="exampleModalLabel">New cluster</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                					<h5 class="modal-title" id="exampleModalLabel">Tambah Data Kendaraan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                 				</div>
                 				<div class="modal-body">
-                					<form class="" method="post" action="<?=site_url('cluster/save')?>">
-                            <div id="site_id_div">
-															<div class="form-group">
-																<label for="">Pilih Site</label>
-																<select class="selectpicker form-control" name="site_id" id="site_id" data-live-search="true">
-																	<option selected disabled readonly>PILIH SITE</option>
-																	<option value="new_site">New Site</option>
-																	<?php foreach ($site_list->result() as $site_data): ?>
-																		<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
-																	<?php endforeach; ?>
-																</select>
-															</div>
-															<div class="" id="new_site_div">
-																<div class="form-group">
-																	<label for="">Site ID</label>
-																	<input type="text" class="form-control" name="id_site" value="" placeholder="ID Site">
-																</div>
-																<div class="form-group">
-																	<label for="">Site ID Telkom</label> <i>*optional</i>
-																	<input type="text" class="form-control" name="id_site_telkom" value="" placeholder="ID Site Telkom">
-																</div>
-																<div class="form-group">
-																	<label for="">Nama Site</label>
-																	<input type="text" class="form-control" name="nama_site" value="" placeholder="Nama Site">
-																</div>
-																<div class="form-group">
-																	<label for="">Lokasi</label>
-																	<input type="text" class="form-control" name="lokasi_site" value="" placeholder="Lokasi Site">
-																</div>
-																<div class="form-group">
-																	<label for="">Keterangan Site</label>
-																	<textarea name="keterangan_site" class="form-control" rows="8" cols="80" placeholder="Keterangan Site"></textarea>
-																</div>
-															</div>
-														</div>
-                            <hr>
+                					<form class="" method="post" action="<?=site_url('kendaraan/save')?>">
                             <div class="form-group">
-                              <label for="inputAddress2">Homebase</label>
-                              <input type="text" class="form-control" name="homebase" placeholder="Homebase" required>
+                              <label for="inputAddress2">Nomor Polisi</label>
+                              <input type="text" class="form-control" name="plat_kendaraan" placeholder="Nomor Polisi" required>
                             </div>
                             <div class="form-group">
-                              <label for="inputAddress2">Wilayah</label>
-                              <input type="text" class="form-control" name="wilayah" placeholder="Wilayah" required>
+                              <label for="inputAddress2">Jenis Kendaraan</label>
+                              <select class="form-control selectpicker" name="jenis_kendaraan">
+                                <option value="Motor">Motor</option>
+                                <option value="Mobil">Mobil</option>
+                              </select>
                             </div>
                 				</div>
                 				<div class="modal-footer">
@@ -80,13 +48,13 @@
 										<i class="fas fa-sync-alt"></i>
                   </button>
 									<hr>
-									<table cellspacing="0" class="table table-bordered" id="cluster" width="100%">
+									<table cellspacing="0" class="table table-bordered" id="vehicles" width="100%">
 										<thead>
 											<tr>
 												<th width="30">No</th>
-												<th>Homebase</th>
-                        <th>Wilayah</th>
-												<th>Site</th>
+												<th>Nomor<br>Polisi</th>
+                        <th>Jenis<br>Kendaraan</th>
+                        <th>Posisi</th>
 												<th style="white-space:nowrap;" width="100">Action</th>
 											</tr>
 										</thead>
@@ -100,24 +68,39 @@
                 				</div>
                 				<div class="modal-body">
 													<form class="" id="form_update" action="#">
-														<input type="hidden" name="id_e" value="">
-														<div class="form-group">
-															<label for="">Site ID</label>
-															<select class="form-control selectpicker" id="siteide" name="site_id_e" data-live-search="true">
-																<!-- <option value="new_site">New Site</option> -->
-																<?php foreach ($site_list->result() as $site_data): ?>
-																	<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
-																<?php endforeach; ?>
-															</select>
-														</div>
+														<input type="hidden" name="id" value="">
                             <div class="form-group">
-                              <label for="inputAddress2">Homebase</label>
-                              <input type="text" class="form-control" name="homebase_e" placeholder="Homebase" required>
+                              <label for="inputAddress2">Full Name</label>
+                              <input type="text" class="form-control" name="nama_e" placeholder="Full Name" required>
                             </div>
-														<div class="form-group">
-															<label for="inputAddress2">Wilayah</label>
-															<input type="text" class="form-control" name="wilayah_e" placeholder="Wilayah" required>
-														</div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Telp</label>
+                              <input type="text" class="form-control" name="telp_e" placeholder="Telp" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Position</label>
+                              <input type="text" class="form-control" name="posisi_e" placeholder="Position" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Date of Birth</label>
+															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="dob_e"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Address</label>
+                              <textarea class="form-control" name="alamat_e" rows="8" cols="80" placeholder="Address" required></textarea>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Additional Information</label>
+                              <input type="text" class="form-control" name="keterangan_e" placeholder="Additional Information" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Keluarga yang Bisa Dihubungi</label>
+                              <input type="text" class="form-control" name="keluarga_yg_bisa_dihub_e" placeholder="Nama Kelurga yang Bisa Dihubungi" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="inputAddress2">Kontak Keluarga</label>
+                              <input type="text" class="form-control" name="telp_keluarga_yg_bisa_dihub_e" placeholder="Kontak Keluarga" required>
+                            </div>
 	                				</div>
 													</form>
 	                				<div class="modal-footer">
@@ -137,15 +120,15 @@
 			</main>
 			<script type="text/javascript">
 
-				var cluster;
+				var vehicles;
 
 				$(document).ready(function() {
-				    cluster = $('#cluster').DataTable({
+				    vehicles = $('#vehicles').DataTable({
 				        "processing": true,
 				        "serverSide": true,
 				        "order": [],
 								"ajax": {
-				            "url": "<?php echo site_url('cluster/data')?>",
+				            "url": "<?php echo site_url('kendaraan/data')?>",
 				            "type": "POST"
 				        }, "columnDefs": [
 					        {
@@ -154,7 +137,7 @@
 					        },
 									{
 										"class": "dt-center",
-										"targets": [4]
+										"targets": [1, 2, 3]
 									}
 				        ],
 				    });
@@ -416,13 +399,10 @@
 						type: "GET",
 						dataType: "json",
 						success: function(data) {
-							$('[name=id_e]').val(data.cluster_id);
-							$('[name=homebase_e]').val(data.homebase);
-							$('[name=wilayah_e]').val(data.wilayah);
-							$('#siteide option[value='+data.site_id+']').attr('selected', true);
-							$('.selectpicker').selectpicker('render');
+							$('[name=id]').val(data.cluster_id);
+							$('[name=homebase]').val(data.homebase);
 							$('#editCluster').modal('show');
-							$('.modal-title').text('Update Data Cluster ' + data.homebase);
+							$('.modal-title').text('Update Data cluster ' + data.nama);
 						}, error: function(jqXHR, textStatus, errorThrown) {
 							alert('Error get data from ajax');
 						}
@@ -430,35 +410,6 @@
 				}
 
 				function reload_table() {
-					cluster.ajax.reload(null, false);
-				}
-
-				function removeCluster(id) {
-					swal({
-					  title: "Are you sure?",
-					  text: "You will not be able to recover this cluster data!",
-					  type: "warning",
-					  showCancelButton: true,
-					  confirmButtonClass: "btn-danger",
-					  confirmButtonText: "Yes, delete it!",
-					  cancelButtonText: "No, cancel pls!",
-					  closeOnConfirm: false,
-					  closeOnCancel: false
-					},
-					function(isConfirm) {
-					  if (isConfirm) {
-							$.ajax({
-								url: "<?=site_url('cluster/removeCluster/')?>" + id,
-								type: "POST",
-								data: {id: id},
-								success: function(data) {
-									swal("Deleted!", "Cluster berhasil dihapus.", "success");
-									reload_table();
-								}
-							});
-					  } else {
-					    swal("Cancelled", "Cluster batal dihapus", "error");
-					  }
-					});
+					vehicles.ajax.reload(null, false);
 				}
 			</script>

@@ -30,7 +30,7 @@ class Site extends MY_Controller
       $row[]  = $stfd->lokasi;
       $row[]  = ($stfd->keterangan_site != "" ? $stfd->keterangan_site : "-");
       $row[]  = '
-                  <button type="button" href="" onclick="edit_site('."'".$stfd->site_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editsite">
+                  <button type="button" href="" onclick="edit_site('."'".$stfd->site_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editSite">
                     <i class="fas fa-edit"></i>
                   </button>
                   <button type="button" href="" onclick="removeSite('."'".$stfd->site_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
@@ -75,6 +75,11 @@ class Site extends MY_Controller
       'keterangan_site' => $this->input->post('keterangan_site_e')
     );
     $insert = $this->appModel->updateSite(array('site_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function removeSite() {
+    $delete_staff = $this->appModel->removeSite($this->input->post('id'));
     echo json_encode(array("status" => TRUE));
   }
 }

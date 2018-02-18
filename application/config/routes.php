@@ -61,6 +61,7 @@ $route['submission'] = 'submission/main';
 $route['progress'] = 'progress/main';
 $route['progress/chart'] = 'progress/chart';
 $route['cluster'] = 'cluster/main';
+$route['kendaraan'] = 'kendaraan/main';
 
 $route['submission/print'] = 'submission/printed';
 $route['submission/re-print'] = 'submission/reprinted';

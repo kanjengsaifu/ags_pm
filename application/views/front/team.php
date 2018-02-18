@@ -119,18 +119,53 @@
 											</tr>
 										</thead>
 									</table>
-                  <?php foreach ($teamData->result() as $data) {
-                    echo '
-                    <div class="modal fade" id="teamD'.$data->team_id.'">
-                      <div class="modal-dialog modal-lg">
-                          <div class="modal-content">
-                            <div class="modal-body">
-                              <div class="te"></div>
+									<!-- EDIT STAFF -->
+									<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editTeam" role="dialog" tabindex="-1">
+                		<div class="modal-dialog modal-lg" role="document">
+                			<div class="modal-content">
+                				<div class="modal-header">
+                					<h5 class="modal-title" id="exampleModalLabel">Edit Team</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                				</div>
+                				<div class="modal-body">
+													<form class="" id="form_update" action="#">
+														<input type="hidden" name="id" value="">
+                            <div class="form-group">
+                              <label for="inputAddress2">Genset 7.5</label>
+                              <input type="text" class="form-control" name="genset_mobile_75_e" placeholder="Genset 7.5" required>
                             </div>
-                          </div>
-                      </div>
-                    </div>';
-                  } ?>
+														<div class="form-group">
+                              <label for="inputAddress2">Genset 10</label>
+                              <input type="text" class="form-control" name="genset_mobile_10_e" placeholder="Genset 10" required>
+                            </div>
+														<div class="form-group">
+                              <label for="inputAddress2">Genset 12</label>
+                              <input type="text" class="form-control" name="genset_mobile_12_e" placeholder="Genset 12" required>
+                            </div>
+														<div class="form-group">
+                              <label for="inputAddress2">Cluster</label>
+                              <select class="form-control selectpicker" id="cluster_id_e" name="cluster_id_e" data-live-search="true">
+																<option value=""></option>
+                              </select>
+                            </div>
+														<div class="form-group">
+                              <label for="inputAddress2">Kendaraan</label>
+															<select style="width:100%;" class="form-control" id="kendaraan_e" name="kendaraan_e[]" multiple="multiple">
+																<?php foreach ($kendaraan_list->result() as $kendaraan_data): ?>
+																	<option value="<?=$kendaraan_data->kendaraan_id?>"><?=$kendaraan_data->plat_kendaraan?></option>
+																<?php endforeach; ?>
+															</select>
+                            </div>
+	                				</div>
+													</form>
+	                				<div class="modal-footer">
+														<button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+														<button class="btn btn-primary" data-dismiss="modal" type="button" id="btnUpdate" onclick="update()">Update</button>
+	                				</div>
+                				</div>
+                			</div>
+                		</div>
+                	</div>
+									<!-- END OF EDIT STAFF -->
 								</div>
 							</div>
 						</div>
@@ -140,6 +175,9 @@
 			<script type="text/javascript">
 				$(document).ready(function() {
 					$("#kendaraan").select2({
+						placeholder: "Pilih Kendaraan"
+					});
+					$("#kendaraan_e").select2({
 						placeholder: "Pilih Kendaraan"
 					});
 				});
@@ -167,6 +205,28 @@
 				        ],
 				    });
 				});
+
+				function edit_team(id) {
+					$.ajax({
+						url: "<?=base_url('team/getTeamData/')?>"+id,
+						type: "GET",
+						dataType: "json",
+						success: function(data) {
+							$('[name=genset_mobile_75_e]').val(data.genset_mobile_75);
+							$('[name=genset_mobile_10_e]').val(data.genset_mobile_10);
+							$('[name=genset_mobile_12_e]').val(data.genset_mobile_12);
+							// $.ajax({
+							// 	url: "<?=base_url('team/getCurrentCluster/')?>"+id,
+							// 	type: "GET",
+							// 	dataType: "json",
+							// 	success: function(data) {
+							//
+							// 	}
+							// });
+							$('#cluster_id_e option[value='+data.wilayah+']').prop("disabled", "disabled");
+						}
+					});
+				}
 
 				function reload_table() {
 					team.ajax.reload(null, false);

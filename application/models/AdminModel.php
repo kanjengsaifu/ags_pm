@@ -180,6 +180,7 @@ class AdminModel extends CI_Model
     if ($data['belum_diprint'] != 'N') {
       $this->db->where('pengajuan.is_printed', 'N');
       $this->db->where('pengajuan.success_print', 'N');
+      $this->db->where('pengajuan.success_print', 'N');
       $this->db->where('pengajuan.status_admin_dmt', NULL);
       $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
@@ -198,6 +199,7 @@ class AdminModel extends CI_Model
 
     if ($data['belum_diapprove'] != 'N') {
       $this->db->where('pengajuan.tanggal_approval', NULL);
+      $this->db->where('pengajuan.is_printed', 'N');
     }
 
     if ($data['sudah_diapprove'] != 'N') {

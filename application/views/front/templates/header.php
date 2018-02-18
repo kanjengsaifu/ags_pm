@@ -434,13 +434,16 @@
                   <a class="sidebar-link" href="<?=site_url('staff')?>"><span class="icon-holder"><i class="fas fa-user"></i></span> <span class="title">Staff</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('team')?>"><span class="icon-holder"><i class="fas fa-users"></i></span> <span class="title">Team</span></a>
+                  <a class="sidebar-link" href="<?=site_url('site')?>"><span class="icon-holder"><i class="fas fa-map-marker"></i></span> <span class="title">Site</span></a>
                 </li>
                 <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('cluster')?>"><span class="icon-holder"><i class="fas fa-sitemap"></i></span> <span class="title">Cluster</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('site')?>"><span class="icon-holder"><i class="fas fa-map-marker"></i></span> <span class="title">Site</span></a>
+                  <a class="sidebar-link" href="<?=site_url('kendaraan')?>"><span class="icon-holder"><i class="fas fa-car"></i></span> <span class="title">Kendaraan</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="sidebar-link" href="<?=site_url('team')?>"><span class="icon-holder"><i class="fas fa-users"></i></span> <span class="title">Team</span></a>
                 </li>
               <?php } ?>
               <?php if (isAdministrator() || isApproval() || isAdminJakarta() || isAdminTasik()): ?>

@@ -402,7 +402,7 @@
 													</table>
                 				</div>
                 				<div class="modal-footer">
-                					<button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                					<button id="detailClose" class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
                 				</div>
                 			</div>
                 		</div>
@@ -493,7 +493,7 @@
 				                            <input type="text" name="pengajuan" class="form-control" id="pengajuan_filter">
 				                        </div>
 				                    </div>
-														<div class="form-group">
+														<!-- <div class="form-group">
 															<label for="LastName" class="col-sm-2 control-label">Kategori Pengajuan</label>
 															<div class="col-sm-6">
 																<select id="kategori_pengajuan_filter" style="width:100%;" class="form-control selectpicker" name="kategori_pengajuan_filter">
@@ -502,7 +502,7 @@
 																	<option value="Non Project">Non Project</option>
 																</select>
 															</div>
-														</div>
+														</div> -->
 														<div class="form-group">
 															<label for="LastName" class="col-sm-2 control-label">Jenis Pengajuan</label>
 															<div class="col-sm-6">
@@ -1441,6 +1441,15 @@
 								$('[name=nilai_pengajuan_edit]').val(data.nilai_pengajuan);
 							}
 						});
+					});
+				});
+
+				$(document).ready(function() {
+					$('#detailClose').click(function() {
+						$('#nilai_pengajuan_val_edit').hide();
+						$('#nilai_pengajuan_val').show();
+						$('#doneNilaiPengajuan').hide();
+						$('#editNilaiPengajuan').show();
 					});
 				});
 

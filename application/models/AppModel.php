@@ -1360,4 +1360,116 @@ class AppModel extends CI_Model
     return $evidence_q;
   }
 
+  // kendaraan
+  public function getVehiclesJSON() {
+    $this->vehiclesJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function vehiclesJSON_query() {
+    $table = 'kendaraan';
+    $column_order = array(null, 'kendaraan.nama_kendaraan', 'kendaraan.jenis_kendaraan', 'kendaraan.plat_kendaraan', null);
+    $column_search = array('kendaraan.nama_kendaraan', 'kendaraan.jenis_kendaraan', 'kendaraan.plat_kendaraan');
+
+    $this->db->from($table);
+    $this->db->join('team', 'find_in_set(kendaraan.kendaraan_id, team.kendaraan_id)', 'left outer', false);
+    // $this->db->query("select a.*, b.team_id from kendaraan a left outer join team b on find_in_set(a.kendaraan_id, b.kendaraan_id) order by a.kendaraan_id asc");
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countVehiclesDataFiltered() {
+    $this->vehiclesJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countVehiclesData() {
+    $this->db->from('cluster');
+    return $this->db->count_all_results();
+  }
+
+  public function addVehicle($data) {
+    $this->db->insert('kendaraan', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Data kendaraan berhasil disimpan!");
+      redirect('/kendaraan');
+    } else {
+      $this->session->set_flashdata('notification', "Data kendaraan gagal disimpan!");
+      redirect('/kendaraan');
+    }
+  }
+
+  public function getTeamEditbyID($id) {
+    $this->db->from('team');
+    $this->db->join('cluster', 'cluster.cluster_id=team.cluster_id', 'left outer');
+    $this->db->where('team.team_id', $id);
+    $query = $this->db->get();
+
+    return $query->row();
+  }
+
+  // public function getCurrentCluster($id) {
+  //   $this->db->from('cluster');
+  //   $this->db->where('cluster_id', $id);
+  //   $query = $this->db->get();
+  //
+  //   return $query->row();
+  // }
+
+  public function removeSite($where) {
+    $this->db->where('site_id', $where);
+    $this->db->delete('site');
+    return $this->db->affected_rows();
+  }
+
+  public function saveCluster($data) {
+    $this->db->insert('cluster', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Cluster berhasil ditambahkan!");
+      redirect('/cluster');
+    } else {
+      $this->session->set_flashdata('notification', "Cluster gagal ditambahkan!");
+      redirect('/cluster');
+    }
+  }
+
+  public function removeCluster($where) {
+    $this->db->where('cluster_id', $where);
+    $this->db->delete('cluster');
+    return $this->db->affected_rows();
+  }
+
+  public function updateCluster($where, $data) {
+    $this->db->update('cluster', $data, $where);
+    return $this->db->affected_rows();
+  }
+
 }

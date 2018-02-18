@@ -229,4 +229,33 @@
 						}
 					});
 				}
+
+				function removeSite(id) {
+					swal({
+					  title: "Are you sure?",
+					  text: "You will not be able to recover this site data!",
+					  type: "warning",
+					  showCancelButton: true,
+					  confirmButtonClass: "btn-danger",
+					  confirmButtonText: "Yes, delete it!",
+					  cancelButtonText: "No, cancel pls!",
+					  closeOnConfirm: false,
+					  closeOnCancel: false
+					},
+					function(isConfirm) {
+					  if (isConfirm) {
+							$.ajax({
+								url: "<?=site_url('site/removeSite/')?>" + id,
+								type: "POST",
+								data: {id: id},
+								success: function(data) {
+									swal("Deleted!", "Site berhasil dihapus.", "success");
+									reload_table();
+								}
+							});
+					  } else {
+					    swal("Cancelled", "Site batal dihapus", "error");
+					  }
+					});
+				}
 			</script>
