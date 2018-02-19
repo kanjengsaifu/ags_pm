@@ -760,10 +760,16 @@ class AppModel extends CI_Model
   }
 
   public function getSubPrintingTerpilih() {
+    echo $this->uri->segment(2);
     $this->db->distinct();
     $this->db->select('jenis_pengajuan');
-    $this->db->where('tanggal_approval_keuangan', NULL);
-    $this->db->where('is_checked', 'Y');
+    if ($this->uri->segment(2) == "re-print-h") {
+      $this->db->where('is_checked_h', 'Y');
+      $this->db->where('tanggal_approval_keuangan !=', NULL);
+    } else {
+      $this->db->where('is_checked', 'Y');
+      $this->db->where('tanggal_approval_keuangan', NULL);
+    }
     $data = $this->db->get('pengajuan');
 
     echo '
@@ -834,8 +840,13 @@ class AppModel extends CI_Model
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
       $this->db->where('pengajuan.is_printed', 'Y');
       $this->db->where('pengajuan.success_print', 'Y');
-      $this->db->where('pengajuan.is_checked', 'Y');
-      $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
+      if ($this->uri->segment(2) == "re-print-h") {
+        $this->db->where('pengajuan.is_checked_h', 'Y');
+        $this->db->where('pengajuan.tanggal_approval_keuangan !=', NULL);
+      } else {
+        $this->db->where('pengajuan.is_checked', 'Y');
+        $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
+      }
       $this->db->order_by('pengajuan.jenis_pengajuan');
       $data2 = $this->db->get();
 
@@ -1597,6 +1608,57 @@ class AppModel extends CI_Model
     $this->db->where('team.team_id', $id);
     $query = $this->db->get();
     return $query->row();
+  }
+
+  public function printEvidences($id) {
+    // $this->db->select('evidence_id','pengajuan');
+    $this->db->from('pengajuan');
+    $this->db->where('pengajuan_id', $id);
+    $query = $this->db->get();
+    $data = $query->row();
+    $evidence_list = explode(',', $data->evidence_id);
+    $arr = array();
+    foreach ($evidence_list as $evi) {
+      $this->db->select('url');
+      $this->db->from('evidence');
+      $this->db->where('id_evidence', $evi);
+      $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+      $queryvi = $this->db->get();
+      $arr[] = $queryvi->row();
+    }
+    echo "<style>
+            @media print{@page {size: landscape}}
+            .image {
+              display: inline-block;
+              margin: 4px;
+              border: 1px solid #CCCCCC;
+              background-position: center center;
+              background-repeat: no-repeat;
+            }
+            .image.size-fixed {
+              width: 500px;
+              height: 500px;
+            }
+            .image.size-fluid {
+              width: 32%;
+              height: 45%;
+            }
+            .image.scale-fit {
+              background-size: contain;
+            }
+            .image.scale-fill {
+              background-size: cover;
+            }
+            .image img {
+              display: none;
+            }
+        </style>
+        Evidence untuk pengajuan $data->pengajuan<br>";
+    foreach ($arr as $key => $value) {
+      echo "
+            <div class=\"image size-fluid scale-fit\" style=\"background-image: url(".base_url('public/assets/evidence/'.$value->url).");\"><img src=\"image-1.jpg\" alt=\"Orientation: Square\"></div>
+           ";
+    }
   }
 
 }

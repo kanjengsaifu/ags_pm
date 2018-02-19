@@ -211,16 +211,21 @@ class Submission extends MY_Controller
       $no++;
       $row = array();
       if (isAdminJakarta()) {
-        $row[]  = (
-                    $stfd->is_printed == "N" ?
-                    '<input type="checkbox" disabled readonly>' :
-                    ($stfd->tanggal_approval_keuangan != NULL ?
-                      '<input type="checkbox" disabled readonly>' :
+        $row[]  = ($stfd->tanggal_approval_keuangan != NULL ?
+                    ($stfd->is_printed != "N" ?
+                      ($stfd->is_checked_h == "Y" ?
+                        '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="h_rmvCBox('.$stfd->pengajuan_id.')" checked>'
+                        :
+                        '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="h_saveCBox('.$stfd->pengajuan_id.')">'
+                      ) : ''
+                    )
+                    :
+                    ($stfd->is_printed != "N" ?
                       ($stfd->is_checked == "Y" ?
                         '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="rmvCBox('.$stfd->pengajuan_id.')" checked>'
                         :
                         '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="saveCBox('.$stfd->pengajuan_id.')">'
-                      )
+                      ) : ''
                     )
                   );
       } else if (isApproval()) {
@@ -385,6 +390,22 @@ class Submission extends MY_Controller
     echo json_encode(array("status" => TRUE));
   }
 
+  public function h_savecbox() {
+    $data = array(
+      'is_checked_h'  => "Y"
+    );
+    $this->appModel->saveCBox(array('pengajuan_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function h_rmvcbox() {
+    $data = array(
+      'is_checked_h'  => "N"
+    );
+    $this->appModel->saveCBox(array('pengajuan_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
   public function checkall() {
     $data = array(
       'is_checked' => "Y"
@@ -493,5 +514,9 @@ class Submission extends MY_Controller
     );
 
     echo json_encode($output);
+  }
+
+  public function printBukti($id) {
+    $this->appModel->printEvidences($id);
   }
 }

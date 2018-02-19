@@ -333,6 +333,7 @@
 
 																		<div id="bukti_dokumen"></div>
 
+																		<a id="print_bukti" target="_blank" href="#">PRINT BUKTI GAMBAR</a>
 																		<div class="" id="mult_img_row1">
 																		</div>
 
@@ -360,7 +361,6 @@
 																		  </div>
 																		</div>
 																	</div>
-																	<!-- <button type="button" name="button" class="btn btn-outline-primary" id="print_bukti">PRINT BUKTI</button> -->
 																</td>
 															</tr>
 															<tr id="buktit_src_div">
@@ -818,7 +818,7 @@
 									}, {
 										"className"	: "dt-center",
 										<?php if(isApproval()) { ?>
-											"targets"		: [0, 3, 5, 6]
+											"targets"		: [0, 2, 5, 6]
 										<?php } else if (isAdminJakarta()) { ?>
 											"targets"		: [0, 2, 3, 4, 5]
 										<?php } else { ?>
@@ -894,7 +894,8 @@
 							$('#menampilkan').text("History Pengajuan");
 							$("input[type=hidden]").val("N");
 							document.getElementById("history_val").value = "Y";
-							$('#print').hide();
+							document.getElementById("print").href = "<?=site_url('submission/re-print-h')?>";
+							$('#print').show();
 							$('#print_c').hide();
 							$('#acc').hide();
 							submission.ajax.reload();  //just reload table
@@ -1276,6 +1277,40 @@
 					});
 				}
 
+				function h_saveCBox(id) {
+					url = "<?=site_url('submission/h_savecbox')?>";
+					$.ajax({
+						url: url,
+						data: {id: id},
+						type: "POST",
+						success: function(data) {
+							if (data.status = 'true') {
+								reload_table();
+							} else {
+								swal("Error!", "Something went wrong!", "error");
+								reload_table();
+							}
+						}
+					});
+				}
+
+				function h_rmvCBox(id) {
+					url = "<?=site_url('submission/h_rmvcbox')?>";
+					$.ajax({
+						url: url,
+						data: {id: id},
+						type: "POST",
+						success: function(data) {
+							if (data.status = 'true') {
+								reload_table();
+							} else {
+								swal("Error!", "Something went wrong!", "error");
+								reload_table();
+							}
+						}
+					});
+				}
+
 				function pad(num, places) {
 					var zero = places - num.toString().length + 1;
 					return Array(+(zero > 0 && zero)).join("0") + num;
@@ -1593,6 +1628,7 @@
 							if (data.evidence_id != null) {
 								$('#bukti_src_div').show();
 								$('#print_bukti').show();
+								document.getElementById("print_bukti").href = "<?=site_url('submission/print-bukti/')?>"+id;
 								$.ajax({
 									url: "<?=site_url('submission/getEvidencebyID')?>/" + data.pengajuan_id,
 									type: "GET",
