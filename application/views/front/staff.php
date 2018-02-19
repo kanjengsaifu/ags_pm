@@ -175,8 +175,8 @@
 														<input type="hidden" name="id" value="">
 														<div class="form-group">
 															<label for="">Select Team</label>
-															<select style="width:100%;" class="form-control selectpicker" id="team_id" name="team_id" data-live-search="true">
-																<option value="" selected>SELECT TEAM</option>
+															<select style="width:100%;" class="form-control selectpicker" id="team_id_c" name="team_id" data-live-search="true">
+																<option value="selected" selected disabled readonly>SELECT TEAM</option>
 																<?php foreach ($team_list->result() as $team_data): ?>
 																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?></option>
 																<?php endforeach; ?>
@@ -464,6 +464,8 @@
 						dataType: "json",
 						success: function(data) {
 							$('[name=id]').val(data.staff_id);
+							$('#team_id_c option[value="selected"]').attr('selected', true);
+							$('.selectpicker').selectpicker('render');
 							$('#addToTeam').modal('show');
 							$('.modal-title').text('Update Data Staff ' + data.nama);
 						}, error: function(jqXHR, textStatus, errorThrown) {
@@ -508,7 +510,13 @@
 						dataType: "json",
 						success: function(data) {
 							$('[name=id]').val(data.staff_id);
-							$('[name=team_id]').val(data.team_id);
+							if (data.team_id != "") {
+								$('#team_id_c option[value='+data.team_id+']').attr('selected', true);
+								$('.selectpicker').selectpicker('render');
+							} else {
+								$('#team_id_c option[value="selected"]').attr('selected', true);
+								$('.selectpicker').selectpicker('render');
+							}
 							$('#changeTeam').modal('show');
 							$('.modal-title').text('Update Team Position ' + data.nama);
 						}, error: function(jqXHR, textStatus, errorThrown) {

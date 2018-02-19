@@ -47,6 +47,9 @@ class Team extends MY_Controller
                   <a href="'.site_url("delete_team&pid?='.$stfd->team_id").'">
                      <i class="fas fa-trash"></i>
                   </a>-->
+                  <button type="button" href="" onclick="detailTeam('."'".$stfd->team_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailTeam">
+                    <i class="fas fa-search"></i>
+                  </button>
                   <button type="button" href="" onclick="edit_team('."'".$stfd->team_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editTeam">
                     <i class="fas fa-edit"></i>
                   </button>
@@ -85,6 +88,18 @@ class Team extends MY_Controller
 
   public function getCurrentCluster($id) {
     $data = $this->appModel->getCurrentCluster($id);
+    echo json_encode($data);
+  }
+
+  public function removeTeam() {
+    // $id = $this->uri->segment(3);
+    // $remove_staff = $this->appModel->removeStaff($id);
+    $delete_staff = $this->appModel->removeTeam($this->input->post('id'));
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function getTeamDetail($id) {
+    $data = $this->appModel->getTeambyID($id);
     echo json_encode($data);
   }
 }

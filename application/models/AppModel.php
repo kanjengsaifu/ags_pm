@@ -274,6 +274,12 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
+  public function removeTeam($where) {
+    $this->db->where('team_id', $where);
+    $this->db->delete('team');
+    return $this->db->affected_rows();
+  }
+
   public function deleteProgress($where) {
     $this->db->where('progress_id', $where);
     $this->db->delete('progress');
@@ -534,7 +540,7 @@ class AppModel extends CI_Model
   }
 
   public function getProgressByID($id) {
-    $this->db->select('*');
+    $this->db->select('project.project_id, project.nama_project, progress.*, site.*');
     $this->db->from('progress');
     $this->db->join('project', 'progress.project_id = project.project_id');
     $this->db->join('site', 'progress.site_id = site.site_id');
@@ -1141,6 +1147,7 @@ class AppModel extends CI_Model
     $order = array('progress_id' => 'asc');
 
     $this->db->from($table);
+    $this->db->select('project.project_id, project.nama_project, progress.*, site.*');
     $this->db->join('project', 'progress.project_id = project.project_id');
     $this->db->join('site', 'progress.site_id = site.site_id');
 
@@ -1470,6 +1477,126 @@ class AppModel extends CI_Model
   public function updateCluster($where, $data) {
     $this->db->update('cluster', $data, $where);
     return $this->db->affected_rows();
+  }
+
+  // evidence
+  public function getPDocJSON() {
+    $this->pdocJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function pdocJSON_query() {
+    $table = 'evidence';
+    $column_order = array(null, 'evidence.url', 'evidence.url', 'evidence.id_evidence', null);
+    $column_search = array('evidence.url', 'evidence.url', 'evidence.id_evidence');
+
+    $this->db->from($table);
+    $this->db->join('pengajuan', 'find_in_set(evidence.id_evidence, pengajuan.evidence_id)', 'left outer', false);
+    $this->db->where_not_in('evidence.extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $this->db->group_by('evidence.id_evidence');
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countPDocDataFiltered() {
+    $this->pdocJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countPDocData() {
+    $this->db->from('cluster');
+    return $this->db->count_all_results();
+  }
+
+  // evidence
+  public function getTDocJSON() {
+    $this->tdocJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function tdocJSON_query() {
+    $table = 'evidence_transaksi';
+    $column_order = array(null, 'evidence_transaksi.url', 'evidence_transaksi.url', 'evidence_transaksi.id_evidence', null);
+    $column_search = array('evidence_transaksi.url', 'evidence_transaksi.url', 'evidence_transaksi.id_evidence');
+
+    $this->db->from($table);
+    $this->db->join('pengajuan', 'evidence_transaksi.pengajuan_id = pengajuan.pengajuan_id', 'left outer', false);
+    $this->db->where_in('evidence_transaksi.extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $this->db->group_by('evidence_transaksi.id_evidence');
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countTDocDataFiltered() {
+    $this->tdocJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countTDocData() {
+    $this->db->from('cluster');
+    return $this->db->count_all_results();
+  }
+
+  public function getTeambyID($id) {
+    $this->db->from('team');
+    $this->db->select('team.*, cluster.homebase, cluster.wilayah, GROUP_CONCAT(kendaraan.plat_kendaraan SEPARATOR ",") as plat');
+    $this->db->join('cluster', 'cluster.cluster_id = team.cluster_id');
+    $this->db->join('kendaraan', 'find_in_set(kendaraan.kendaraan_id, team.kendaraan_id)', 'left outer', false);
+    $this->db->where('team.team_id', $id);
+    $query = $this->db->get();
+    return $query->row();
   }
 
 }

@@ -114,11 +114,51 @@
                         <th class="text-center">Genset<br>10 KVA</th>
 												<th class="text-center">Genset<br>12 KVA</th> -->
 												<?php if (isAdministrator() || isApproval()): ?>
-                          <th class="text-center" width="80">MODIFY</th>
+                          <th class="text-center" width="150">Action</th>
                         <?php endif; ?>
 											</tr>
 										</thead>
 									</table>
+									<!-- DETAIL TEAM -->
+									<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="detailTeam" role="dialog" tabindex="-1">
+										<div class="modal-dialog modal-lg" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel">New Staff</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+												</div>
+												<div class="modal-body">
+													<table class="table">
+														<tbody>
+															<tr>
+																<th width="250">Cluster</th>
+																<td><span id="cluster"></span></td>
+															</tr>
+															<tr>
+																<th width="250">Jumlah Genset 7,5 KVA</th>
+																<td><span id="genset_75"></span></td>
+															</tr>
+															<tr>
+																<th width="250">Jumlah Genset 10 KVA</th>
+																<td><span id="genset_10"></span></td>
+															</tr>
+															<tr>
+																<th width="250">Jumlah Genset 12 KVA</th>
+																<td><span id="genset_12"></span></td>
+															</tr>
+															<tr>
+																<th width="250">Kendaraan</th>
+																<td><span id="kendaraan"></span></td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												<div class="modal-footer">
+													<button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END OF DETAIL TEAM -->
 									<!-- EDIT STAFF -->
 									<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editTeam" role="dialog" tabindex="-1">
                 		<div class="modal-dialog modal-lg" role="document">
@@ -144,7 +184,9 @@
 														<div class="form-group">
                               <label for="inputAddress2">Cluster</label>
                               <select class="form-control selectpicker" id="cluster_id_e" name="cluster_id_e" data-live-search="true">
-																<option value=""></option>
+																<?php foreach ($cluster_list->result() as $key => $value): ?>
+																	<option value="<?=$value->cluster_id?>"><?=$value->homebase . " - " . $value->wilayah?></option>
+																<?php endforeach; ?>
                               </select>
                             </div>
 														<div class="form-group">
@@ -215,6 +257,13 @@
 							$('[name=genset_mobile_75_e]').val(data.genset_mobile_75);
 							$('[name=genset_mobile_10_e]').val(data.genset_mobile_10);
 							$('[name=genset_mobile_12_e]').val(data.genset_mobile_12);
+							$('#cluster_id_e option[value='+data.cluster_id+']').attr('selected', true);
+							$('.selectpicker').selectpicker('render');
+							var input = data.kendaraan_id;
+							var output = input.replace(",", "\",\"");
+							var akhir = [output];
+							console.log(akhir);
+							$('#kendaraan_e').select2().select2("val", akhir);
 							// $.ajax({
 							// 	url: "<?=base_url('team/getCurrentCluster/')?>"+id,
 							// 	type: "GET",
@@ -223,12 +272,59 @@
 							//
 							// 	}
 							// });
-							$('#cluster_id_e option[value='+data.wilayah+']').prop("disabled", "disabled");
 						}
 					});
 				}
 
 				function reload_table() {
 					team.ajax.reload(null, false);
+				}
+
+				function removeTeam(id) {
+					swal({
+					  title: "Are you sure?",
+					  text: "You will not be able to recover this team data!",
+					  type: "warning",
+					  showCancelButton: true,
+					  confirmButtonClass: "btn-danger",
+					  confirmButtonText: "Yes, delete it!",
+					  cancelButtonText: "No, cancel pls!",
+					  closeOnConfirm: false,
+					  closeOnCancel: false
+					},
+					function(isConfirm) {
+					  if (isConfirm) {
+							$.ajax({
+								url: "<?=site_url('team/removeTeam/')?>" + id,
+								type: "POST",
+								data: {id: id},
+								success: function(data) {
+									swal("Deleted!", "Team berhasil dihapus.", "success");
+									reload_table();
+								}
+							});
+					  } else {
+					    swal("Cancelled", "Team batal dihapus", "error");
+					  }
+					});
+				}
+
+				function detailTeam(id) {
+					$.ajax({
+						url: "<?=site_url('team/getTeamDetail/')?>/" + id,
+						type: "GET",
+						dataType: "json",
+						success: function(data) {
+							$('id').html(data.id);
+							$('[id=cluster]').html(data.homebase+" - "+data.wilayah);
+							$('[id=genset_75]').html(data.genset_mobile_75);
+							$('[id=genset_10]').html(data.genset_mobile_10);
+							$('[id=genset_12]').html(data.genset_mobile_12);
+							$('[id=kendaraan]').html(data.plat);
+							$('.modal-title').text('CLUSTER ' + data.homebase);
+						}, error: function(jqXHR, textStatus, errorThrown) {
+							alert('Error get data from ajax');
+						}
+					});
 				}
 			</script>

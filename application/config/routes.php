@@ -65,3 +65,8 @@ $route['kendaraan'] = 'kendaraan/main';
 
 $route['submission/print'] = 'submission/printed';
 $route['submission/re-print'] = 'submission/reprinted';
+
+// evidences
+$route['evidences/submission/document'] = 'submission/main_document';
+$route['evidences/submission/picture'] = 'submission/main_picture';
+$route['evidences/transaksi/document'] = 'transaksi/main_document';

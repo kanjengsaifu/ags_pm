@@ -459,4 +459,39 @@ class Submission extends MY_Controller
     $data = $this->appModel->getEvidenceTransaksi($id);
     echo json_encode(array($data));
   }
+
+  public function main_document($page = 'submission/document') {
+    isLoggedIn();
+    $config['title']  = "Document Evidence | Pengajuan" . $this->title;
+    $this->loadPage($page, $config);
+  }
+
+  public function data_doc() {
+    $pdoc_data  = $this->appModel->getPDocJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($pdoc_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = substr($stfd->url, 14);
+      $row[]  = $stfd->extension;
+      $row[]  = "#ADP".sprintf('%04d', $stfd->pengajuan_id);
+      $row[]  = '
+                  <a type="button" href="'.base_url('public/assets/evidence/'.$stfd->url).'" download="'.$stfd->url.'" onclick="downloadEvidence('."'".$stfd->id_evidence."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
+                    <i class="fas fa-download"></i>
+                  </button>
+                ';
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->appModel->countPDocData(),
+      "recordsFiltered" => $this->appModel->countPDocDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
+  }
 }

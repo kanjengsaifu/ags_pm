@@ -12,33 +12,33 @@
     <?=css('theme/adminator/colorlib.com/polygon/adminator/style.css')?>
     <?=css('css/fontawesome/web-fonts-with-css/css/fontawesome-all.css')?>
     <?=css('theme/air-datepicker/datepicker.min.css')?>
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css" />
-    <link rel="stylesheet" href="http://demo.harviacode.com/select2/select2.min.css">
-    <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://plugins.krajee.com/assets/2778ca57/themes/explorer/theme.min.css?ver=201801102302">
+    <?=css('css/jquery.dataTables.min.css')?>
+    <?=css('css/bootstrap.css')?>
+    <?=css('css/fileinput.min.css')?>
+    <?=css('css/bootstrap-tagsinput.css')?>
+    <?=css('css/bootstrap-select.min.css')?>
+    <?=css('css/select2.min.css')?>
+    <?=css('css/sweetalert.css')?>
+    <?=css('css/ekko-lightbox.css')?>
+    <?=css('css/font-awesome.min.css')?>
+    <?=css('css/theme.min.css?ver=201801102302')?>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/piexif.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/sortable.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/purify.min.js" type="text/javascript"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    <?=js('js/piexif.min.js')?>
+    <?=js('js/sortable.min.js')?>
+    <?=js('js/purify.min.js')?>
+    <?=js('js/bootstrap.min.js')?>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/fileinput.min.js"></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/locales/LANG.js"></script> -->
     <?=js('assets/js/fileinput.js'); ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/locales/id.min.js"></script>
-    <script type="text/javascript" src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
+    <?=js('js/id.min.js')?>
+    <?=js('js/sweetalert.js')?>
     <?=js('theme/air-datepicker/datepicker.min.js')?>
     <script type="text/javascript" src="https://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <?=js('js/ekko-lightbox.min.js')?>
+    <?=js('js/jquery.dataTables.min.js')?>
+    <?=js('js/Chart.min.js')?>
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script> -->
     <style media="screen">
@@ -459,6 +459,61 @@
               <?php if (isViewer() || isAdministrator() || isAdm()): ?>
                 <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('progress/chart')?>"><span class="icon-holder"><i class="far fa-chart-bar"></i></span> <span class="title">Progress Chart</span></a>
+                </li>
+              <?php endif; ?>
+              <?php if (!isAdminTasik()): ?>
+                <li class="nav-item dropdown">
+                  <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                      <i class="fas fa-book"></i>
+                    </span>
+                    <span class="title">Evidences</span>
+                    <span class="arrow">
+                      <i class="ti-angle-right"></i>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu" style="display: none;">
+
+                    <li class="nav-item dropdown">
+                      <a href="javascript:void(0);">
+                        <span>Pengajuan</span>
+                        <span class="arrow">
+                          <i class="ti-angle-right"></i>
+                        </span>
+                      </a>
+                      <ul class="dropdown-menu" style="display: block;">
+                        <li>
+                          <a href="<?=site_url('evidences/submission/document')?>">Dokumen</a>
+                        </li>
+                        <li>
+                          <a href="<?=site_url('evidences/submission/picture')?>">Picture</a>
+                        </li>
+                      </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                      <a href="<?=site_url('evidences/transaksi/document')?>">
+                        <span>Transaksi</span>
+                      </a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                      <a href="javascript:void(0);">
+                        <span>Progress</span>
+                        <span class="arrow">
+                          <i class="ti-angle-right"></i>
+                        </span>
+                      </a>
+                      <ul class="dropdown-menu" style="display: block;">
+                        <li>
+                          <a href="javascript:void(0);">Dokumen</a>
+                        </li>
+                        <li>
+                          <a href="javascript:void(0);">Picture</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
                 </li>
               <?php endif; ?>
               <li class="nav-item">
