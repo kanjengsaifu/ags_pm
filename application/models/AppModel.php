@@ -685,7 +685,7 @@ class AppModel extends CI_Model
             <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
             <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
             <td style="width:90px;text-align:center"><b>PENGAJUAN</b></td>
-            <td style="width:120px;text-align:center"><b>KET</b></td>
+
           </tr>
         </thead>
       ';
@@ -703,7 +703,7 @@ class AppModel extends CI_Model
 
         echo '<tbody>
           <tr style="background-color: #ccc;">
-            <td valign="middle" colspan="11"><b>'.strtoupper($row->jenis_pengajuan).'</b></td>
+            <td valign="middle" colspan="9"><b>'.strtoupper($row->jenis_pengajuan).'</b></td>
           </tr>
         </tbody>';
         $current_cat = null;
@@ -733,7 +733,7 @@ class AppModel extends CI_Model
               <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
-              <td style="width:120px;text-align:center">'.($row2->keterangan == "" ? "-" : $row2->keterangan).'</td>
+
             <tr>
           </tbody>';
           $no++;
@@ -746,7 +746,6 @@ class AppModel extends CI_Model
             <td style="width:90px;text-align:right"><b>'.($nilai_corr == '0' ? '' : number_format($nilai_corr, '0','.','.')).'</b></td>
             <td style="width:90px;text-align:right"><b>'.($nilai_po == '0' ? '' : number_format($nilai_po, '0','.','.')).'</b></td>
             <td style="width:90px;text-align:right"><b>'.($pengajuan_total == '0' ? '' : number_format($pengajuan_total, '0','.','.')).'</b></td>
-            <td style="width:120px;text-align:center"></td>
           </tr>
         </tbody>';
       }
@@ -755,7 +754,7 @@ class AppModel extends CI_Model
         <tr style="background-color:#fff;">
           <td colspan="8">Total</td>
           <td style="width:90px;text-align:right"><b>'.($tot_np == '0' ? '' : number_format($tot_np, '0','.','.')).'</b></td>
-          <td colspan="1" style="width:120px;text-align:center;"></td>
+
         </tr>
       </tbody>
       </table>';
@@ -835,7 +834,7 @@ class AppModel extends CI_Model
           <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
           <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
           <td style="width:90px;text-align:center"><b>PENGAJUAN</b></td>
-          <td style="width:120px;text-align:center"><b>KET</b></td>
+
         </tr>
       </thead>
     ';
@@ -861,7 +860,7 @@ class AppModel extends CI_Model
 
       echo '<tbody>
         <tr style="background-color: #ccc;">
-          <td valign="middle" colspan="14"><b>'.strtoupper($row->jenis_pengajuan).'</b></td>
+          <td valign="middle" colspan="13"><b>'.strtoupper($row->jenis_pengajuan).'</b></td>
         </tr>
       </tbody>';
       $current_cat = null;
@@ -891,7 +890,7 @@ class AppModel extends CI_Model
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
-            <td style="width:120px;text-align:center">'.($row2->keterangan == "" ? "-" : $row2->keterangan).'</td>
+
           <tr>
         </tbody>';
         $no++;
@@ -904,7 +903,7 @@ class AppModel extends CI_Model
           <td style="width:90px;text-align:right"><b>'.($nilai_corr == '0' ? '' : number_format($nilai_corr, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($nilai_po == '0' ? '' : number_format($nilai_po, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($pengajuan_total == '0' ? '' : number_format($pengajuan_total, '0','.','.')).'</b></td>
-          <td colspan="1" style="width:120px;text-align:center;"></td>
+
         </tr>
       </tbody>';
     }
@@ -913,7 +912,7 @@ class AppModel extends CI_Model
       <tr style="background-color:#fff;">
         <td colspan="8">Total</td>
         <td style="width:90px;text-align:right"><b>'.($tot_np == '0' ? '' : number_format($tot_np, '0','.','.')).'</b></td>
-        <td colspan="1" style="width:120px;text-align:center;"></td>
+
       </tr>
     </tbody>
     </table>';
@@ -980,7 +979,7 @@ class AppModel extends CI_Model
           <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
           <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
           <td style="width:90px;text-align:center"><b>PENGAJUAN</b></td>
-          <td style="width:120px;text-align:center"><b>KET</b></td>
+
         </tr>
       </thead>
     ';
@@ -1001,7 +1000,7 @@ class AppModel extends CI_Model
 
       echo '<tbody>
         <tr style="background-color: #ccc;">
-          <td valign="middle" colspan="14"><b>'.strtoupper($row->jenis_pengajuan).'</b></td>
+          <td valign="middle" colspan="13"><b>'.strtoupper($row->jenis_pengajuan).'</b></td>
         </tr>
       </tbody>';
       $current_cat = null;
@@ -1031,7 +1030,7 @@ class AppModel extends CI_Model
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
-            <td style="width:120px;text-align:center">'.($row2->keterangan == "" ? "-" : $row2->keterangan).'</td>
+
           <tr>
         </tbody>';
         $no++;
@@ -1045,7 +1044,7 @@ class AppModel extends CI_Model
           <td style="width:90px;text-align:right"><b>'.($nilai_corr == '0' ? '' : number_format($nilai_corr, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($nilai_po == '0' ? '' : number_format($nilai_po, '0','.','.')).'</b></td>
           <td style="width:90px;text-align:right"><b>'.($pengajuan_total == '0' ? '' : number_format($pengajuan_total, '0','.','.')).'</b></td>
-          <td colspan="1" style="width:120px;text-align:center;"></td>
+
         </tr>
       </tbody>';
     }
@@ -1054,7 +1053,7 @@ class AppModel extends CI_Model
       <tr style="background-color:#fff;">
         <td colspan="8">Total</td>
         <td style="width:90px;text-align:right"><b>'.($tot_np == '0' ? '' : number_format($tot_np, '0','.','.')).'</b></td>
-        <td colspan="1" style="width:120px;text-align:center;"></td>
+
       </tr>
     </tbody>
     </table>';
@@ -1712,6 +1711,119 @@ class AppModel extends CI_Model
            ";
     }
 
+  }
+
+  public function printEvidencesSekaligus() {
+    $this->db->select("GROUP_CONCAT(evidence_id) as evidence_id");
+    $this->db->from('pengajuan');
+    // $this->db->where('pengajuan_id', $id);
+    $this->db->where('is_printed', 'N');
+    $this->db->where('success_print', 'N');
+    $this->db->where('status_admin_dmt', NULL);
+    $this->db->where('tanggal_approval_keuangan', NULL);
+    $query = $this->db->get();
+    $data = $query->row();
+    $evidence_list = explode(',', $data->evidence_id);
+    $arr = array();
+    foreach ($evidence_list as $evi) {
+      $this->db->select('url');
+      $this->db->from('evidence');
+      $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+      $this->db->where('id_evidence', $evi);
+      $queryvi = $this->db->get();
+      $arr[] = $queryvi->row();
+    }
+    echo "
+          <!--<body onload='window.print()'>-->
+          <style>
+            @media print{@page {size: landscape}}
+            .image {
+              display: inline-block;
+              margin: 4px;
+              background-position: center center;
+              background-repeat: no-repeat;
+            }
+            .image.scale-fit {
+              background-size: contain;
+            }
+            .image.scale-fill {
+              background-size: cover;
+            }
+            .image img {
+              display: none;
+            }";
+
+            switch (count(array_filter($arr))) {
+              case '1':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 100%;
+                    height: 90%;
+                  }";
+                break;
+              case '2':
+                  echo "
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 70%;
+                  }";
+                break;
+              case '3':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 45%;
+                  }";
+                break;
+              case '4':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 45%;
+                  }";
+                break;
+              case '5':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+              case '6':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+              case '7':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 30%;
+                  }";
+                break;
+              case '8':
+                  echo ".image.size-fluid {
+                    width: 23%;
+                    height: 45%;
+                  }";
+                break;
+              default:
+                  echo ".image.size-fluid {
+                    width: 22%;
+                    height: 23%;
+                  }";
+                break;
+            }
+    echo "</style>";
+    foreach (array_filter($arr) as $key => $value) {
+      echo "
+            <div class=\"image size-fluid scale-fit\" style=\"background-image: url('".base_url('public/assets/evidence/'.$value->url)."');\"><img src=".base_url('public/assets/evidence/'.$value->url)." alt=\"Orientation: Square\">
+            <!--<br>
+            ".substr($value->url, "14")."--></div>
+           ";
+    }
   }
 
   public function checkAll($data) {

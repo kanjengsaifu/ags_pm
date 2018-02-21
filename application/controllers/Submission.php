@@ -568,4 +568,8 @@ class Submission extends MY_Controller
   public function getImages($id) {
     $this->appModel->getImages($id);
   }
+
+  public function printEvidences() {
+    $this->appModel->printEvidencesSekaligus();
+  }
 }

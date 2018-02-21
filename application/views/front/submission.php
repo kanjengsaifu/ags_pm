@@ -636,6 +636,7 @@
 	                  </button> -->
 										<br>
 										<a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
+										<a id="print_evi" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print-evidences')?>"><i class="fas fa-print"></i>&nbsp; PRINT EVIDENCES</a>
 										<a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT ULANG YANG TERPILIH</a>
 										<a id="acc" class="btn btn-outline-primary" onclick="accTerpilih()">ACC YANG TERPILIH</a>
 										<button type="button" class="btn cur-p btn-outline-primary" id="check_all">
@@ -855,6 +856,7 @@
 							document.getElementById("print").href = "<?=site_url('submission/re-print')?>";
 							$('#print').show();
 							$('#print_c').show();
+							$('#print_evi').hide();
 							$('#acc').show();
 							$('#check_all').show();
 							$('#uncheck_all').show();
@@ -880,6 +882,7 @@
 							$('#uncheck_all').hide();
 							$('#h_check_all').hide();
 							$('#h_uncheck_all').hide();
+							$('#print_evi').hide();
 						});
 
 						$('#belum_diprint').click(function() {
@@ -892,6 +895,7 @@
 							$('#print').show();
 							$('#print_c').hide();
 							$('#acc').hide();
+							$('#print_evi').show();
 							$('#check_all').hide();
 							$('#uncheck_all').hide();
 							$('#h_check_all').hide();
@@ -923,6 +927,7 @@
 							$('#print').show();
 							$('#print_c').hide();
 							$('#acc').hide();
+							$('#print_evi').hide();
 							$('#check_all').hide();
 							$('#uncheck_all').hide();
 							$('#h_check_all').show();
@@ -936,6 +941,7 @@
 							$('#bayar_stat').show();
 							$('#client_stat').show();
 							$('#print_c').hide();
+							$('#print_evi').hide();
 							$('#acc').hide();
 
 							$("input[type=hidden]").val("N");

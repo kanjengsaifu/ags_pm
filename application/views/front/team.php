@@ -261,9 +261,9 @@
 							$('.selectpicker').selectpicker('render');
 							var input = data.kendaraan_id;
 							var output = input.replace(",", "\",\"");
-							var akhir = [output];
+							var akhir = output;
 							console.log(akhir);
-							$('#kendaraan_e').select2().select2("val", akhir);
+							$('#kendaraan_e').select2().select2("val", ["3"]);
 							// $.ajax({
 							// 	url: "<?=base_url('team/getCurrentCluster/')?>"+id,
 							// 	type: "GET",
