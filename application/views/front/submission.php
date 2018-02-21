@@ -332,12 +332,9 @@
 																	<div class="" id="bukti">
 
 																		<div id="bukti_dokumen"></div>
+																		<div id="mult_img_row1"></div>
 
-																		<a id="print_bukti" target="_blank" href="#">PRINT BUKTI GAMBAR</a>
-																		<div class="" id="mult_img_row1">
-																		</div>
-
-																		<div id="myModal" style="height:100%" class="modal" data-backdrop="static" data-keyboard="false">
+																		<!-- <div id="myModal" style="height:100%" class="modal" data-backdrop="static" data-keyboard="false">
 																		  <span class="close cursor" onclick="closeModal()">&times;</span>
 																		  <div class="modal-content">
 
@@ -359,7 +356,7 @@
 																					<button class="btn btn-secondary" onclick="closeModal()" type="button">Close</button>
 																				</div>
 																		  </div>
-																		</div>
+																		</div> -->
 																	</div>
 																</td>
 															</tr>
@@ -595,9 +592,9 @@
 										<i class="fas fa-sync-alt"></i>
                   </button>
 									<?php if (isAdminJakarta()): ?>
-										<button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
+										<!-- <button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
 	                    SEMUA PENGAJUAN
-	                  </button>
+	                  </button> -->
 									<?php endif; ?>
 									<?php if (isApproval()): ?>
 										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
@@ -641,6 +638,18 @@
 										<a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
 										<a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT ULANG YANG TERPILIH</a>
 										<a id="acc" class="btn btn-outline-primary" onclick="accTerpilih()">ACC YANG TERPILIH</a>
+										<button type="button" class="btn cur-p btn-outline-primary" id="check_all">
+											CHECK ALL
+										</button>
+										<button type="button" class="btn cur-p btn-outline-primary" id="uncheck_all">
+											UNCHECK ALL
+										</button>
+										<button type="button" class="btn cur-p btn-outline-primary" id="h_check_all">
+											CHECK ALL
+										</button>
+										<button type="button" class="btn cur-p btn-outline-primary" id="h_uncheck_all">
+											UNCHECK ALL
+										</button>
 									<?php endif; ?>
 									<hr>
 									<?php if (isApproval() || isAdminJakarta()) { ?>
@@ -762,6 +771,10 @@
 				$('#print').show();
 				$('#print_c').hide();
 				$('#acc').hide();
+				$('#check_all').hide();
+				$('#uncheck_all').hide();
+				$('#h_check_all').hide();
+				$('#h_uncheck_all').hide();
 
 				$(document).ready(function() {
 						submission = $('#submission').DataTable({
@@ -843,6 +856,10 @@
 							$('#print').show();
 							$('#print_c').show();
 							$('#acc').show();
+							$('#check_all').show();
+							$('#uncheck_all').show();
+							$('#h_check_all').hide();
+							$('#h_uncheck_all').hide();
 							submission.ajax.reload();  //just reload table
 						});
 
@@ -859,6 +876,10 @@
 							submission.ajax.reload();  //just reload table
 							$('#print_c').hide();
 							$('#acc').hide();
+							$('#check_all').hide();
+							$('#uncheck_all').hide();
+							$('#h_check_all').hide();
+							$('#h_uncheck_all').hide();
 						});
 
 						$('#belum_diprint').click(function() {
@@ -871,6 +892,10 @@
 							$('#print').show();
 							$('#print_c').hide();
 							$('#acc').hide();
+							$('#check_all').hide();
+							$('#uncheck_all').hide();
+							$('#h_check_all').hide();
+							$('#h_uncheck_all').hide();
 							submission.ajax.reload();  //just reload table
 						});
 
@@ -898,6 +923,10 @@
 							$('#print').show();
 							$('#print_c').hide();
 							$('#acc').hide();
+							$('#check_all').hide();
+							$('#uncheck_all').hide();
+							$('#h_check_all').show();
+							$('#h_uncheck_all').show();
 							submission.ajax.reload();  //just reload table
 						});
 
@@ -914,6 +943,54 @@
 							$('#print').hide();
 							submission.ajax.reload();  //just reload table
 						})
+
+						$('#check_all').click(function() {
+							$.ajax({
+								url: "<?=site_url('submission/checkAll/')?>",
+								type: "POST",
+								success: function(data) {
+									reload_table();
+								}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+									console.log(errorThrown);
+								}
+							});
+						});
+
+						$('#uncheck_all').click(function() {
+							$.ajax({
+								url: "<?=site_url('submission/unCheckAll/')?>",
+								type: "POST",
+								success: function(data) {
+									reload_table();
+								}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+									console.log(errorThrown);
+								}
+							});
+						});
+
+						$('#h_check_all').click(function() {
+							$.ajax({
+								url: "<?=site_url('submission/hCheckAll/')?>",
+								type: "POST",
+								success: function(data) {
+									reload_table();
+								}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+									console.log(errorThrown);
+								}
+							});
+						});
+
+						$('#h_uncheck_all').click(function() {
+							$.ajax({
+								url: "<?=site_url('submission/hunCheckAll/')?>",
+								type: "POST",
+								success: function(data) {
+									reload_table();
+								}, error: function(XMLHttpRequest, textStatus, errorThrown) {
+									console.log(errorThrown);
+								}
+							});
+						});
 
 						$('#btn-filter').click(function() { //button filter event click
 				    	submission.ajax.reload();  //just reload table
@@ -1521,6 +1598,9 @@
 
 
 				function detailPengajuan(id) {
+					// if ($("#my_gallery").length > 0) {
+					// 	document.getElementById("my_gallery").remove();
+					// }
 					$('#mult_img_row1').html("");
 					$('#mult_img_row2').html("");
 					$('#mult_img_row3').html("");
@@ -1628,7 +1708,6 @@
 							if (data.evidence_id != null) {
 								$('#bukti_src_div').show();
 								$('#print_bukti').show();
-								document.getElementById("print_bukti").href = "<?=site_url('submission/print-bukti/')?>"+id;
 								$.ajax({
 									url: "<?=site_url('submission/getEvidencebyID')?>/" + data.pengajuan_id,
 									type: "GET",
@@ -1639,28 +1718,37 @@
 										var row2 = '';
 										var row3 = '';
 										var angka = 1;
-											for (var i = 0; i < evi[0].length; i++) {
+											// for (var i = 0; i < evi[0].length; i++) {
 												// console.log(evi[0][i].url)
-												if (evi[0][i] != null) {
+														if (evi[0][0] != null) {
+															row1+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti/')?>'+data.pengajuan_id+'"><i class="fas fa-print"></i></a></button></div><div id="my_gallery'+data.pengajuan_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
+														}
 
-													row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
-														'<img src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
-													'</div>';
+														for (var i = 0; i < evi[0].length; i++) {
+															if (evi[0][i] != null) {
+																row1+= '<a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][i].url) +'" >'+evi[0][i].url.substring(14)+'</a>';
+															}
+														}
 
-													row2+='<div class="mySlides">'+
-															'<img src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
-														'</div>';
+														if (evi[0][0] != null) {
+															row1+= '</div>';
+														}
+													// row1+= (i == 0 ? '<br>' : '') + '<a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][i].url) +'" >Title Image1</a>';
 
-													row3+='<div class="column">'+
-															'<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
-														'</div>';
-												}
+													// row2+='<div class="mySlides">'+
+													// 		'<img src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
+													// 	'</div>';
+													//
+													// row3+='<div class="column">'+
+													// 		'<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
+													// 	'</div>';
+												// }
 												angka++;
-											}
-
+											// }
 										$('#mult_img_row1').html(row1);
-										$('#mult_img_row2').html(row2);
-										$('#mult_img_row3').html(row3);
+										// $('#mult_img_row2').html(row2);
+										// $('#mult_img_row3').html(row3);
+										$('#my_gallery'+data.pengajuan_id+moment().toDate().getTime()+'').nanogallery2('refresh');
 									}, error: function(jqXHR, textStatus, errorThrown) {
 										var err = eval("(" + jqXHR.responseText + ")");
 									  alert(err.Message);
@@ -1668,7 +1756,6 @@
 								});
 							} else {
 								$('#bukti_src_div').hide();
-								$('#print_bukti').hide();
 							}
 							if (data.evidence_id != null) {
 								$.ajax({
@@ -1681,8 +1768,11 @@
 										var angka = 1;
 										for (var i = 0; i < evi[0].length; i++) {
 											// console.log(evi[0][i].url)
+											$('#bukti_dokumen').show();
 											if (evi[0][i] != null) {
 												row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" target="_blank">'+ evi[0][i].url.slice(14) +'</a></div>';
+											} else {
+												$('#bukti_dokumen').hide();
 											}
 											angka++;
 										}
@@ -1693,9 +1783,6 @@
 									  alert(err.Message);
 									}
 								})
-							} else {
-								$('#bukti_src_div').hide();
-								$('#print_bukti').hide();
 							}
 
 							$.ajax({

@@ -609,10 +609,10 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
-  public function checkAll($where, $data) {
-    $this->db->update('pengajuan', $data, $where);
-    return $this->db->affected_rows();
-  }
+  // public function checkAll($where, $data) {
+  //   $this->db->update('pengajuan', $data, $where);
+  //   return $this->db->affected_rows();
+  // }
 
   public function accTerpilih($where, $data) {
     $this->db->update('pengajuan', $data, $where);
@@ -679,7 +679,7 @@ class AppModel extends CI_Model
             <td style="width:70px;text-align:center"><b>ID</b></td>
             <td><b>PEKERJAAN</b></td>
             <td style="width:70px;text-align:center"><b>ID SITE</b></td>
-            <td style="width:90px;text-align:center"><b>NAMA SITE</b></td>
+            <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
             <td style="width:90px;text-align:center"><b>REALISASI</b></td>
             <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
             <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
@@ -691,6 +691,7 @@ class AppModel extends CI_Model
       ';
 
       $no = 1;
+      $tot_np = 0;
       foreach ($data->result() as $row) {
         $this->db->from('pengajuan');
         $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
@@ -715,6 +716,7 @@ class AppModel extends CI_Model
           $nilai_corr+= $row2->nilai_corr;
           $nilai_po+= $row2->nilai_po;
           $pengajuan_total+= $row2->nilai_pengajuan;
+          $tot_np += $row2->nilai_pengajuan;
           if ($row2->jenis_pengajuan != $current_cat) {
             $current_cat = $row2->jenis_pengajuan;
           }
@@ -749,6 +751,13 @@ class AppModel extends CI_Model
         </tbody>';
       }
       echo '
+      <tbody>
+        <tr style="background-color:#fff;">
+          <td colspan="8">Total</td>
+          <td style="width:90px;text-align:right"><b>'.($tot_np == '0' ? '' : number_format($tot_np, '0','.','.')).'</b></td>
+          <td colspan="1" style="width:120px;text-align:center;"></td>
+        </tr>
+      </tbody>
       </table>';
       $this->db->set('success_print', 'Y');
       $this->db->where('success_print', 'N');
@@ -760,7 +769,6 @@ class AppModel extends CI_Model
   }
 
   public function getSubPrintingTerpilih() {
-    echo $this->uri->segment(2);
     $this->db->distinct();
     $this->db->select('jenis_pengajuan');
     if ($this->uri->segment(2) == "re-print-h") {
@@ -811,7 +819,7 @@ class AppModel extends CI_Model
     </style>
 
     <body onload="window.print()">
-    <span style="float:left;font-weight: 100"> <i>Lembar Print Ulang Pengajuan Terhold</i>  </span>
+    <span style="float:left;font-weight: 100"> <i> '.($this->uri->segment(2) == "re-print-h" ? 'Rekap' : 'Lembar Print Ulang Pengajuan Terhold').' </i>  </span>
     <span style="float:right;font-weight: 100"> Diprint pada '.date('d/m/Y', time()).'</span>
     <br><br>
     <table class="print-friendly">
@@ -820,9 +828,9 @@ class AppModel extends CI_Model
           <td style="width:20px">#</td>
           <td style="width:50px;text-align:center"><b>ID</b></td>
           <td><b>PEKERJAAN</b></td>
-          <td style="width:30px;text-align:center"><b>ID SITE</b></td>
-          <td style="width:90px;text-align:center"><b>NAMA SITE</b></td>
-          <td style="width:60px;text-align:center"><b>REALISASI</b></td>
+          <td style="width:70px;text-align:center"><b>ID SITE</b></td>
+          <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
+          <td style="width:80px;text-align:center"><b>REALISASI</b></td>
           <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
           <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
           <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
@@ -833,6 +841,7 @@ class AppModel extends CI_Model
     ';
 
     $no = 1;
+    $tot_np = 0;
     foreach ($data->result() as $row) {
       $this->db->from('pengajuan');
       $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
@@ -865,6 +874,7 @@ class AppModel extends CI_Model
         $nilai_corr+= $row2->nilai_corr;
         $nilai_po+= $row2->nilai_po;
         $pengajuan_total+= $row2->nilai_pengajuan;
+        $tot_np += $row2->nilai_pengajuan;
         if ($row2->jenis_pengajuan != $current_cat) {
           $current_cat = $row2->jenis_pengajuan;
         }
@@ -899,6 +909,13 @@ class AppModel extends CI_Model
       </tbody>';
     }
     echo '
+    <tbody>
+      <tr style="background-color:#fff;">
+        <td colspan="8">Total</td>
+        <td style="width:90px;text-align:right"><b>'.($tot_np == '0' ? '' : number_format($tot_np, '0','.','.')).'</b></td>
+        <td colspan="1" style="width:120px;text-align:center;"></td>
+      </tr>
+    </tbody>
     </table>';
   }
 
@@ -956,9 +973,9 @@ class AppModel extends CI_Model
           <td style="width:20px">#</td>
           <td style="width:50px;text-align:center"><b>ID</b></td>
           <td><b>PEKERJAAN</b></td>
-          <td style="width:30px;text-align:center"><b>ID SITE</b></td>
-          <td style="width:90px;text-align:center"><b>NAMA SITE</b></td>
-          <td style="width:60px;text-align:center"><b>REALISASI</b></td>
+          <td style="width:70px;text-align:center"><b>ID SITE</b></td>
+          <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
+          <td style="width:80px;text-align:center"><b>REALISASI</b></td>
           <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
           <td style="width:90px;text-align:center"><b>NILAI CORR / SPH</b></td>
           <td style="width:90px;text-align:center"><b>NILAI PO</b></td>
@@ -969,6 +986,7 @@ class AppModel extends CI_Model
     ';
 
     $no = 1;
+    $tot_np = 0;
     foreach ($data->result() as $row) {
       $this->db->from('pengajuan');
       $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
@@ -979,6 +997,7 @@ class AppModel extends CI_Model
       $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
       $this->db->order_by('pengajuan.jenis_pengajuan');
       $data2 = $this->db->get();
+      $dg = $data2->row();
 
       echo '<tbody>
         <tr style="background-color: #ccc;">
@@ -991,6 +1010,7 @@ class AppModel extends CI_Model
       $nilai_po = 0;
       $pengajuan_total = 0;
       foreach ($data2->result() as $row2) {
+        $tot_np += $row2->nilai_pengajuan;
         $nilai_sph+= $row2->nilai_sph;
         $nilai_corr+= $row2->nilai_corr;
         $nilai_po+= $row2->nilai_po;
@@ -1017,7 +1037,8 @@ class AppModel extends CI_Model
         $no++;
         $no = $no++;
       }
-      echo '<tbody>
+      echo '
+      <tbody>
         <tr style="background-color:#fff;">
           <td colspan="6"></td>
           <!--<td style="width:90px;text-align:right"><b>'.($nilai_sph == '0' ? '' : number_format($nilai_sph, '0','.','.')).'</b></td>-->
@@ -1029,6 +1050,13 @@ class AppModel extends CI_Model
       </tbody>';
     }
     echo '
+    <tbody>
+      <tr style="background-color:#fff;">
+        <td colspan="8">Total</td>
+        <td style="width:90px;text-align:right"><b>'.($tot_np == '0' ? '' : number_format($tot_np, '0','.','.')).'</b></td>
+        <td colspan="1" style="width:120px;text-align:center;"></td>
+      </tr>
+    </tbody>
     </table>';
   }
 
@@ -1621,27 +1649,20 @@ class AppModel extends CI_Model
     foreach ($evidence_list as $evi) {
       $this->db->select('url');
       $this->db->from('evidence');
-      $this->db->where('id_evidence', $evi);
       $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+      $this->db->where('id_evidence', $evi);
       $queryvi = $this->db->get();
       $arr[] = $queryvi->row();
     }
-    echo "<style>
+    echo "
+          <body onload='window.print()'>
+          <style>
             @media print{@page {size: landscape}}
             .image {
               display: inline-block;
               margin: 4px;
-              border: 1px solid #CCCCCC;
               background-position: center center;
               background-repeat: no-repeat;
-            }
-            .image.size-fixed {
-              width: 500px;
-              height: 500px;
-            }
-            .image.size-fluid {
-              width: 32%;
-              height: 45%;
             }
             .image.scale-fit {
               background-size: contain;
@@ -1651,13 +1672,86 @@ class AppModel extends CI_Model
             }
             .image img {
               display: none;
+            }";
+
+            switch (count(array_filter($arr))) {
+              case '1':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 100%;
+                    height: 90%;
+                  }";
+                break;
+              case '2':
+                  echo "
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 70%;
+                  }";
+                break;
+              case '6':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+              default:
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
             }
-        </style>
+
+    echo "</style>
         Evidence untuk pengajuan $data->pengajuan<br>";
-    foreach ($arr as $key => $value) {
+    foreach (array_filter($arr) as $key => $value) {
       echo "
-            <div class=\"image size-fluid scale-fit\" style=\"background-image: url(".base_url('public/assets/evidence/'.$value->url).");\"><img src=\"image-1.jpg\" alt=\"Orientation: Square\"></div>
+            <div class=\"image size-fluid scale-fit\" style=\"background-image: url('".base_url('public/assets/evidence/'.$value->url)."');\"><img src=".base_url('public/assets/evidence/'.$value->url)." alt=\"Orientation: Square\"></div>
            ";
+    }
+
+  }
+
+  public function checkAll($data) {
+    $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('status_admin_dmt !=', NULL);
+    // $this->db->where('tanggal_approval_keuangan', NULL);
+    $this->db->where('is_printed', 'Y');
+    $this->db->where('success_print', 'Y');
+    $this->db->update('pengajuan', $data);
+    return $this->db->affected_rows();
+  }
+
+  public function hCheckAll($data) {
+    $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('status_admin_dmt !=', NULL);
+    $this->db->where('tanggal_approval_keuangan !=', NULL);
+    $this->db->where('is_printed', 'Y');
+    $this->db->where('success_print', 'Y');
+    $this->db->update('pengajuan', $data);
+    return $this->db->affected_rows();
+  }
+
+  public function getImages($id) {
+    // $this->db->select('evidence_id','pengajuan');
+    $this->db->from('pengajuan');
+    $this->db->where('pengajuan_id', $id);
+    $query = $this->db->get();
+    $data = $query->row();
+    $evidence_list = explode(',', $data->evidence_id);
+    $arr = array();
+    foreach ($evidence_list as $evi) {
+      $this->db->select('url');
+      $this->db->from('evidence');
+      $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+      $this->db->where('id_evidence', $evi);
+      $queryvi = $this->db->get();
+      $arr[] = $queryvi->row();
+    }
+    foreach (array_filter($arr) as $key => $value) {
+      return '<a href="'.base_url('public/assets/evidence/'.$value->url).'" data-ngthumb="'.base_url('public/assets/evidence/'.$value->url).'">Title Image1</a>';
     }
   }
 

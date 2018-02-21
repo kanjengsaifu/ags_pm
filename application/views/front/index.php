@@ -56,7 +56,6 @@
 											</div>
 										</div>
 									</div>
-									<br>
 									<?php if (isViewer()): ?>
 										<!-- <div class="col-md-12" id="chart">
 											<div class="col-md-6">
@@ -68,7 +67,6 @@
 										</div> -->
 										<button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn">SHOW CUSTOM FILTER</button>
 										<br>
-
 										<!-- PENGAJUAN DETAIL -->
 										<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="detailPengajuan" role="dialog" tabindex="-1">
 	                		<div class="modal-dialog modal-lg" role="document" id="modalDetail">

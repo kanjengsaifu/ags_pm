@@ -262,7 +262,7 @@ class Submission extends MY_Controller
       // $row[]  = ($stfd->is_bayar == "N" ? "&#x2714" : '');
       // $row[]  = ($stfd->is_bayarclient == "N" ? "&#x2714" : '');
       $row[]  = '
-                  <button type="button" href="" onclick="detailPengajuan('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailPengajuan">
+                  <button type="button" href="" id="detailPengajuan" onclick="detailPengajuan('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailPengajuan">
                     <i class="fas fa-search"></i>
                   </button>
                   '.
@@ -291,6 +291,15 @@ class Submission extends MY_Controller
                             </button>' : ''
                           )
                         ) : ''
+                      ) : ''
+                    )
+                  .'
+                  '.
+                    (isAdminTasik() ?
+                      ($stfd->tanggal_approval_keuangan != NULL ?
+                        '<button onclick="reset_cam('."'".$stfd->pengajuan_id."'".')" type="button" href="" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#captureEvidence">
+                          <i class="fa fa-camera"></i>
+                        </button>' : ''
                       ) : ''
                     )
                   .'
@@ -406,13 +415,13 @@ class Submission extends MY_Controller
     echo json_encode(array("status" => TRUE));
   }
 
-  public function checkall() {
-    $data = array(
-      'is_checked' => "Y"
-    );
-    $this->appModel->checkAll(array('is_printed' => "N"), $data);
-    echo json_encode(array("status" => TRUE));
-  }
+  // public function checkall() {
+  //   $data = array(
+  //     'is_checked' => "Y"
+  //   );
+  //   $this->appModel->checkAll(array('is_printed' => "N"), $data);
+  //   echo json_encode(array("status" => TRUE));
+  // }
 
   public function rmvcheckall() {
     $data = array(
@@ -518,5 +527,45 @@ class Submission extends MY_Controller
 
   public function printBukti($id) {
     $this->appModel->printEvidences($id);
+  }
+
+  public function checkAll() {
+    // check all on progress
+    $data = array(
+      'is_checked'  => "Y"
+    );
+    $this->appModel->checkAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function unCheckAll() {
+    // check all on progress
+    $data = array(
+      'is_checked'  => "N"
+    );
+    $this->appModel->checkAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function hCheckAll() {
+    // check all on progress
+    $data = array(
+      'is_checked_h'  => "Y"
+    );
+    $this->appModel->checkAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function hunCheckAll() {
+    // check all on progress
+    $data = array(
+      'is_checked_h'  => "N"
+    );
+    $this->appModel->checkAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function getImages($id) {
+    $this->appModel->getImages($id);
   }
 }

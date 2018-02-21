@@ -22,8 +22,10 @@
     <?=css('css/ekko-lightbox.css')?>
     <?=css('css/font-awesome.min.css')?>
     <?=css('css/theme.min.css?ver=201801102302')?>
+    <link href="https://unpkg.com/nanogallery2@2.0.0/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/nanogallery2@2.0.0/dist/jquery.nanogallery2.min.js"></script>
     <?=js('js/piexif.min.js')?>
     <?=js('js/sortable.min.js')?>
     <?=js('js/purify.min.js')?>
