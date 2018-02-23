@@ -508,10 +508,10 @@
                       </a>
                       <ul class="dropdown-menu" style="display: block;">
                         <li>
-                          <a href="javascript:void(0);">Dokumen</a>
+                          <a href="<?=site_url('evidences/progress/document')?>">Dokumen</a>
                         </li>
                         <li>
-                          <a href="javascript:void(0);">Picture</a>
+                          <a href="<?=site_url('evidences/progress/picture')?>">Picture</a>
                         </li>
                       </ul>
                     </li>

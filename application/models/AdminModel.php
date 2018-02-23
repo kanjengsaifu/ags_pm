@@ -161,50 +161,50 @@ class AdminModel extends CI_Model
     // $this->excel->getActiveSheet()->setTitle('test worksheet');
 
     $this->db->from('pengajuan');
-    $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
+    $this->db->join('site', 'progress.site_id = site.site_id', 'left');
 
     if ($data['on_progress'] != 'N') {
-      $this->db->where('pengajuan.is_printed', 'Y');
-      $this->db->where('pengajuan.success_print', 'Y');
-      $this->db->where('pengajuan.status_admin_dmt !=', NULL);
-      $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
+      $this->db->where('progress.is_printed', 'Y');
+      $this->db->where('progress.success_print', 'Y');
+      $this->db->where('progress.status_admin_dmt !=', NULL);
+      $this->db->where('progress.tanggal_approval_keuangan', NULL);
     }
 
     if ($data['history'] != 'N') {
-      $this->db->where('pengajuan.is_printed', 'Y');
-      $this->db->where('pengajuan.success_print', 'Y');
-      $this->db->where('pengajuan.status_admin_dmt !=', NULL);
-      $this->db->where('pengajuan.tanggal_approval_keuangan !=', NULL);
+      $this->db->where('progress.is_printed', 'Y');
+      $this->db->where('progress.success_print', 'Y');
+      $this->db->where('progress.status_admin_dmt !=', NULL);
+      $this->db->where('progress.tanggal_approval_keuangan !=', NULL);
     }
 
     if ($data['belum_diprint'] != 'N') {
-      $this->db->where('pengajuan.is_printed', 'N');
-      $this->db->where('pengajuan.success_print', 'N');
-      $this->db->where('pengajuan.success_print', 'N');
-      $this->db->where('pengajuan.status_admin_dmt', NULL);
-      $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
-      $this->db->where('pengajuan.tanggal_approval !=', NULL);
+      $this->db->where('progress.is_printed', 'N');
+      $this->db->where('progress.success_print', 'N');
+      $this->db->where('progress.success_print', 'N');
+      $this->db->where('progress.status_admin_dmt', NULL);
+      $this->db->where('progress.tanggal_approval_keuangan', NULL);
+      $this->db->where('progress.tanggal_approval !=', NULL);
     }
 
     if ($data['progress_project'] != 'N') {
-      $this->db->where('pengajuan.is_printed', 'Y');
-      $this->db->where('pengajuan.success_print', 'Y');
-      $this->db->where('pengajuan.kategori_pengajuan', 'Project');
-      $this->db->where('pengajuan.status_admin_dmt !=', NULL);
-      $this->db->where('pengajuan.tanggal_approval_keuangan !=', NULL);
+      $this->db->where('progress.is_printed', 'Y');
+      $this->db->where('progress.success_print', 'Y');
+      $this->db->where('progress.kategori_pengajuan', 'Project');
+      $this->db->where('progress.status_admin_dmt !=', NULL);
+      $this->db->where('progress.tanggal_approval_keuangan !=', NULL);
     }
 
     if ($data['semua_pengajuan'] != 'N') {
     }
 
     if ($data['belum_diapprove'] != 'N') {
-      $this->db->where('pengajuan.tanggal_approval', NULL);
-      $this->db->where('pengajuan.is_printed', 'N');
+      $this->db->where('progress.tanggal_approval', NULL);
+      $this->db->where('progress.is_printed', 'N');
     }
 
     if ($data['sudah_diapprove'] != 'N') {
-      $this->db->where('pengajuan.tanggal_approval !=', NULL);
-      $this->db->where('pengajuan.is_printed', 'N');
+      $this->db->where('progress.tanggal_approval !=', NULL);
+      $this->db->where('progress.is_printed', 'N');
     }
 
     if ($data['pengajuan'] != "") {
@@ -730,5 +730,117 @@ class AdminModel extends CI_Model
     }
     echo '</tbody>
         </table>';
+  }
+
+  // evidence
+  public function getPrpicJSON() {
+    $this->PrpicJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function PrpicJSON_query() {
+    $table = 'evidence_progress';
+    $column_order = array(null, 'evidence_progress.url', 'evidence_progress.url', 'evidence_progress.id_evidence', null);
+    $column_search = array('evidence_progress.url', 'evidence_progress.url', 'evidence_progress.id_evidence');
+
+    $this->db->from($table);
+    // $this->db->join('evidence', 'find_in_set(evidence_progress.id_evidence, progress.evidence_id)', 'left outer', false);
+    $this->db->join('progress', 'evidence_progress.progress_id = progress.progress_id', 'left outer', false);
+    $this->db->where_in('evidence_progress.extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $this->db->group_by('evidence_progress.id_evidence');
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countPrpicDataFiltered() {
+    $this->PrpicJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countPrpicData() {
+    $this->db->from('evidence_progress');
+    return $this->db->count_all_results();
+  }
+
+  // evidence
+  public function getPrDocJSON() {
+    $this->PrDocJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function PrDocJSON_query() {
+    $table = 'evidence_progress';
+    $column_order = array(null, 'evidence_progress.url', 'evidence_progress.url', 'evidence_progress.id_evidence', null);
+    $column_search = array('evidence_progress.url', 'evidence_progress.url', 'evidence_progress.id_evidence');
+
+    $this->db->from($table);
+    // $this->db->join('evidence', 'find_in_set(evidence_progress.id_evidence, progress.evidence_id)', 'left outer', false);
+    $this->db->join('progress', 'evidence_progress.progress_id = progress.progress_id', 'left outer', false);
+    $this->db->where_not_in('evidence_progress.extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $this->db->group_by('evidence_progress.id_evidence');
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countPrDocDataFiltered() {
+    $this->PrDocJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countPrDocData() {
+    $this->db->from('evidence_progress');
+    return $this->db->count_all_results();
   }
 }

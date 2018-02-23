@@ -177,7 +177,7 @@ class Progress extends MY_Controller
       for ($i=0; $i < $filesCount; $i++) {
         unset($config);
         $config = array();
-        $config['upload_path']    = './public/assets/evidence/';
+        $config['upload_path']    = './public/assets/evidence/progress/';
         $config['allowed_types']  = 'jpg|jpeg|png|pdf|xlsx|xls|doc|docx';
         $config['overwrite']      = FALSE;
         $config['file_name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
@@ -315,5 +315,75 @@ class Progress extends MY_Controller
 
   public function h_printTerpilih() {
     $this->adminModel->h_getProgressPrintingTerpilih();
+  }
+
+  public function main_document($page = 'progress/document') {
+    isLoggedIn();
+    $config['title']  = "Progress Evidences | Pengajuan" . $this->title;
+    $this->loadPage($page, $config);
+  }
+
+  public function main_picture($page = 'progress/picture') {
+    isLoggedIn();
+    $config['title']  = "Progress Evidences | Pengajuan" . $this->title;
+    $this->loadPage($page, $config);
+  }
+
+  public function data_doc() {
+    $PrDoc_data  = $this->adminModel->getPrDocJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($PrDoc_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = substr($stfd->url, 14);
+      $row[]  = $stfd->extension;
+      $row[]  = "#ADP".sprintf('%04d', $stfd->progress_id);
+      $row[]  = '
+                  <a type="button" href="'.base_url('public/assets/evidence/progress/'.$stfd->url).'" download="'.$stfd->url.'" onclick="downloadEvidence('."'".$stfd->id_evidence."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
+                    <i class="fas fa-download"></i>
+                  </button>
+                ';
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->adminModel->countPrDocData(),
+      "recordsFiltered" => $this->adminModel->countPrDocDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
+  }
+
+  public function data_pic() {
+    $TDoc_data  = $this->adminModel->getPrpicJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($TDoc_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = '<img src='.base_url('public/assets/evidence/progress/'.$stfd->url).' width="200">';
+      $row[]  = $stfd->keterangan;
+      $row[]  = "#ADP".sprintf('%04d', $stfd->progress_id);
+      $row[]  = '
+                  <a type="button" href="'.base_url('public/assets/evidence/progress/'.$stfd->url).'" download="'.$stfd->url.'" onclick="downloadEvidence('."'".$stfd->id_evidence."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
+                    <i class="fas fa-download"></i>
+                  </button>
+                ';
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->adminModel->countPrpicData(),
+      "recordsFiltered" => $this->adminModel->countPrpicDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
   }
 }

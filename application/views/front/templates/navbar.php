@@ -50,18 +50,51 @@
           <span class="fsz-sm c-grey-900"><?=$this->session->userdata('name')?></span>
         </div></a>
         <ul class="dropdown-menu fsz-sm">
-          <!-- <li>
-            <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="#"><i class="ti-settings mR-10"></i> <span>Setting</span></a>
-          </li>
           <li>
+            <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="<?=site_url('settings')?>" data-toggle="modal" data-target="#settings"><i class="ti-settings mR-10"></i> <span>Account Setting</span></a>
+          </li>
+          <!-- <li>
             <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="#"><i class="ti-user mR-10"></i> <span>Profile</span></a>
           </li> -->
-          <!-- <li class="divider" role="separator"></li> -->
+          <li class="divider" role="separator"></li>
           <li>
             <a class="d-b td-n bgcH-grey-100 c-grey-700" href="<?=site_url('logout')?>"><i class="ti-power-off mR-10"></i> <span>Logout</span></a>
           </li>
         </ul>
       </li>
     </ul>
+  </div>
+</div>
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="settings" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Account Settings</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_addfeed" class="" action="<?=site_url('app/saveChanges')?>" method="post" enctype="multipart/form-data">
+
+          <div class="form-group">
+            <label for="">Current Password</label>
+            <input type="password" name="cur_password" value="" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="">New Password</label>
+            <input type="password" name="password" value="" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="">Confirm New Password</label>
+            <input type="password" name="password" value="" class="form-control">
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+        <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnSaveChanges" onclick="savechanges()">Submit</button>
+      </div>
+      </form>
+    </div>
   </div>
 </div>

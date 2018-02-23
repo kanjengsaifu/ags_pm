@@ -18,7 +18,7 @@
 										<i class="fas fa-sync-alt"></i>
                   </button>
 									<hr>
-									<table cellspacing="0" class="table table-bordered" id="evidence_tdoc" width="100%">
+									<table cellspacing="0" class="table table-bordered" id="evidence_prpic" width="100%">
 										<thead>
 											<tr>
 												<th width="30">No</th>
@@ -40,7 +40,7 @@
 				var evidence_tdoc;
 
 				$(document).ready(function() {
-				    evidence_tdoc = $('#evidence_tdoc').DataTable({
+				    evidence_tdoc = $('#evidence_prpic').DataTable({
 				        "processing": true,
 				        "serverSide": true,
 			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
@@ -52,7 +52,7 @@
                 },
 				        "order": [],
 								"ajax": {
-				            "url": "<?php echo site_url('transaksi/data_doc')?>",
+				            "url": "<?php echo site_url('progress/data_pic')?>",
 				            "type": "POST"
 				        }, "columnDefs": [
 					        {

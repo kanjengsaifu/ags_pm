@@ -18,7 +18,7 @@
 										<i class="fas fa-sync-alt"></i>
                   </button>
 									<hr>
-									<table cellspacing="0" class="table table-bordered" id="evidence_pdoc" width="100%">
+									<table cellspacing="0" class="table table-bordered" id="evidence_prdoc" width="100%">
 										<thead>
 											<tr>
 												<th width="30">No</th>
@@ -40,7 +40,7 @@
 				var evidence_pdoc;
 
 				$(document).ready(function() {
-				    evidence_pdoc = $('#evidence_pdoc').DataTable({
+				    evidence_pdoc = $('#evidence_prdoc').DataTable({
 				        "processing": true,
 				        "serverSide": true,
 			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
@@ -52,7 +52,7 @@
                 },
 				        "order": [],
 								"ajax": {
-				            "url": "<?php echo site_url('submission/data_doc')?>",
+				            "url": "<?php echo site_url('progress/data_doc')?>",
 				            "type": "POST"
 				        }, "columnDefs": [
 					        {
@@ -69,12 +69,6 @@
 
         function reload_table() {
 					evidence_pdoc.ajax.reload(null, false);
-				}
-
-				function hideModal(){
-					$("#editCluster").removeClass("in");
-					$(".modal-backdrop").remove();
-					$("#editCluster").hide();
 				}
 
 				function pad(num, places) {

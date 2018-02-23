@@ -22,7 +22,7 @@ class AppModel extends CI_Model
 
   public function auth_check($username, $password) {
     $this->db->where('username', $username);
-    $this->db->where('password', $password);
+    $this->db->where('password', md5($password));
     $user = $this->db->get('users');
     $user_c = $user->num_rows();
     $row = $user->row();

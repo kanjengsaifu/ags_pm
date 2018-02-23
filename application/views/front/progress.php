@@ -1121,7 +1121,7 @@
             for (var i = 0; i < evi[0][0].length; i++) {
               // console.log(evi[0][i].url)
               if (evi[0][0][i] != null) {
-                row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
+                row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
               }
               angka++;
             }
@@ -1148,15 +1148,15 @@
                 for (var i = 0; i < evi[0][0].length; i++) {
                   // console.log(evi[0][i].url)
                     row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
-                      '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
+                      '<img src="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
                     '</div>';
 
                     row2+='<div class="mySlides">'+
-                        '<img src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
+                        '<img src="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
                       '</div>';
 
                     row3+='<div class="column">'+
-                        '<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+                        '<img class="demo cursor" src="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
                       '</div>';
                   angka++;
                 }
