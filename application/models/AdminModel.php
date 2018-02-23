@@ -324,4 +324,411 @@ class AdminModel extends CI_Model
     $this->db->where('is_bayarclient', NULL);
     return $this->db->count_all_results();
   }
+
+  public function checkAll($data) {
+    $this->db->where('is_bayarclient', NULL);
+    $this->db->update('progress', $data);
+    return $this->db->affected_rows();
+  }
+
+  public function hCheckAll($data) {
+    $this->db->where('is_bayarclient !=', NULL);
+    $this->db->update('progress', $data);
+    return $this->db->affected_rows();
+  }
+
+  public function saveCBox($where, $data) {
+    $this->db->update('progress', $data, $where);
+    return $this->db->affected_rows();
+  }
+
+  public function getProgressPrinting() {
+    $this->db->from('progress');
+    $this->db->join('project', 'project.project_id = progress.project_id', 'left outer');
+    $this->db->join('site', 'site.site_id = progress.site_id', 'left outer');
+    $this->db->where('progress.is_bayarclient', NULL);
+    $this->db->order_by('site.nama_site', 'asc');
+    $row = $this->db->get();
+
+    echo '
+    <link rel="stylesheet" type="text/css" href="'.base_url('public/css/fontawesome/web-fonts-with-css/css/fontawesome-all.css').'" media="all">
+    <style>
+    @media print{@page {size: landscape}}
+    @media print{
+      div.row:nth-child(odd) {
+        background-color: #eee !important;
+      }
+    }
+    * {
+      font-size:12px;
+      font-family: calibri, sans-serif;
+      -webkit-print-color-adjust: exact;
+    }
+    tr{ page-break-before: avoid; display: "inline-block"; //or display: "inline-table" }
+    table {
+        font-family: calibri, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        color: #585858;
+    }
+    td, th {
+        border: 1px solid #333333;
+        text-align: left;
+        padding:0px 3px;
+    }
+    @media print {
+      div.row:nth-child(odd) div.cell {
+        background-color: #000000;
+      }
+    }
+    tbody:nth-child(odd) tr {
+        background-color: #eee;
+    }
+    table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid;
+    }
+    </style>
+
+    <body onload="window.print()">
+    <span>Progress Berjalan</span>
+    <span style="float:right;font-weight: 100"> Diprint pada '.date('d/m/Y', time()).'</span>
+    <br><br>
+    <table class="print-friendly">
+      <thead>
+        <tr>
+          <td style="width:20px">No</td>
+          <td style="width:120px;text-align:center"><b>Keterangan</b></td>
+          <td style="width:120px;text-align:center"><b>No BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>No BAST</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAST</b></td>
+          <td style="width:120px;text-align:center"><b>No CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>No PO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal PO</b></td>
+          <td style="width:120px;text-align:center"><b>Invoiced</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar Client</b></td>
+        </tr>
+      </thead>
+      <tbody>
+    ';
+
+    $no = 1;
+    foreach ($row->result() as $key => $value) {
+      echo '
+          <tr style="background-color:#fff;">
+            <td>'.$no.'</td>
+            <td>'.$value->keterangan.'</td>
+            <td style="text-align:center;">'.($value->no_bapp != NULL ? $value->no_bapp : '-').'</td>
+            <td style="text-align:center;">'.($value->no_bast != NULL ? $value->no_bast : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bapp != NULL ? date('d M Y', strtotime($value->tanggal_bapp)) : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bast != NULL ? date('d M Y', strtotime($value->tanggal_bast)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_corr != NULL ? $value->no_corr : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_corr != NULL ? date('d M Y', strtotime($value->tanggal_corr)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_po != NULL ? $value->no_po : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_po != NULL ? date('d M Y', strtotime($value->tanggal_po)) : '-').'</td>
+            <td style="text-align:center;">'.($value->is_invoiced != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_invoiced : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayar != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayar : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayarclient != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayarclient : "<i class='fas fa-times text-danger'></i>").'</td>
+          </tr>
+      ';
+      $no++;
+    }
+    echo '</tbody>
+        </table>';
+  }
+
+  public function getProgressPrintingTerpilih() {
+    $this->db->from('progress');
+    $this->db->join('project', 'project.project_id = progress.project_id', 'left outer');
+    $this->db->join('site', 'site.site_id = progress.site_id', 'left outer');
+    $this->db->where('progress.is_bayarclient', NULL);
+    $this->db->where('progress.is_checked', 'Y');
+    $this->db->order_by('site.nama_site', 'asc');
+    $row = $this->db->get();
+
+    echo '
+    <link rel="stylesheet" type="text/css" href="'.base_url('public/css/fontawesome/web-fonts-with-css/css/fontawesome-all.css').'" media="all">
+    <style>
+    @media print{@page {size: landscape}}
+    @media print{
+      div.row:nth-child(odd) {
+        background-color: #eee !important;
+      }
+    }
+    * {
+      font-size:12px;
+      font-family: calibri, sans-serif;
+      -webkit-print-color-adjust: exact;
+    }
+    tr{ page-break-before: avoid; display: "inline-block"; //or display: "inline-table" }
+    table {
+        font-family: calibri, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        color: #585858;
+    }
+    td, th {
+        border: 1px solid #333333;
+        text-align: left;
+        padding:0px 3px;
+    }
+    @media print {
+      div.row:nth-child(odd) div.cell {
+        background-color: #000000;
+      }
+    }
+    tbody:nth-child(odd) tr {
+        background-color: #eee;
+    }
+    table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid;
+    }
+    </style>
+
+    <body onload="window.print()">
+    <span>Progress Berjalan</span>
+    <span style="float:right;font-weight: 100"> Diprint pada '.date('d/m/Y', time()).'</span>
+    <br><br>
+    <table class="print-friendly">
+      <thead>
+        <tr>
+          <td style="width:20px">No</td>
+          <td style="width:120px;text-align:center"><b>Keterangan</b></td>
+          <td style="width:120px;text-align:center"><b>No BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>No BAST</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAST</b></td>
+          <td style="width:120px;text-align:center"><b>No CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>No PO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal PO</b></td>
+          <td style="width:120px;text-align:center"><b>Invoiced</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar Client</b></td>
+        </tr>
+      </thead>
+      <tbody>
+    ';
+
+    $no = 1;
+    foreach ($row->result() as $key => $value) {
+      echo '
+          <tr style="background-color:#fff;">
+            <td>'.$no.'</td>
+            <td>'.$value->keterangan.'</td>
+            <td style="text-align:center;">'.($value->no_bapp != NULL ? $value->no_bapp : '-').'</td>
+            <td style="text-align:center;">'.($value->no_bast != NULL ? $value->no_bast : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bapp != NULL ? date('d M Y', strtotime($value->tanggal_bapp)) : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bast != NULL ? date('d M Y', strtotime($value->tanggal_bast)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_corr != NULL ? $value->no_corr : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_corr != NULL ? date('d M Y', strtotime($value->tanggal_corr)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_po != NULL ? $value->no_po : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_po != NULL ? date('d M Y', strtotime($value->tanggal_po)) : '-').'</td>
+            <td style="text-align:center;">'.($value->is_invoiced != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_invoiced : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayar != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayar : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayarclient != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayarclient : "<i class='fas fa-times text-danger'></i>").'</td>
+          </tr>
+      ';
+      $no++;
+    }
+    echo '</tbody>
+        </table>';
+  }
+
+  public function h_getProgressPrinting() {
+    $this->db->from('progress');
+    $this->db->join('project', 'project.project_id = progress.project_id', 'left outer');
+    $this->db->join('site', 'site.site_id = progress.site_id', 'left outer');
+    $this->db->where('progress.is_bayarclient !=', NULL);
+    $this->db->order_by('site.nama_site', 'asc');
+    $row = $this->db->get();
+
+    echo '
+    <link rel="stylesheet" type="text/css" href="'.base_url('public/css/fontawesome/web-fonts-with-css/css/fontawesome-all.css').'" media="all">
+    <style>
+    @media print{@page {size: landscape}}
+    @media print{
+      div.row:nth-child(odd) {
+        background-color: #eee !important;
+      }
+    }
+    * {
+      font-size:12px;
+      font-family: calibri, sans-serif;
+      -webkit-print-color-adjust: exact;
+    }
+    tr{ page-break-before: avoid; display: "inline-block"; //or display: "inline-table" }
+    table {
+        font-family: calibri, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        color: #585858;
+    }
+    td, th {
+        border: 1px solid #333333;
+        text-align: left;
+        padding:0px 3px;
+    }
+    @media print {
+      div.row:nth-child(odd) div.cell {
+        background-color: #000000;
+      }
+    }
+    tbody:nth-child(odd) tr {
+        background-color: #eee;
+    }
+    table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid;
+    }
+    </style>
+
+    <body onload="window.print()">
+    <span>Progress yang Telah Selesai</span>
+    <span style="float:right;font-weight: 100"> Diprint pada '.date('d/m/Y', time()).'</span>
+    <br><br>
+    <table class="print-friendly">
+      <thead>
+        <tr>
+          <td style="width:20px">No</td>
+          <td style="width:120px;text-align:center"><b>Keterangan</b></td>
+          <td style="width:120px;text-align:center"><b>No BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>No BAST</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAST</b></td>
+          <td style="width:120px;text-align:center"><b>No CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>No PO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal PO</b></td>
+          <td style="width:120px;text-align:center"><b>Invoiced</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar Client</b></td>
+        </tr>
+      </thead>
+      <tbody>
+    ';
+
+    $no = 1;
+    foreach ($row->result() as $key => $value) {
+      echo '
+          <tr style="background-color:#fff;">
+            <td>'.$no.'</td>
+            <td>'.$value->keterangan.'</td>
+            <td style="text-align:center;">'.($value->no_bapp != NULL ? $value->no_bapp : '-').'</td>
+            <td style="text-align:center;">'.($value->no_bast != NULL ? $value->no_bast : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bapp != NULL ? date('d M Y', strtotime($value->tanggal_bapp)) : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bast != NULL ? date('d M Y', strtotime($value->tanggal_bast)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_corr != NULL ? $value->no_corr : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_corr != NULL ? date('d M Y', strtotime($value->tanggal_corr)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_po != NULL ? $value->no_po : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_po != NULL ? date('d M Y', strtotime($value->tanggal_po)) : '-').'</td>
+            <td style="text-align:center;">'.($value->is_invoiced != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_invoiced : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayar != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayar : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayarclient != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayarclient : "<i class='fas fa-times text-danger'></i>").'</td>
+          </tr>
+      ';
+      $no++;
+    }
+    echo '</tbody>
+        </table>';
+  }
+
+  public function h_getProgressPrintingTerpilih() {
+    $this->db->from('progress');
+    $this->db->join('project', 'project.project_id = progress.project_id', 'left outer');
+    $this->db->join('site', 'site.site_id = progress.site_id', 'left outer');
+    $this->db->where('progress.is_bayarclient !=', NULL);
+    $this->db->where('progress.is_checked', 'Y');
+    $this->db->order_by('site.nama_site', 'asc');
+    $row = $this->db->get();
+
+    echo '
+    <link rel="stylesheet" type="text/css" href="'.base_url('public/css/fontawesome/web-fonts-with-css/css/fontawesome-all.css').'" media="all">
+    <style>
+    @media print{@page {size: landscape}}
+    @media print{
+      div.row:nth-child(odd) {
+        background-color: #eee !important;
+      }
+    }
+    * {
+      font-size:12px;
+      font-family: calibri, sans-serif;
+      -webkit-print-color-adjust: exact;
+    }
+    tr{ page-break-before: avoid; display: "inline-block"; //or display: "inline-table" }
+    table {
+        font-family: calibri, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        color: #585858;
+    }
+    td, th {
+        border: 1px solid #333333;
+        text-align: left;
+        padding:0px 3px;
+    }
+    @media print {
+      div.row:nth-child(odd) div.cell {
+        background-color: #000000;
+      }
+    }
+    tbody:nth-child(odd) tr {
+        background-color: #eee;
+    }
+    table.print-friendly tr td, table.print-friendly tr th {
+        page-break-inside: avoid;
+    }
+    </style>
+
+    <body onload="window.print()">
+    <span>Progress yang Telah Selesai</span>
+    <span style="float:right;font-weight: 100"> Diprint pada '.date('d/m/Y', time()).'</span>
+    <br><br>
+    <table class="print-friendly">
+      <thead>
+        <tr>
+          <td style="width:20px">No</td>
+          <td style="width:120px;text-align:center"><b>Keterangan</b></td>
+          <td style="width:120px;text-align:center"><b>No BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>No BAST</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAPP</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal BAST</b></td>
+          <td style="width:120px;text-align:center"><b>No CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal CORMO</b></td>
+          <td style="width:120px;text-align:center"><b>No PO</b></td>
+          <td style="width:120px;text-align:center"><b>Tanggal PO</b></td>
+          <td style="width:120px;text-align:center"><b>Invoiced</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar</b></td>
+          <td style="width:120px;text-align:center"><b>Sudah Dibayar Client</b></td>
+        </tr>
+      </thead>
+      <tbody>
+    ';
+
+    $no = 1;
+    foreach ($row->result() as $key => $value) {
+      echo '
+          <tr style="background-color:#fff;">
+            <td>'.$no.'</td>
+            <td>'.$value->keterangan.'</td>
+            <td style="text-align:center;">'.($value->no_bapp != NULL ? $value->no_bapp : '-').'</td>
+            <td style="text-align:center;">'.($value->no_bast != NULL ? $value->no_bast : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bapp != NULL ? date('d M Y', strtotime($value->tanggal_bapp)) : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_bast != NULL ? date('d M Y', strtotime($value->tanggal_bast)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_corr != NULL ? $value->no_corr : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_corr != NULL ? date('d M Y', strtotime($value->tanggal_corr)) : '-').'</td>
+            <td style="text-align:center;">'.($value->no_po != NULL ? $value->no_po : '-').'</td>
+            <td style="text-align:right;">'.($value->tanggal_po != NULL ? date('d M Y', strtotime($value->tanggal_po)) : '-').'</td>
+            <td style="text-align:center;">'.($value->is_invoiced != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_invoiced : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayar != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayar : "<i class='fas fa-times text-danger'></i>").'</td>
+            <td style="text-align:center;">'.($value->is_bayarclient != NULL ? "<i class='fas fa-check text-success'></i>&nbsp; ".$value->is_bayarclient : "<i class='fas fa-times text-danger'></i>").'</td>
+          </tr>
+      ';
+      $no++;
+    }
+    echo '</tbody>
+        </table>';
+  }
 }

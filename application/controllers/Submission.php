@@ -496,6 +496,12 @@ class Submission extends MY_Controller
     $this->loadPage($page, $config);
   }
 
+  public function main_picture($page = 'submission/picture') {
+    isLoggedIn();
+    $config['title']  = "Picture Evidence | Pengajuan" . $this->title;
+    $this->loadPage($page, $config);
+  }
+
   public function data_doc() {
     $pdoc_data  = $this->appModel->getPDocJSON();
     $data       = array();
@@ -519,6 +525,35 @@ class Submission extends MY_Controller
       "draw"            => $_POST['draw'],
       "recordsTotal"    => $this->appModel->countPDocData(),
       "recordsFiltered" => $this->appModel->countPDocDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
+  }
+
+  public function data_pic() {
+    $TDoc_data  = $this->appModel->getSPicJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($TDoc_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = '<img src='.base_url('public/assets/evidence/'.$stfd->url).' width="200">';
+      $row[]  = $stfd->pengajuan;
+      $row[]  = "#ADP".sprintf('%04d', $stfd->pengajuan_id);
+      $row[]  = '
+                  <a type="button" href="'.base_url('public/assets/evidence/'.$stfd->url).'" download="'.$stfd->url.'" onclick="downloadEvidence('."'".$stfd->id_evidence."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
+                    <i class="fas fa-download"></i>
+                  </button>
+                ';
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->appModel->countSPicData(),
+      "recordsFiltered" => $this->appModel->countSPicDataFiltered(),
       "data"            => $data
     );
 

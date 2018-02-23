@@ -79,16 +79,28 @@ class Progress extends MY_Controller
     foreach ($staff_data as $stfd) {
       $no++;
       $row = array();
+      $row[]  = ($stfd->is_bayarclient != NULL ?
+                  ($stfd->is_checked != "N" ?
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="h_rmvCBox('.$stfd->progress_id.')" checked>'
+                    :
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="h_saveCBox('.$stfd->progress_id.')">'
+                  )
+                  :
+                  ($stfd->is_checked != "N" ?
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="rmvCBox('.$stfd->progress_id.')" checked>'
+                    :
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="saveCBox('.$stfd->progress_id.')">'
+                  )
+                );
       $row[]  = $no;
+      $row[]  = $stfd->keterangan;
       $row[]  = $stfd->nama_project;
       $row[]  = $stfd->id_site;
       $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
-      $row[]  = ($stfd->no_corr != null ? $stfd->no_corr : '-');
       $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
-      $row[]  = ($stfd->no_po != null ? $stfd->no_po : '-');
+      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
       $row[]  = ($stfd->is_bayar != NULL ? date('Y-m-d', strtotime($stfd->is_bayar)) : 'PROGRESS');
       $row[]  = ($stfd->is_bayarclient != NULL ? date('Y-m-d', strtotime($stfd->is_bayarclient)) : 'PROGRESS');
-      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
       $row[]  = '
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
                   <i class="fas fa-search"></i>
@@ -135,16 +147,16 @@ class Progress extends MY_Controller
   public function update() {
     $data = array(
       'tanggal_corr'            => ($this->input->post('tanggal_corr_vale') != null ? $this->input->post('tanggal_corr_vale') : NULL),
-      'no_corr'                 => $this->input->post('no_corr_vale'),
+      'no_corr'                 => ($this->input->post('no_corr_vale') != null ? $this->input->post('no_corr_vale') : NULL),
       'tanggal_po'              => ($this->input->post('tanggal_po_vale') != null ? $this->input->post('tanggal_po_vale') : NULL),
-      'no_po'                   => $this->input->post('no_po_vale'),
+      'no_po'                   => ($this->input->post('no_po_vale') != null ? $this->input->post('no_po_vale') : NULL),
       'tanggal_kontrak'         => ($this->input->post('tanggal_kontrak_vale') != null ? $this->input->post('tanggal_kontrak_vale') : NULL),
       'tanggal_akhir_kontrak'   => ($this->input->post('tanggal_akhir_kontrak_vale') != null ? $this->input->post('tanggal_akhir_kontrak_vale') : NULL),
       'tanggal_bapp'            => ($this->input->post('tanggal_bapp_vale') != null ? $this->input->post('tanggal_bapp_vale') : NULL),
-      'no_bapp'                 => $this->input->post('no_bapp_vale'),
+      'no_bapp'                 => ($this->input->post('no_bapp_vale') != null ? $this->input->post('no_bapp_vale') : NULL),
       'tanggal_bast'            => ($this->input->post('tanggal_bast_vale') != null ? $this->input->post('tanggal_bast_vale') : NULL),
-      'no_bast'                 => $this->input->post('no_bast_vale'),
-      'deskripsi'               => $this->input->post('deskripsi_vale'),
+      'no_bast'                 => ($this->input->post('no_bast_vale') != null ? $this->input->post('no_bast_vale') : NULL),
+      'deskripsi'               => ($this->input->post('deskripsi_vale') != null ? $this->input->post('deskripsi_vale') : NULL),
       'is_invoiced'             => ($this->input->post('invoiced_vale') != null ? $this->input->post('invoiced_vale') : NULL),
       'is_bayar'                => ($this->input->post('bayar_vale') != null ? $this->input->post('bayar_vale') : NULL),
       'is_bayarclient'          => ($this->input->post('bayarclient_vale') != null ? $this->input->post('bayarclient_vale') : NULL)
@@ -219,5 +231,89 @@ class Progress extends MY_Controller
     $config['invoiced'] = $this->adminModel->countinvoiced();
     $config['belumsemua'] = $this->adminModel->countbelumsemua();
     $this->loadPage($page, $config);
+  }
+
+  public function savecbox() {
+    $data = array(
+      'is_checked'  => "Y"
+    );
+    $this->adminModel->saveCBox(array('progress_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function rmvcbox() {
+    $data = array(
+      'is_checked'  => "N"
+    );
+    $this->adminModel->saveCBox(array('progress_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function h_savecbox() {
+    $data = array(
+      'is_checked'  => "Y"
+    );
+    $this->adminModel->saveCBox(array('progress_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function h_rmvcbox() {
+    $data = array(
+      'is_checked'  => "N"
+    );
+    $this->adminModel->saveCBox(array('progress_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function checkAll() {
+    // check all on progress
+    $data = array(
+      'is_checked'  => "Y"
+    );
+    $this->adminModel->checkAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function unCheckAll() {
+    // check all on progress
+    $data = array(
+      'is_checked'  => "N"
+    );
+    $this->adminModel->checkAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function hCheckAll() {
+    // check all on progress
+    $data = array(
+      'is_checked'  => "Y"
+    );
+    $this->adminModel->hCheckAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function hunCheckAll() {
+    // check all on progress
+    $data = array(
+      'is_checked'  => "N"
+    );
+    $this->adminModel->hCheckAll($data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function print() {
+    $this->adminModel->getProgressPrinting();
+  }
+
+  public function printTerpilih() {
+    $this->adminModel->getProgressPrintingTerpilih();
+  }
+
+  public function h_print() {
+    $this->adminModel->h_getProgressPrinting();
+  }
+
+  public function h_printTerpilih() {
+    $this->adminModel->h_getProgressPrintingTerpilih();
   }
 }

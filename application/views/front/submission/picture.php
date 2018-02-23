@@ -18,12 +18,12 @@
 										<i class="fas fa-sync-alt"></i>
                   </button>
 									<hr>
-									<table cellspacing="0" class="table table-bordered" id="evidence_pdoc" width="100%">
+									<table cellspacing="0" class="table table-bordered" id="evidence_spic" width="100%">
 										<thead>
 											<tr>
 												<th width="30">No</th>
-                        <th>Filename</th>
-                        <th>Extension</th>
+                        <th width="150">Image Preview</th>
+                        <th>Pengajuan</th>
 												<th>Pengajuan ID</th>
 												<th style="white-space:nowrap;" width="100">Action</th>
 											</tr>
@@ -37,10 +37,10 @@
 			</main>
 			<script type="text/javascript">
 
-				var evidence_pdoc;
+				var evidence_spic;
 
 				$(document).ready(function() {
-				    evidence_pdoc = $('#evidence_pdoc').DataTable({
+				    evidence_spic = $('#evidence_spic').DataTable({
 				        "processing": true,
 				        "serverSide": true,
 			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
@@ -52,7 +52,7 @@
                 },
 				        "order": [],
 								"ajax": {
-				            "url": "<?php echo site_url('submission/data_doc')?>",
+				            "url": "<?php echo site_url('submission/data_pic')?>",
 				            "type": "POST"
 				        }, "columnDefs": [
 					        {
@@ -61,25 +61,14 @@
 					        },
 									{
 										"class": "dt-center",
-										"targets": [2, 3, 4]
+										"targets": [1, 2, 3, 4]
 									}
 				        ],
 				    });
 				});
 
         function reload_table() {
-					evidence_pdoc.ajax.reload(null, false);
-				}
-
-				function hideModal(){
-					$("#editCluster").removeClass("in");
-					$(".modal-backdrop").remove();
-					$("#editCluster").hide();
-				}
-
-				function pad(num, places) {
-					var zero = places - num.toString().length + 1;
-					return Array(+(zero > 0 && zero)).join("0") + num;
+					evidence_spic.ajax.reload(null, false);
 				}
 
 			</script>

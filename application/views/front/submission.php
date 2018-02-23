@@ -238,6 +238,7 @@
                 					<h5 class="modal-title" id="exampleModalLabel">Pengajuan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                 				</div>
                 				<div class="modal-body">
+													<b>KATEGORI</b>
 													<table class="table">
 														<tbody>
 															<input id="id_val" type="hidden" value="">
@@ -245,13 +246,19 @@
 																<th width="250">Kategori Pengajuan</th>
 																<td><span id="kategori_pengajuan_val"></span></td>
 															</tr>
-															<tr id="nama_project_div">
-																<th width="250">Nama Project</th>
-																<td><span id="nama_project_val"></span></td>
-															</tr>
 															<tr id="jenis_pengajuan_div">
 																<th width="250">Jenis Pengajuan</th>
 																<td><span id="jenis_pengajuan_val"></span></td>
+															</tr>
+														</tbody>
+														<br><br>
+													</table>
+													<br><i class="fas fa-info-circle"></i> <b> DETAIL PENGAJUAN</b><br><br>
+													<table class="table">
+														<tbody>
+															<tr id="nama_project_div">
+																<th width="250">Nama Project</th>
+																<td><span id="nama_project_val"></span></td>
 															</tr>
 															<tr>
 																<th width="250">Pengajuan</th>
@@ -268,43 +275,6 @@
 															<tr id="tanggal_approval_keuangan_div">
 																<th width="250">Tanggal Approval Keuangan</th>
 																<td><span id="tanggal_approval_keuangan"></span></td>
-															</tr>
-															<tr id="nilai_sph_div_det">
-																<th width="250">Nilai SPH</th>
-																<td><span id="nilai_sph_val"></span></td>
-															</tr>
-															<tr id="no_sph_div_det">
-																<th width="250">Nomor SPH</th>
-																<td><span id="no_sph_val"></span></td>
-															</tr>
-															<tr id="nilai_corr_div_det">
-																<th width="250">Nilai Corr</th>
-																<td><span id="nilai_corr_val"></span></td>
-															</tr>
-															<tr id="no_corr_div_det">
-																<th width="250">Nomor Corr</th>
-																<td><span id="no_corr_val"></span></td>
-															</tr>
-															<tr id="nilai_po_div_det">
-																<th width="250">Nilai PO</th>
-																<td><span id="nilai_po_val"></span></td>
-															</tr>
-															<tr id="no_po_div_det">
-																<th width="250">Nomor PO</th>
-																<td><span id="no_po_val"></span></td>
-															</tr>
-															<tr id="nilai_pengajuan_div_det">
-																<th width="250">Nilai Pengajuan</th>
-																<td>
-																	<span id="nilai_pengajuan_val"></span>
-																	<?php if (isApproval()): ?>
-																		<a id="editNilaiPengajuan" href="#" style="float:right;text-decoration:underline;">edit</a>
-																		<a id="doneNilaiPengajuan" href="#" style="float:right;text-decoration:underline;">done</a>
-																		<div id="nilai_pengajuan_val_edit" style="width:100% !important">
-																			<input style="width:100%;" name="nilai_pengajuan_edit" type="number" class="form-control currency" id="c1" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai Pengajuan">
-																		</div>
-																	<?php endif; ?>
-																</td>
 															</tr>
 															<tr id="pid_div_det">
 																<th width="250">PID (Site ID)</th>
@@ -393,6 +363,48 @@
 																		</div> -->
 																	</div>
 																	<!-- <button type="button" name="button" class="btn btn-outline-primary" id="print_bukti">PRINT BUKTI</button> -->
+																</td>
+															</tr>
+														</tbody>
+													</table>
+													<br><i class="fas fa-money-bill-alt"></i> <b>NILAI</b><br><br>
+													<table class="table">
+														<tbody>
+															<tr id="nilai_sph_div_det">
+																<th width="250">Nilai SPH</th>
+																<td><span id="nilai_sph_val"></span></td>
+															</tr>
+															<tr id="no_sph_div_det">
+																<th width="250">Nomor SPH</th>
+																<td><span id="no_sph_val"></span></td>
+															</tr>
+															<tr id="nilai_corr_div_det">
+																<th width="250">Nilai Corr</th>
+																<td><span id="nilai_corr_val"></span></td>
+															</tr>
+															<tr id="no_corr_div_det">
+																<th width="250">Nomor Corr</th>
+																<td><span id="no_corr_val"></span></td>
+															</tr>
+															<tr id="nilai_po_div_det">
+																<th width="250">Nilai PO</th>
+																<td><span id="nilai_po_val"></span></td>
+															</tr>
+															<tr id="no_po_div_det">
+																<th width="250">Nomor PO</th>
+																<td><span id="no_po_val"></span></td>
+															</tr>
+															<tr id="nilai_pengajuan_div_det">
+																<th width="250">Nilai Pengajuan</th>
+																<td>
+																	<span id="nilai_pengajuan_val"></span>
+																	<?php if (isApproval()): ?>
+																		<a id="editNilaiPengajuan" href="#" style="float:right;text-decoration:underline;">edit</a>
+																		<a id="doneNilaiPengajuan" href="#" style="float:right;text-decoration:underline;">done</a>
+																		<div id="nilai_pengajuan_val_edit" style="width:100% !important">
+																			<input style="width:100%;" name="nilai_pengajuan_edit" type="number" class="form-control currency" id="c1" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai Pengajuan">
+																		</div>
+																	<?php endif; ?>
 																</td>
 															</tr>
 														</tbody>
@@ -781,6 +793,10 @@
 						submission = $('#submission').DataTable({
 								"processing": true,
 								"serverSide": true,
+			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+			               "<'row'<'col-sm-12'tr>>" +
+			               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+			          "pageLength": 5,
 								// rowReorder: {
 				        // 	selector: 'td:nth-child(2)'
 				        // },

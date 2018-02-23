@@ -1065,10 +1065,7 @@ class AppModel extends CI_Model
   }
 
   public function getProjectDataforProgress() {
-    $this->db->select('project.project_id, project.nama_project');
     $this->db->from('project');
-    $this->db->join('progress', 'project.project_id = progress.project_id', 'left');
-    $this->db->where('progress.project_id', NULL);
     return $this->db->get();
   }
 
@@ -1198,6 +1195,94 @@ class AppModel extends CI_Model
 
     if ($this->input->post('belum_selesai') != "N") {
       $this->db->where('progress.is_bayarclient', NULL);
+    }
+
+    if ($this->input->post('project')) {
+      $this->db->where('progress.project_id', $this->input->post('project'));
+    }
+
+    if ($this->input->post('site')) {
+      $this->db->where('progress.site_id', $this->input->post('site'));
+    }
+
+    if ($this->input->post('keterangan')) {
+      $this->db->where('progress.keterangan', $this->input->post('keterangan'));
+    }
+
+    if ($this->input->post('no_corr')) {
+      $this->db->where('progress.no_corr', $this->input->post('no_corr'));
+    }
+
+    if ($this->input->post('no_po')) {
+      $this->db->where('progress.no_po', $this->input->post('no_po'));
+    }
+
+    if ($this->input->post('tanggal_corr')) {
+      $this->db->like('tanggal_corr', $this->input->post('tanggal_corr'));
+    }
+
+    if ($this->input->post('tanggal_corr_first')) {
+      $this->db->where('DATE_FORMAT(tanggal_corr, "%Y-%m-%D") >=', $this->input->post('tanggal_corr_first'));
+    }
+
+    if ($this->input->post('tanggal_corr_last')) {
+      $this->db->where('DATE_FORMAT(tanggal_corr, "%Y-%m-%D") <=', $this->input->post('tanggal_corr_last'));
+    }
+
+    if ($this->input->post('tanggal_po')) {
+      $this->db->like('tanggal_po', $this->input->post('tanggal_po'));
+    }
+
+    if ($this->input->post('tanggal_po_first')) {
+      $this->db->where('DATE_FORMAT(tanggal_po, "%Y-%m-%D") >=', $this->input->post('tanggal_po_first'));
+    }
+
+    if ($this->input->post('tanggal_po_last')) {
+      $this->db->where('DATE_FORMAT(tanggal_po, "%Y-%m-%D") <=', $this->input->post('tanggal_po_last'));
+    }
+
+    if ($this->input->post('no_bast')) {
+      $this->db->where('progress.no_bast', $this->input->post('no_bast'));
+    }
+
+    if ($this->input->post('no_bapp')) {
+      $this->db->where('progress.no_bapp', $this->input->post('no_bapp'));
+    }
+
+    if ($this->input->post('tanggal_bast')) {
+      $this->db->like('tanggal_bast', $this->input->post('tanggal_bast'));
+    }
+
+    if ($this->input->post('tanggal_bast_first')) {
+      $this->db->where('DATE_FORMAT(tanggal_bast, "%Y-%m-%D") >=', $this->input->post('tanggal_bast_first'));
+    }
+
+    if ($this->input->post('tanggal_bast_last')) {
+      $this->db->where('DATE_FORMAT(tanggal_bast, "%Y-%m-%D") <=', $this->input->post('tanggal_bast_last'));
+    }
+
+    if ($this->input->post('tanggal_bapp')) {
+      $this->db->like('tanggal_bapp', $this->input->post('tanggal_bapp'));
+    }
+
+    if ($this->input->post('tanggal_bapp_first')) {
+      $this->db->where('DATE_FORMAT(tanggal_bapp, "%Y-%m-%D") >=', $this->input->post('tanggal_bapp_first'));
+    }
+
+    if ($this->input->post('tanggal_bapp_last')) {
+      $this->db->where('DATE_FORMAT(tanggal_bapp, "%Y-%m-%D") <=', $this->input->post('tanggal_bapp_last'));
+    }
+
+    if ($this->input->post('check_invoiced')) {
+      $this->db->where('is_invoiced !=', NULL);
+    }
+
+    if ($this->input->post('check_bayar')) {
+      $this->db->where('is_bayar !=', NULL);
+    }
+
+    if ($this->input->post('check_bayarclient')) {
+      $this->db->where('is_bayarclient !=', NULL);
     }
 
     $i = 0;
@@ -1623,7 +1708,63 @@ class AppModel extends CI_Model
   }
 
   public function countTDocData() {
-    $this->db->from('cluster');
+    $this->db->from('evidence_transaksi');
+    return $this->db->count_all_results();
+  }
+
+  // evidence
+  public function getSPicJSON() {
+    $this->spicJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function spicJSON_query() {
+    $table = 'pengajuan';
+    $column_order = array(null, 'evidence.url', 'evidence.url', 'evidence.id_evidence', null);
+    $column_search = array('evidence.url', 'evidence.url', 'evidence.id_evidence');
+
+    $this->db->from($table);
+    $this->db->join('evidence', 'find_in_set(evidence.id_evidence, pengajuan.evidence_id)', 'left outer', false);
+    // $this->db->join('pengajuan', 'evidence.pengajuan_id = pengajuan.pengajuan_id', 'left outer', false);
+    $this->db->where_in('evidence.extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $this->db->group_by('evidence.id_evidence');
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countSPicDataFiltered() {
+    $this->spicJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countSPicData() {
+    $this->db->from('evidence_transaksi');
     return $this->db->count_all_results();
   }
 

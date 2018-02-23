@@ -33,9 +33,9 @@ class Site extends MY_Controller
                   <button type="button" href="" onclick="edit_site('."'".$stfd->site_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editSite">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button type="button" href="" onclick="removeSite('."'".$stfd->site_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
+                  <!--<button type="button" href="" onclick="removeSite('."'".$stfd->site_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger">
                     <i class="fas fa-trash"></i>
-                  </button>
+                  </button>-->
                 ';
       $data[]  = $row;
     }

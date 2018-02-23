@@ -90,15 +90,63 @@
                         <div class="form-group">
                             <label for="FirstName" class="col-sm-2 control-label">Nomor PO</label>
                             <div class="col-sm-6">
-                                <input type="text" name="no_po" class="form-control" id="no_po_filter">
+                                <input type="text" name="no_po_filter" class="form-control" id="no_po_filter">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                          <label for="LastName" class="col-sm-2 control-label">Tanggal BAST</label>
+                          <div class="col-sm-6">
+                            <select class="form-control selectpicker" name="" id="tanggal_bast_jns_op">
+                              <option value="" selected disabled readonly>JENIS SELECTOR</option>
+                              <option value="satuan_val">Per Tanggal</option>
+                              <option value="range_val">Range</option>
+                            </select>
+                            <div style="padding:5px 0px;" id="tanggal_bast_satuan">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_bast_filter" id="tanggal_bast_filter">
+                            </div>
+                            <div style="padding:5px 0px;" id="tanggal_bast_range">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_bast_first_filter" id="tanggal_bast_first_filter" placeholder="Dari Tanggal">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;margin-top:5px;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_bast_last_filter" id="tanggal_bast_last_filter" placeholder="ke Tanggal">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName" class="col-sm-2 control-label">Nomor BAST</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="no_bast_filter" class="form-control" id="no_bast_filter">
                             </div>
                         </div>
                         <div class="form-group">
+                          <label for="LastName" class="col-sm-2 control-label">Tanggal BAPP</label>
+                          <div class="col-sm-6">
+                            <select class="form-control selectpicker" name="" id="tanggal_bapp_jns_op">
+                              <option value="" selected disabled readonly>JENIS SELECTOR</option>
+                              <option value="satuan_val">Per Tanggal</option>
+                              <option value="range_val">Range</option>
+                            </select>
+                            <div style="padding:5px 0px;" id="tanggal_bapp_satuan">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_bapp_filter" id="tanggal_bapp_filter">
+                            </div>
+                            <div style="padding:5px 0px;" id="tanggal_bapp_range">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_bapp_first_filter" id="tanggal_bapp_first_filter" placeholder="Dari Tanggal">
+                              <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;margin-top:5px;" data-date-format="yyyy-mm-dd" data-language='en' name="tanggal_bapp_last_filter" id="tanggal_bapp_last_filter" placeholder="ke Tanggal">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName" class="col-sm-2 control-label">Nomor BAPP</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="no_bapp_filter" class="form-control" id="no_bapp_filter">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
                           <label for="LastName" class="col-sm-2 control-label">Progress Pengajuan</label>
                           <div class="col-sm-6">
-                            <label for=""> <input type="checkbox" id="check_invoiced" name="check_invoiced" value="Y"> Invoiced </label> &nbsp;&nbsp;&nbsp;
-                            <label for=""> <input type="checkbox" id="check_bayar" name="check_bayar" value="Y"> Sudah Dibayar AG </label> &nbsp;&nbsp;&nbsp;
-                            <label for=""> <input type="checkbox" id="check_bayarclient" name="check_bayarclient" value="Y"> Sudah Dibayar Client </label> &nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label"> <input type="checkbox" id="check_invoiced" name="check_invoiced" value="N"> Invoiced </label> &nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label"> <input type="checkbox" id="check_bayar" name="check_bayar" value="N"> Sudah Dibayar AG </label> &nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label"> <input type="checkbox" id="check_bayarclient" name="check_bayarclient" value="N"> Sudah Dibayar Client </label> &nbsp;&nbsp;&nbsp;
                           </div>
                         </div>
                         <div class="form-group">
@@ -121,22 +169,14 @@
                   <div class="modal-body">
                     <form class="" method="post" action="<?=site_url('progress/save')?>">
                       <div class="form-group">
-                        <label for="">Tanggal Mulai Progress</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Progress">
-                      </div>
-                      <hr>
-                      <div class="form-group">
                         <label for="">Keterangan Progress</label>
                         <input type="text" class="form-control" name="keterangan" value="" placeholder="Keterangan Progress">
                       </div>
                       <div class="form-group">
-                        <label for="">Tanggal Awal Kontrak</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
+                        <label for="">Tanggal Mulai Progress</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Progress">
                       </div>
-                      <div class="form-group">
-                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
-                      </div>
+                      <hr>
                       <div class="form-group" id="project_id_div">
                         <label for="">Pilih Project</label>
                         <select class="selectpicker form-control" name="project_id" id="project_id" data-live-search="true">
@@ -153,8 +193,6 @@
                           <input type="text" class="form-control" name="nama_project" value="" placeholder="Nama Project">
                         </div>
                       </div>
-                      <!-- SITE -->
-                      <hr>
                       <div class="form-group">
                         <label for="">Pilih Site</label>
                         <select class="selectpicker form-control" name="site_id" id="site_id" data-live-search="true">
@@ -164,6 +202,15 @@
                             <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
                           <?php endforeach; ?>
                         </select>
+                      </div>
+                      <hr>
+                      <div class="form-group">
+                        <label for="">Tanggal Awal Kontrak</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
                       </div>
                       <div class="" id="new_site_div">
                         <div class="form-group">
@@ -223,6 +270,8 @@
                     <h5 class="modal-title" id="exampleModalLabel">Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                   </div>
                   <div class="modal-body">
+                    <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
+                    <br><br>
                     <table class="table">
                       <tbody>
                         <tr>
@@ -254,39 +303,9 @@
                           <td><span id="lokasi_site_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Tanggal COR</th>
-                          <td><span id="tanggal_corr_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Nomor Corr</th>
-                          <td><span id="no_corr_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Tanggal PO</th>
-                          <td><span id="tanggal_po_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Nomor PO</th>
-                          <td><span id="no_po_val"></span></td>
-                        </tr>
-                        <tr>
                           <th width="250">Deskripsi</th>
                           <td><span id="deskripsi_val"></span></td>
                         </tr>
-
-                        <tr>
-                          <th width="250">Tanggal Pembayaran</th>
-                          <td><span id="sudah_dibayarkan_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Tanggal Pembayaran Client</th>
-                          <td><span id="sudah_dibayar_client_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Tanggal Invoice</th>
-                          <td><span id="sudah_invoice_val"></span></td>
-                        </tr>
-
                         <tr id="bukti_src_div">
                           <th width="250">Bukti</th>
                           <td>
@@ -326,6 +345,64 @@
                         </tr>
                       </tbody>
                     </table>
+                    <br>
+                    <i class="fas fa-tasks"></i> <b> PROGRESS</b>
+                    <br><br>
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th width="250">Tanggal COR</th>
+                          <td><span id="tanggal_corr_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Nomor Corr</th>
+                          <td><span id="no_corr_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal PO</th>
+                          <td><span id="tanggal_po_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Nomor PO</th>
+                          <td><span id="no_po_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal BAST</th>
+                          <td><span id="tanggal_bast_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Nomor BAST</th>
+                          <td><span id="no_bast_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal BAPP</th>
+                          <td><span id="tanggal_bapp_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Nomor BAPP</th>
+                          <td><span id="no_bapp_val"></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br>
+                    <i class="fas fa-money-bill-alt"></i> <b> STATUS PEMBAYARAN</b>
+                    <br><br>
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th width="250">Tanggal Invoice</th>
+                          <td><span id="sudah_invoice_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal Pembayaran AG</th>
+                          <td><span id="sudah_dibayarkan_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal Pembayaran Client</th>
+                          <td><span id="sudah_dibayar_client_val"></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
@@ -360,6 +437,7 @@
                         <label for="inputAddress2">Nomor PO</label>
                         <input id="no_po_vale" type="text" class="form-control" name="no_po_vale" placeholder="Nomor PO" required>
                       </div>
+                      <hr>
                       <div class="form-group">
                         <label for="">Tanggal Kontrak</label>
                         <input id="tanggal_kontrak_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak_vale" placeholder="Tanggal Kontrak">
@@ -465,27 +543,42 @@
             <button type="button" class="btn cur-p btn-outline-success" style="" id="sudah_selesai">
 							SUDAH SELESAI
             </button>
-            <div class="" style="float:right ">
+            <!-- <div class="" style="float:right ">
               <button type="button" class="btn cur-p btn-outline-default" name="button">
                 <a class="" href="#" target="_blank" id="exportExcel" style="text-decoration:none;color:inherit;">
                   <i class="fas fa-file-excel"></i>
                 </a>
               </button>
-            </div>
+            </div> -->
+            <br><br>
+            <a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('progress/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
+            <a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('progress/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT YANG TERPILIH</a>
+            <button type="button" class="btn cur-p btn-outline-primary" id="check_all">
+              CHECK ALL
+            </button>
+            <button type="button" class="btn cur-p btn-outline-primary" id="uncheck_all">
+              UNCHECK ALL
+            </button>
+            <button type="button" class="btn cur-p btn-outline-primary" id="h_check_all">
+              CHECK ALL
+            </button>
+            <button type="button" class="btn cur-p btn-outline-primary" id="h_uncheck_all">
+              UNCHECK ALL
+            </button>
             <hr>
             <table cellspacing="0" class="table table-striped table-bordered" id="progress" width="100%">
               <thead>
                 <tr>
+                  <th class="text-center"></th>
                   <th class="text-center">No</th>
+                  <th class="text-center">Ket</th>
                   <th class="text-center">Nama Project</th>
                   <th class="text-center">PID</th>
-                  <th class="text-center">Tanggal<br>COR</th>
-                  <th class="text-center">Nomor<br>Corr</th>
+                  <th class="text-center">Tanggal<br>CORMO</th>
                   <th class="text-center">Tanggal<br>PO</th>
-                  <th class="text-center">Nomor<br>PO</th>
+                  <th class="text-center">Tanggal<br>Invoice</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>AG</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>Client</th>
-                  <th class="text-center">Tanggal<br>Invoice</th>
                   <th style="white-space:nowrap;" class="text-center" width="250">Action</th>
                 </tr>
               </thead>
@@ -510,6 +603,10 @@
       progress = $('#progress').DataTable({
           "processing": true,
           "serverSide": true,
+          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          "pageLength": 5,
           // "language"	: {
           // 	"info": "Menampilkan halaman _PAGE_ of _PAGES_"
           // },
@@ -521,6 +618,39 @@
                 // data.kategori_pengajuan = $('#kategori_pengajuan_filter').val();
                 data.belum_selesai = $('#belum_selesai_val').val();
                 data.sudah_selesai = $('#sudah_selesai_val').val();
+
+                data.keterangan = $('#keterangan_filter').val();
+                data.project = $('#project_filter').val();
+                data.site = $('#site_id_filter').val();
+                data.no_corr = $('#no_corr_filter').val();
+                data.no_po = $('#no_po_filter').val();
+                data.tanggal_corr = $('#tanggal_corr_filter').val();
+                data.tanggal_corr_first = $('#tanggal_corr_first_filter').val();
+                data.tanggal_corr_last = $('#tanggal_corr_last_filter').val();
+                data.tanggal_po = $('#tanggal_po_filter').val();
+                data.tanggal_po_first = $('#tanggal_po_first_filter').val();
+                data.tanggal_po_last = $('#tanggal_po_last_filter').val();
+
+                data.no_bast = $('#no_bast_filter').val();
+                data.no_bapp = $('#no_bapp_filter').val();
+                data.tanggal_bast = $('#tanggal_bast_filter').val();
+                data.tanggal_bast_first = $('#tanggal_bast_first_filter').val();
+                data.tanggal_bast_last = $('#tanggal_bast_last_filter').val();
+                data.tanggal_bapp = $('#tanggal_bapp_filter').val();
+                data.tanggal_bapp_first = $('#tanggal_bapp_first_filter').val();
+                data.tanggal_bapp_last = $('#tanggal_bapp_last_filter').val();
+
+                if (document.getElementById('check_invoiced').checked) {
+                  data.check_invoiced = $('#check_invoiced').val();
+                }
+
+                if (document.getElementById('check_bayar').checked) {
+                  data.check_bayar = $('#check_bayar').val();
+                }
+
+                if (document.getElementById('check_bayarclient').checked) {
+                  data.check_bayarclient = $('#check_bayarclient').val();
+                }
               }
           }, "columnDefs": [
             {
@@ -537,7 +667,7 @@
             // },
             {
               "className": "dt-center",
-              "targets": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              "targets": [2, 3, 4, 5, 6, 7, 8, 9, 10]
             }
           ],
       });
@@ -554,18 +684,84 @@
   $('#tanggal_corr_range').hide();
   $('#tanggal_po_satuan').hide();
   $('#tanggal_po_range').hide();
+  $('#tanggal_bast_satuan').hide();
+  $('#tanggal_bast_range').hide();
+  $('#tanggal_bapp_satuan').hide();
+  $('#tanggal_bapp_range').hide();
+  $('#h_check_all').hide();
+  $('#h_uncheck_all').hide();
+
+  $('#check_all').click(function() {
+    $.ajax({
+      url: "<?=site_url('progress/checkAll/')?>",
+      type: "POST",
+      success: function(data) {
+        reload_table();
+      }, error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(errorThrown);
+      }
+    });
+  });
+
+  $('#uncheck_all').click(function() {
+    $.ajax({
+      url: "<?=site_url('progress/unCheckAll/')?>",
+      type: "POST",
+      success: function(data) {
+        reload_table();
+      }, error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(errorThrown);
+      }
+    });
+  });
+
+  $('#h_check_all').click(function() {
+    $.ajax({
+      url: "<?=site_url('progress/hCheckAll/')?>",
+      type: "POST",
+      success: function(data) {
+        reload_table();
+      }, error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(errorThrown);
+      }
+    });
+  });
+
+  $('#h_uncheck_all').click(function() {
+    $.ajax({
+      url: "<?=site_url('progress/hunCheckAll/')?>",
+      type: "POST",
+      success: function(data) {
+        reload_table();
+      }, error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(errorThrown);
+      }
+    });
+  });
 
   $('#belum_selesai').click(function() {
     $('#menampilkan').text("Progress yang Belum Selesai");
+    $('#h_check_all').hide();
+    $('#h_uncheck_all').hide();
+    $('#check_all').show();
+    $('#uncheck_all').show();
     $("input[type=hidden]").val("N");
     document.getElementById("belum_selesai_val").value = "Y";
+    document.getElementById("print").href = "<?=site_url('progress/print')?>";
+    document.getElementById("print_c").href = "<?=site_url('progress/printTerpilih')?>";
     progress.ajax.reload();
   });
 
   $('#sudah_selesai').click(function() {
     $('#menampilkan').text("Progress yang Sudah Selesai");
+    $('#h_check_all').show();
+    $('#h_uncheck_all').show();
+    $('#check_all').hide();
+    $('#uncheck_all').hide();
     $("input[type=hidden]").val("N");
     document.getElementById("sudah_selesai_val").value = "Y";
+    document.getElementById("print").href = "<?=site_url('progress/h_print')?>";
+    document.getElementById("print_c").href = "<?=site_url('progress/h_printTerpilih')?>";
     progress.ajax.reload();
   });
 
@@ -630,6 +826,42 @@
   });
 
   $(document).ready(function() {
+    $('#tanggal_bast_jns_op').change(function() {
+      if ($(this).val() === 'satuan_val') {
+        $('#tanggal_bast_satuan').show();
+        $('#tanggal_bast_range').hide();
+        document.getElementById('tanggal_bast_filter').value = "";
+        document.getElementById('tanggal_bast_first_filter').value = "";
+        document.getElementById('tanggal_bast_last_filter').value = "";
+      } else {
+        $('#tanggal_bast_satuan').hide();
+        $('#tanggal_bast_range').show();
+        document.getElementById('tanggal_bast_filter').value = "";
+        document.getElementById('tanggal_bast_first_filter').value = "";
+        document.getElementById('tanggal_bast_last_filter').value = "";
+      }
+    });
+  });
+
+  $(document).ready(function() {
+    $('#tanggal_bapp_jns_op').change(function() {
+      if ($(this).val() === 'satuan_val') {
+        $('#tanggal_bapp_satuan').show();
+        $('#tanggal_bapp_range').hide();
+        document.getElementById('tanggal_bapp_filter').value = "";
+        document.getElementById('tanggal_bapp_first_filter').value = "";
+        document.getElementById('tanggal_bapp_last_filter').value = "";
+      } else {
+        $('#tanggal_bapp_satuan').hide();
+        $('#tanggal_bapp_range').show();
+        document.getElementById('tanggal_bapp_filter').value = "";
+        document.getElementById('tanggal_bapp_first_filter').value = "";
+        document.getElementById('tanggal_bapp_last_filter').value = "";
+      }
+    });
+  });
+
+  $(document).ready(function() {
     $('#project_id').change(function() {
       if ($(this).val() === 'new_project') {
         $('#new_project_div').show();
@@ -678,6 +910,10 @@
     });
   });
 
+  $('#btn-filter').click(function() { //button filter event click
+    progress.ajax.reload();  //just reload table
+  });
+
   $('#btn-reset').click(function() { //button reset event click
     $('#form-filter')[0].reset();
     $("#project_filter").val('default');
@@ -688,12 +924,88 @@
     $("#tanggal_corr_jns_op").selectpicker("refresh");
     $("#tanggal_po_jns_op").val('default');
     $("#tanggal_po_jns_op").selectpicker("refresh");
+    $("#tanggal_bast_jns_op").val('default');
+    $("#tanggal_bast_jns_op").selectpicker("refresh");
+    $("#tanggal_bapp_jns_op").val('default');
+    $("#tanggal_bapp_jns_op").selectpicker("refresh");
     $("#tanggal_corr_satuan").hide();
     $("#tanggal_corr_range").hide();
     $("#tanggal_po_satuan").hide();
     $("#tanggal_po_range").hide();
+    $("#tanggal_bast_satuan").hide();
+    $("#tanggal_bast_range").hide();
+    $("#tanggal_bapp_satuan").hide();
+    $("#tanggal_bapp_range").hide();
     progress.ajax.reload();  //just reload table
   });
+
+  function saveCBox(id) {
+    url = "<?=site_url('progress/savecbox')?>";
+    $.ajax({
+      url: url,
+      data: {id: id},
+      type: "POST",
+      success: function(data) {
+        if (data.status = 'true') {
+          reload_table();
+        } else {
+          swal("Error!", "Something went wrong!", "error");
+          reload_table();
+        }
+      }
+    });
+  }
+
+  function rmvCBox(id) {
+    url = "<?=site_url('progress/rmvcbox')?>";
+    $.ajax({
+      url: url,
+      data: {id: id},
+      type: "POST",
+      success: function(data) {
+        if (data.status = 'true') {
+          reload_table();
+        } else {
+          swal("Error!", "Something went wrong!", "error");
+          reload_table();
+        }
+      }
+    });
+  }
+
+  function h_saveCBox(id) {
+    url = "<?=site_url('progress/h_savecbox')?>";
+    $.ajax({
+      url: url,
+      data: {id: id},
+      type: "POST",
+      success: function(data) {
+        if (data.status = 'true') {
+          reload_table();
+        } else {
+          swal("Error!", "Something went wrong!", "error");
+          reload_table();
+        }
+      }
+    });
+  }
+
+  function h_rmvCBox(id) {
+    url = "<?=site_url('progress/h_rmvcbox')?>";
+    $.ajax({
+      url: url,
+      data: {id: id},
+      type: "POST",
+      success: function(data) {
+        if (data.status = 'true') {
+          reload_table();
+        } else {
+          swal("Error!", "Something went wrong!", "error");
+          reload_table();
+        }
+      }
+    });
+  }
 
   function detailProgress(id) {
     $.ajax({
@@ -722,39 +1034,71 @@
         $('[id=nama_site_val]').html(data.nama_site);
         $('[id=lokasi_site_val]').html(data.lokasi);
         if (data.no_corr != null) {
-          $('[id=no_corr_val]').html(data.no_corr);
+          $('[id=no_corr_val]').html("<i class='fas fa-check text-success'></i> " + data.no_corr);
         } else {
-          $('[id=no_corr_val]').html("-");
+          $('[id=no_corr_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
+        if (data.no_corr != "") {
+          $('[id=no_corr_val]').html("<i class='fas fa-check text-success'></i> " + data.no_corr);
+        } else {
+          $('[id=no_corr_val]').html("<i class='fas fa-times text-danger'></i>");
         }
         if (data.tanggal_corr != null) {
-          $('[id=tanggal_corr_val]').html(moment(data.tanggal_corr).format('dddd, D MMMM Y'));
+          $('[id=tanggal_corr_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.tanggal_corr).format('dddd, D MMMM Y'));
         } else {
-          $('[id=tanggal_corr_val]').html("-");
+          $('[id=tanggal_corr_val]').html("<i class='fas fa-times text-danger'></i> ");
         }
         if (data.no_po != null) {
-          $('[id=no_po_val]').html(data.no_po);
+          $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po);
         } else {
-          $('[id=no_po_val]').html("-");
+          $('[id=no_po_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
+        if (data.no_po != "") {
+          $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po);
+        } else {
+          $('[id=no_po_val]').html("<i class='fas fa-times text-danger'></i>");
         }
         if (data.tanggal_po != null) {
-          $('[id=tanggal_po_val]').html(moment(data.tanggal_po).format('dddd, D MMMM Y'));
+          $('[id=tanggal_po_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.tanggal_po).format('dddd, D MMMM Y'));
         } else {
-          $('[id=tanggal_po_val]').html("-");
+          $('[id=tanggal_po_val]').html("<i class='fas fa-times text-danger'></i> ");
         }
-        if (data.is_bayar != null) {
-          $('[id=sudah_dibayarkan_val]').html(moment(data.is_bayar).format('dddd, D MMMM Y'));
+
+        if (data.no_bast != null) {
+          $('[id=no_bast_val]').html("<i class='fas fa-check text-success'></i> " + data.no_bast);
         } else {
-          $('[id=sudah_dibayarkan_val]').html("BELUM");
+          $('[id=no_bast_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
+        if (data.tanggal_bast != null) {
+          $('[id=tanggal_bast_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.tanggal_bast).format('dddd, D MMMM Y'));
+        } else {
+          $('[id=tanggal_bast_val]').html("<i class='fas fa-times text-danger'></i> ");
+        }
+        if (data.no_bapp != null) {
+          $('[id=no_bapp_val]').html("<i class='fas fa-check text-success'></i> " + data.no_bapp);
+        } else {
+          $('[id=no_bapp_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
+        if (data.tanggal_bapp != null) {
+          $('[id=tanggal_bapp_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.tanggal_bapp).format('dddd, D MMMM Y'));
+        } else {
+          $('[id=tanggal_bapp_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
+
+        if (data.is_bayar != null) {
+          $('[id=sudah_dibayarkan_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.is_bayar).format('dddd, D MMMM Y'));
+        } else {
+          $('[id=sudah_dibayarkan_val]').html("<i class='fas fa-times text-danger'></i> BELUM");
         }
         if (data.is_bayarclient != null) {
-          $('[id=sudah_dibayar_client_val]').html(moment(data.is_bayarclient).format('dddd, D MMMM Y'));
+          $('[id=sudah_dibayar_client_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.is_bayarclient).format('dddd, D MMMM Y'));
         } else {
-          $('[id=sudah_dibayar_client_val]').html("BELUM");
+          $('[id=sudah_dibayar_client_val]').html("<i class='fas fa-times text-danger'></i> BELUM");
         }
         if (data.is_invoiced != null) {
-          $('[id=sudah_invoice_val]').html(moment(data.is_invoiced).format('dddd, D MMMM Y'));
+          $('[id=sudah_invoice_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.is_invoiced).format('dddd, D MMMM Y'));
         } else {
-          $('[id=sudah_invoice_val]').html("BELUM");
+          $('[id=sudah_invoice_val]').html("<i class='fas fa-times text-danger'></i> BELUM");
         }
 
         // $('[id=tanggal_pengajuan]').html(moment(data.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
