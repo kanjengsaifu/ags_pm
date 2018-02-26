@@ -75,3 +75,6 @@ $route['evidences/submission/picture'] = 'submission/main_picture';
 $route['evidences/transaksi/document'] = 'transaksi/main_document';
 $route['evidences/progress/document'] = 'progress/main_document';
 $route['evidences/progress/picture'] = 'progress/main_picture';
+
+
+$route['progress/report'] = 'progress/main_report';

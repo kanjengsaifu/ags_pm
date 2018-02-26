@@ -20,6 +20,18 @@ class Progress extends MY_Controller
     $this->loadPage($page, $config);
   }
 
+  public function main_report($page = 'progress_report') {
+    isLoggedIn();
+    $config['title']  = "Progress Report" . $this->title;
+    $config['kategori_pengajuan'] = $this->appModel->getEnumKategoriPengajuan();
+    $config['site_list']          = $this->appModel->getSiteData();
+    $config['project_list']       = $this->appModel->getProjectDataforProgress();
+    $config['totalprogress']      = $this->appModel->totalprogress();
+    $config['progressbelumselesai'] = $this->appModel->progressBelumSelesai();
+    $config['progresssudahselesai'] = $this->appModel->progressSudahSelesai();
+    $this->loadPage($page, $config);
+  }
+
   public function save() {
     if ($this->input->post('project_id')=="new_project") {
       $data_site = array(
@@ -120,6 +132,40 @@ class Progress extends MY_Controller
                   </button>'
                   )
                 .'
+                ';
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->appModel->countProgressData(),
+      "recordsFiltered" => $this->appModel->countProgressDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
+  }
+
+  public function data_report() {
+    $staff_data = $this->appModel->getProgressJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($staff_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = $stfd->keterangan;
+      $row[]  = $stfd->nama_project;
+      $row[]  = $stfd->id_site;
+      $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
+      $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
+      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
+      $row[]  = ($stfd->is_bayar != NULL ? date('Y-m-d', strtotime($stfd->is_bayar)) : 'PROGRESS');
+      $row[]  = ($stfd->is_bayarclient != NULL ? date('Y-m-d', strtotime($stfd->is_bayarclient)) : 'PROGRESS');
+      $row[]  = '
+                <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
+                  <i class="fas fa-search"></i>
+                </button>
                 ';
       $data[]  = $row;
     }

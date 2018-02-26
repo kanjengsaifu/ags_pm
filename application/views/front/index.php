@@ -12,6 +12,12 @@
 										</div>
 										<br>
 									<?php endif; ?>
+									<?php if (isNotification()): ?>
+										<div class="alert alert-success alert-dismissable">
+										  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+										  <strong>Success!</strong> <?=notificationMessage()?>
+										</div>
+									<?php endif; ?>
 									<div class="row gap-20">
 										<div class="col-md-3">
 											<div class="layers bd bgc-white p-20">
@@ -65,6 +71,7 @@
 												<canvas id="myChart2" width="400" height="200"></canvas>
 											</div>
 										</div> -->
+										<br>
 										<button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn">SHOW CUSTOM FILTER</button>
 										<br>
 										<!-- PENGAJUAN DETAIL -->
@@ -309,12 +316,6 @@
 					                </form>
 					        </div>
 									<!-- END OF CUSTOM FILTER -->
-									<?php if (isNotification()): ?>
-										<div class="alert alert-success alert-dismissable">
-										  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-										  <strong>Success!</strong> <?=notificationMessage()?>
-										</div>
-									<?php endif; ?>
 									<div class="bgc-white bd bdrs-3 p-20 mB-20">
 										<button type="button" class="btn cur-p btn-outline-primary" onclick="reload_table()">
 	                    <i class="fas fa-sync-alt"></i>
@@ -458,6 +459,10 @@
 						submission_admin = $('#submission_admin').DataTable({
 								"processing": true,
 								"serverSide": true,
+			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+			               "<'row'<'col-sm-12'tr>>" +
+			               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+			          "pageLength": 5,
 								// "language"	: {
 								// 	"info": "Menampilkan halaman _PAGE_ of _PAGES_"
 								// },

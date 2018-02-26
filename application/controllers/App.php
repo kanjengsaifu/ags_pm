@@ -50,4 +50,14 @@ class App extends MY_Controller
     $this->load->helper('download');
     force_download('database.zip', $backup);
   }
+
+  public function checkCurrPassword() {
+    $currpass = md5($this->input->post('currpass'));
+    $this->appModel->checkOldPassMatch($currpass);
+  }
+
+  public function saveChanges() {
+    $newpassword = md5($this->input->post('ep_password'));
+    $this->appModel->changePassword($newpassword);
+  }
 }

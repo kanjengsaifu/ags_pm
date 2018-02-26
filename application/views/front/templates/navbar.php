@@ -51,7 +51,7 @@
         </div></a>
         <ul class="dropdown-menu fsz-sm">
           <li>
-            <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="<?=site_url('settings')?>" data-toggle="modal" data-target="#settings"><i class="ti-settings mR-10"></i> <span>Account Setting</span></a>
+            <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" data-toggle="modal" data-target="#settings"><i class="ti-settings mR-10"></i> <span>Account Setting</span></a>
           </li>
           <!-- <li>
             <a class="d-b td-n pY-5 bgcH-grey-100 c-grey-700" href="#"><i class="ti-user mR-10"></i> <span>Profile</span></a>
@@ -72,27 +72,28 @@
         <h5 class="modal-title" id="exampleModalLabel">Account Settings</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
       </div>
       <div class="modal-body">
-        <form id="form_addfeed" class="" action="<?=site_url('app/saveChanges')?>" method="post" enctype="multipart/form-data">
+        <form id="form_cp" class="" action="<?=site_url('app/saveChanges')?>" method="post" enctype="multipart/form-data">
 
           <div class="form-group">
             <label for="">Current Password</label>
-            <input type="password" name="cur_password" value="" class="form-control">
+            <input type="password" id="ep_cur_password" name="ep_cur_password" value="" class="form-control">
           </div>
 
           <div class="form-group">
             <label for="">New Password</label>
-            <input type="password" name="password" value="" class="form-control">
+            <input type="password" id="ep_password" name="ep_password" value="" class="form-control">
           </div>
 
           <div class="form-group">
             <label for="">Confirm New Password</label>
-            <input type="password" name="password" value="" class="form-control">
+            <input type="password" id="ep_conf_password" name="ep_conf_password" value="" class="form-control">
           </div>
-
+          <div id="divCheckPasswordMatch"></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-        <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnSaveChanges" onclick="savechanges()">Submit</button>
+        <!-- <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnSaveChanges" onclick="savechanges()">Submit</button> -->
+        <input class="btn btn-primary" type="submit" name="" value="Submit">
       </div>
       </form>
     </div>

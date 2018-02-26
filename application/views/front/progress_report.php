@@ -4,9 +4,70 @@
       <div class="row">
         <div class="col-md-12">
           <div class="peer">
-            <button type="button" class="btn cur-p btn-outline-primary" data-toggle="modal" data-target="#createProgress">
-              <i class="fas fa-plus"></i> &nbsp;Progress Baru
-            </button>
+            <div class="row gap-20">
+              <div class="col-md-3">
+                <div class="layers bd bgc-white p-20">
+                  <div class="layer w-100 mB-10">
+                    <h6 class="lh-1">Total Progress</h6>
+                  </div>
+                  <div class="layer w-100">
+                    <div class="peers ai-sb fxw-nw">
+                      <div class="peer peer-greed">
+                        <i class="fas fa-signal"></i>
+                        <!-- <span id="sparklinedash"></span> -->
+                        <!-- <canvas height="20" style="display: inline-block; width: 45px; height: 20px; vertical-align: top;" width="45">
+                          <span id="sparklinedash"></span>
+                        </canvas> -->
+                      </div>
+                      <div class="peer">
+                        <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+                          <?=$totalprogress?>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="layers bd bgc-white p-20">
+                  <div class="layer w-100 mB-10">
+                    <h6 class="lh-1">Progress Belum Selesai</h6>
+                  </div>
+                  <div class="layer w-100">
+                    <div class="peers ai-sb fxw-nw">
+                      <div class="peer peer-greed">
+                        <i class="fas fa-signal"></i>
+                      </div>
+                      <div class="peer">
+                        <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-red-50 c-red-500">
+                          <?=$progressbelumselesai?>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="layers bd bgc-white p-20">
+                  <div class="layer w-100 mB-10">
+                    <h6 class="lh-1">Progress Sudah Selesai</h6>
+                  </div>
+                  <div class="layer w-100">
+                    <div class="peers ai-sb fxw-nw">
+                      <div class="peer peer-greed">
+                        <i class="fas fa-signal"></i>
+                      </div>
+                      <div class="peer">
+                        <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+                          <?=$progresssudahselesai?>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
             <button type="button" name="button" class="btn btn-outline-primary" id="custom_filter_btn"><i class="fas fa-filter"></i> &nbsp;SHOW CUSTOM FILTER</button>
             <br><br>
             <!-- CUSTOM FILTER -->
@@ -203,6 +264,15 @@
                           <?php endforeach; ?>
                         </select>
                       </div>
+                      <hr>
+                      <div class="form-group">
+                        <label for="">Tanggal Awal Kontrak</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
+                      </div>
                       <div class="" id="new_site_div">
                         <div class="form-group">
                           <label for="">Site ID</label>
@@ -220,15 +290,6 @@
                           <label for="">Keterangan Site</label>
                           <textarea name="keterangan_site" class="form-control" rows="8" cols="80" placeholder="Keterangan Site"></textarea>
                         </div>
-                      </div>
-                      <hr>
-                      <div class="form-group">
-                        <label for="">Tanggal Awal Kontrak</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
-                      </div>
-                      <div class="form-group">
-                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
                       </div>
                       <hr>
                       <div class="form-group">
@@ -569,7 +630,6 @@
             <table cellspacing="0" class="table table-striped table-bordered" id="progress" width="100%">
               <thead>
                 <tr>
-                  <th class="text-center"></th>
                   <th class="text-center">No</th>
                   <th class="text-center">Ket</th>
                   <th class="text-center">Nama Project</th>
@@ -579,7 +639,7 @@
                   <th class="text-center">Tanggal<br>Invoice</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>AG</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>Client</th>
-                  <th style="white-space:nowrap;" class="text-center" width="250">Action</th>
+                  <th style="white-space:nowrap;" class="text-center" width="50">Action</th>
                 </tr>
               </thead>
             </table>
@@ -612,7 +672,7 @@
           // },
           "order": [],
           "ajax": {
-              "url": "<?php echo site_url('progress/data')?>",
+              "url": "<?php echo site_url('progress/data_report')?>",
               "type": "POST",
               "data": function(data) {
                 // data.kategori_pengajuan = $('#kategori_pengajuan_filter').val();
@@ -667,7 +727,7 @@
             // },
             {
               "className": "dt-center",
-              "targets": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+              "targets": [1, 2, 3, 4, 5, 6, 7, 8, 9]
             }
           ],
       });
@@ -1038,12 +1098,22 @@
         } else {
           $('[id=no_corr_val]').html("<i class='fas fa-times text-danger'></i>");
         }
+        if (data.no_corr != "") {
+          $('[id=no_corr_val]').html("<i class='fas fa-check text-success'></i> " + data.no_corr);
+        } else {
+          $('[id=no_corr_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
         if (data.tanggal_corr != null) {
           $('[id=tanggal_corr_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.tanggal_corr).format('dddd, D MMMM Y'));
         } else {
           $('[id=tanggal_corr_val]').html("<i class='fas fa-times text-danger'></i> ");
         }
         if (data.no_po != null) {
+          $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po);
+        } else {
+          $('[id=no_po_val]').html("<i class='fas fa-times text-danger'></i>");
+        }
+        if (data.no_po != "") {
           $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po);
         } else {
           $('[id=no_po_val]').html("<i class='fas fa-times text-danger'></i>");

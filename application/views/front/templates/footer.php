@@ -124,6 +124,79 @@ function savefeed() {
 //     $(this).ekkoLightbox();
 // });
 </script>
+<script type="text/javascript">
+  jQuery.validator.addMethod( 'passwordMatch', function(value, element) {
+    var password = $("#ep_password").val();
+    var confirmPassword = $("#ep_conf_password").val();
+
+    if (password != confirmPassword ) {
+        return false;
+    } else {
+        return true;
+    }
+
+  }, "Your Passwords Must Match");
+
+  $(document).ready(function() {
+    $("#form_cp").validate({
+      rules: {
+        ep_cur_password: {
+          required: true,
+          "remote": {
+            url: "<?=base_url('app/checkCurrPassword')?>",
+            type: "POST",
+            data: {
+              currpass: function() {
+                return $('#ep_cur_password').val();
+              }
+            }
+          },
+        },
+        ep_password: {
+          required: true,
+          minlength: 6
+        },
+        ep_conf_password: {
+          required: true,
+          minlength: 6,
+          passwordMatch: true
+        }
+      },
+      messages: {
+        ep_cur_password: {
+          required: "Wajib diisi!",
+          remote: "Password saat ini salah!"
+        },
+        ep_password: {
+          required: "Wajib diisi!",
+          minlength: "Min 6 characters!"
+        },
+        ep_conf_password: {
+          required: "Wajib diisi!",
+          minlength: "Min 6 characters!",
+          passwordMatch: "Konfirmasi password harus sesuai dengan password baru!"
+        }
+      },
+      errorClass: "text-danger"
+    });
+  });
+
+  function checkCurrPassword() {
+    var curr_password = $('#ep_cur_password').val();
+
+    $.ajax({
+      url: "<?=base_url('app/checkCurrPassword')?>",
+      data: {currpass: curr_password},
+      type: "POST",
+      dataType: "json",
+      success: function() {
+        if (true) {
+
+        }
+      }
+    });
+  }
+</script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
 <script type="text/javascript" src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>

@@ -25,6 +25,7 @@
     <link href="https://unpkg.com/nanogallery2@2.0.0/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <?=js('js/jquery.validate.min.js')?>
     <script type="text/javascript" src="https://unpkg.com/nanogallery2@2.0.0/dist/jquery.nanogallery2.min.js"></script>
     <?=js('js/piexif.min.js')?>
     <?=js('js/sortable.min.js')?>
@@ -459,6 +460,11 @@
                 </li>
               <?php endif; ?>
               <?php if (isViewer() || isAdministrator() || isAdm()): ?>
+                <?php if (isViewer()): ?>
+                  <li class="nav-item">
+                    <a class="sidebar-link" href="<?=site_url('progress/report')?>"><span class="icon-holder"><i class="fas fa-tasks"></i></span> <span class="title">Progress</span></a>
+                  </li>
+                <?php endif; ?>
                 <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('progress/chart')?>"><span class="icon-holder"><i class="far fa-chart-bar"></i></span> <span class="title">Progress Chart</span></a>
                 </li>

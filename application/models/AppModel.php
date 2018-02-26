@@ -20,6 +20,47 @@ class AppModel extends CI_Model
     return $this->db->count_all_results();
   }
 
+  public function totalProgress() {
+    $this->db->from('progress');
+    return $this->db->count_all_results();
+  }
+
+  public function progressBelumSelesai() {
+    $this->db->where('is_bayarclient', NULL);
+    $this->db->from('progress');
+    return $this->db->count_all_results();
+  }
+
+  public function progressSudahSelesai() {
+    $this->db->where('is_bayarclient !=', NULL);
+    $this->db->from('progress');
+    return $this->db->count_all_results();
+  }
+
+  public function checkOldPassMatch($currpass) {
+    $this->db->where('user_id', $this->session->useractive_id);
+    $user = $this->db->get('users');
+    $row = $user->row();
+    if ($row->password != $currpass) {
+      echo "false";
+    } else {
+      echo "true";
+    }
+  }
+
+  public function changePassword($newpassword) {
+    $update = $this->db->set('password', $newpassword);
+    $this->db->where('user_id', $this->session->useractive_id);
+    $update = $this->db->update('users');
+    if ($update) {
+      $this->session->set_flashdata('notification', "Password berhasil dirubah");
+      redirect('');
+    } else {
+      $this->session->set_flashdata('notification', "Something went wrong");
+      redirect('');
+    }
+  }
+
   public function auth_check($username, $password) {
     $this->db->where('username', $username);
     $this->db->where('password', md5($password));
