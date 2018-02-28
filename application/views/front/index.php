@@ -832,7 +832,12 @@
 							} else {
 								$('#tanggal_approval_keuangan_div').hide();
 							}
-							$('[id=pid_val]').html(data.id_site + ' / ' + data.nama_site);
+							if (data.site_id != "") {
+								$('[id=pid_val]').html(data.id_site + ' ' + data.id_site_telkom + ' / ' + data.nama_site);
+								$('#pid_div_det').show();
+							} else {
+								$('#pid_div_det').hide();
+							}
 							if (data.no_spk != "") {
 								$('#no_spk_div_det').show();
 								$('[id=no_spk_val]').html(data.no_spk);

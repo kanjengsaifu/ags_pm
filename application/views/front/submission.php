@@ -139,18 +139,18 @@
 																	<option selected disabled readonly>PILIH SITE</option>
 																	<option value="new_site">New Site</option>
 																	<?php foreach ($site_list->result() as $site_data): ?>
-																		<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+																		<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> <?=$site_data->id_site_telkom?> / <?=$site_data->lokasi?></option>
 																	<?php endforeach; ?>
 																</select>
 															</div>
 															<div class="" id="new_site_div">
 																<div class="form-group">
 																	<label for="">Site ID</label>
-																	<input type="text" class="form-control" name="id_site" value="" placeholder="ID Site">
+																	<input type="text" class="form-control" name="id_site" value="" placeholder="Site ID">
 																</div>
 																<div class="form-group">
-																	<label for="">Site ID Telkom</label> <i>*optional</i>
-																	<input type="text" class="form-control" name="id_site_telkom" value="" placeholder="ID Site Telkom">
+																	<label for="">PID</label> <i></i>
+																	<input type="text" class="form-control" name="id_site_telkom" value="" placeholder="PID">
 																</div>
 																<div class="form-group">
 																	<label for="">Nama Site</label>
@@ -277,7 +277,7 @@
 																<td><span id="tanggal_approval_keuangan"></span></td>
 															</tr>
 															<tr id="pid_div_det">
-																<th width="250">PID (Site ID)</th>
+																<th width="250">Nama Site</th>
 																<td><span id="pid_val"></span></td>
 															</tr>
 															<tr id="no_spk_div_det">
@@ -1699,7 +1699,7 @@
 								$('#tanggal_approval_keuangan_div').hide();
 							}
 							if (data.site_id != "") {
-								$('[id=pid_val]').html(data.id_site + ' / ' + data.nama_site);
+								$('[id=pid_val]').html(data.id_site + ' ' + data.id_site_telkom + ' / ' + data.nama_site);
 								$("#pid_div_det").show();
 							} else {
 								$("#pid_div_det").hide();

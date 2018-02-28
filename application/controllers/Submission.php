@@ -117,7 +117,7 @@ class Submission extends MY_Controller
                                     :
                                     (
                                       $this->input->post('site_id') == "new_site" ?
-                                      $this->appModel->getNewSiteID($this->input->post('id_site')) :
+                                      $this->appModel->getNewSiteID($this->input->post('id_site'), $this->input->post('id_site_telkom'), $this->input->post('nama_site')) :
                                       $this->input->post('site_id')
                                     )
                                  ),
@@ -187,7 +187,7 @@ class Submission extends MY_Controller
                                     :
                                     (
                                       $this->input->post('site_id') == "new_site" ?
-                                      $this->appModel->getNewSiteID($this->input->post('id_site')) :
+                                      $this->appModel->getNewSiteID($this->input->post('id_site'), $this->input->post('id_site_telkom'), $this->input->post('nama_site')) :
                                       $this->input->post('site_id')
                                     )
                                  ),

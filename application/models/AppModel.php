@@ -7,6 +7,11 @@
 class AppModel extends CI_Model
 {
 
+  public function __construct() {
+    parent::__construct();
+    $this->load->library('email');
+  }
+
   public function totalPengajuan() {
     $this->db->from('pengajuan');
     return $this->db->count_all_results();
@@ -135,7 +140,7 @@ class AppModel extends CI_Model
     $table = 'staff';
     $column_order = array(null, 'nama', 'posisi', 'alamat', 'keterangan', null);
     $column_search = array('nama', 'posisi', 'alamat', 'keterangan');
-    $order = array('staff_id' => 'asc');
+    $order = array('staff_id' => 'desc');
 
     $this->db->from($table);
 
@@ -192,7 +197,7 @@ class AppModel extends CI_Model
     $table = 'team';
     $column_order = array(null, 'team_id', 'genset_total', 'genset_mobile_75', 'genset_mobile_10', 'genset_mobile_12', 'genset_fix_75', 'genset_fix_10', 'genset_fix_12', null);
     $column_search = array('team_id', 'genset_total', 'genset_mobile_75', 'genset_mobile_10', 'genset_mobile_12', 'genset_fix_75', 'genset_fix_10', 'genset_fix_12');
-    $order = array('team_id' => 'asc');
+    $order = array('team_id' => 'desc');
 
     $this->db->from($table);
 
@@ -357,6 +362,68 @@ class AppModel extends CI_Model
     $this->db->insert('pengajuan', $data);
     $insert = $this->db->insert_id();
     if ($insert) {
+      $from_email = 'info@admaresi.com';
+      $email = 'ahmad.uji1902@gmail.com';
+      $subject = 'Pengajuan Baru';
+      $message = '<style>
+                  table {
+                      font-family: arial, sans-serif;
+                      border-collapse: collapse;
+                      width: 100%;
+                  }
+
+                  td, th {
+                      border: 1px solid #dddddd;
+                      text-align: left;
+                      padding: 8px;
+                  }
+
+                  tr:nth-child(even) {
+                      background-color: #dddddd;
+                  }
+                  </style>
+                  Dear Approval,<br /><br />
+                  Notifikasi Pengajuan Baru :<br>
+                  <table>
+                    <tr>
+                      <td>Diajukan oleh</td>
+                      <td>'.$this->session->userdata('name').'</td>
+                    </tr>
+                    <tr>
+                      <td>Deskripsi Pengajuan</td>
+                      <td>'.$data['pengajuan'].'</td>
+                    </tr>
+                    <tr>
+                      <td>Tanggal Realisasi</td>
+                      <td>'.$data['realisasi_pengajuan'].'</td>
+                    </tr>
+                    <tr>
+                      <td>Nilai Pengajuan</td>
+                      <td>'.$data['nilai_pengajuan'].'</td>
+                    </tr>
+                  </table>
+                  <br>Thanks<br />
+                  Admaresi Globalindo PT';
+      $config['protocol'] = 'smtp';
+      $config['smtp_host'] = 'ssl://mail.admaresi.com';
+      $config['smtp_timeout'] = '10';
+      $config['smtp_port'] = '465';
+      $config['smtp_user'] = $from_email;
+      $config['smtp_pass'] = 'info@Admaresi';
+      $config['mailtype'] = 'html';
+      $config['charset'] = 'iso-8859-1';
+      $config['wordwrap'] = TRUE;
+      $config['mailtype'] = 'html';
+      $config['newline'] = "\r\n";
+      $config['crlf'] = "\r\n";
+      $this->email->initialize($config);
+      $this->email->from($from_email, 'Admaresi Globalindo PT');
+      $this->email->to($email);
+      $this->email->subject($subject);
+      $this->email->message($message);
+      echo $this->email->print_debugger();
+      $this->email->send();
+
       $this->session->set_flashdata('notification', "Pengajuan berhasil disubmit!");
       redirect('/submission');
     } else {
@@ -424,7 +491,7 @@ class AppModel extends CI_Model
     $column_order = array(null, 'pengajuan_id', 'pengajuan', 'tanggal_pengajuan', 'tanggal_approval', 'tanggal_approval_keuangan');
     $column_search = array('pengajuan_id', 'pengajuan_id', 'pengajuan');
     if (isAdminJakarta()) {
-      $order = array('realisasi_pengajuan' => 'asc');
+      $order = array('realisasi_pengajuan' => 'desc');
     } else {
       $order = array('tanggal_pengajuan' => 'desc');
     }
@@ -581,10 +648,11 @@ class AppModel extends CI_Model
   }
 
   public function getProgressByID($id) {
-    $this->db->select('project.project_id, project.nama_project, progress.*, site.*');
+    $this->db->select('users.name, project.project_id, project.nama_project, progress.*, site.*');
     $this->db->from('progress');
-    $this->db->join('project', 'progress.project_id = project.project_id');
-    $this->db->join('site', 'progress.site_id = site.site_id');
+    $this->db->join('project', 'progress.project_id = project.project_id', 'left outer');
+    $this->db->join('site', 'progress.site_id = site.site_id', 'left outer');
+    $this->db->join('users', 'progress.created_by = users.user_id', 'left outer');
     $this->db->where('progress.progress_id', $id);
     $query = $this->db->get();
     return $query->row();
@@ -638,6 +706,15 @@ class AppModel extends CI_Model
       $arr[] = $queryvi->row();
     }
     return $arr;
+  }
+
+  public function historyProgress($id) {
+    $this->db->from('progress_history');
+    $this->db->join('users', 'progress_history.updated_by = users.user_id', 'left');
+    $this->db->where('progress_history.progress_id', $id);
+    $this->db->order_by('progress_history.history_id', 'desc');
+    $query = $this->db->get();
+    echo json_encode($query->result());
   }
 
   public function accPengajuan($where, $data) {
@@ -719,7 +796,7 @@ class AppModel extends CI_Model
             <td style="width:20px">#</td>
             <td style="width:70px;text-align:center"><b>ID</b></td>
             <td><b>PEKERJAAN</b></td>
-            <td style="width:70px;text-align:center"><b>ID SITE</b></td>
+            <td style="width:100px;text-align:center"><b>SITE</b></td>
             <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
             <td style="width:90px;text-align:center"><b>REALISASI</b></td>
             <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
@@ -767,7 +844,7 @@ class AppModel extends CI_Model
               <td style="width:20px;">'.$no.'</td>
               <td style="width:70px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
               <td>'.$row2->pengajuan.'</td>
-              <td style="width:70px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site).'</td>
+              <td style="width:100px;text-align:center">'.($row2->site_id != "" ? $row2->id_site . ' ' . $row2->id_site_telkom : '').'</td>
               <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
               <td style="width:90px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
               <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
@@ -868,7 +945,7 @@ class AppModel extends CI_Model
           <td style="width:20px">#</td>
           <td style="width:50px;text-align:center"><b>ID</b></td>
           <td><b>PEKERJAAN</b></td>
-          <td style="width:70px;text-align:center"><b>ID SITE</b></td>
+          <td style="width:100px;text-align:center"><b>SITE</b></td>
           <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
           <td style="width:80px;text-align:center"><b>REALISASI</b></td>
           <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
@@ -924,7 +1001,7 @@ class AppModel extends CI_Model
             <td style="width:20px;">'.$no.'</td>
             <td style="width:50px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
             <td>'.$row2->pengajuan.'</td>
-            <td style="width:30px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site).'</td>
+            <td style="width:30px;text-align:center">'.($row2->site_id != "" ? $row2->id_site . ' ' . $row2->id_site_telkom : '').'</td>
             <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
             <td style="width:60px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
             <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
@@ -1013,7 +1090,7 @@ class AppModel extends CI_Model
           <td style="width:20px">#</td>
           <td style="width:50px;text-align:center"><b>ID</b></td>
           <td><b>PEKERJAAN</b></td>
-          <td style="width:70px;text-align:center"><b>ID SITE</b></td>
+          <td style="width:100px;text-align:center"><b>SITE</b></td>
           <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
           <td style="width:80px;text-align:center"><b>REALISASI</b></td>
           <!--<td style="width:90px;text-align:center"><b>NILAI SPH</b></td>-->
@@ -1028,6 +1105,7 @@ class AppModel extends CI_Model
     $no = 1;
     $tot_np = 0;
     foreach ($data->result() as $row) {
+      $this->db->select('*');
       $this->db->from('pengajuan');
       $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
       $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
@@ -1064,7 +1142,7 @@ class AppModel extends CI_Model
             <td style="width:20px;">'.$no.'</td>
             <td style="width:50px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
             <td>'.$row2->pengajuan.'</td>
-            <td style="width:30px;text-align:center">'.($row2->id_site == "" ? "-" : $row2->id_site ).'</td>
+            <td style="width:30px;text-align:center">'.($row2->site_id != "" ? $row2->id_site . ' ' . $row2->id_site_telkom : '').'</td>
             <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site ).'</td>
             <td style="width:60px;text-align:center">'.date('d M Y', strtotime($row2->realisasi_pengajuan)).'</td>
             <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
@@ -1122,10 +1200,12 @@ class AppModel extends CI_Model
     return implode(",", $result);
   }
 
-  public function getNewSiteID($id_site) {
+  public function getNewSiteID($id_site, $id_site_telkom, $nama_site) {
     $this->db->select('site_id');
     $this->db->from('site');
     $this->db->where('id_site', $id_site);
+    $this->db->where('id_site_telkom', $id_site_telkom);
+    $this->db->where('nama_site', $nama_site);
     $data = $this->db->get();
     $value = $data->row();
     return $value->site_id;
@@ -1177,8 +1257,32 @@ class AppModel extends CI_Model
   }
 
   public function updateProgress($where, $data) {
-    $this->db->update('progress', $data, $where);
-    return $this->db->affected_rows();
+    $update = $this->db->update('progress', $data, $where);
+    if ($update) {
+      $data_arr = array(
+        'progress_id'               => $where['progress_id'],
+        'tanggal_bapp'              => $data['tanggal_bapp'],
+        'tanggal_bast'              => $data['tanggal_bast'],
+        'no_bapp'                   => $data['no_bapp'],
+        'no_bast'                   => $data['no_bast'],
+        'no_po'                     => $data['no_po'],
+        'tanggal_po'                => $data['tanggal_po'],
+        'tanggal_corr'              => $data['tanggal_corr'],
+        'no_corr'                   => $data['no_corr'],
+        'tanggal_kontrak'           => $data['tanggal_kontrak'],
+        'tanggal_akhir_kontrak'     => $data['tanggal_akhir_kontrak'],
+        'deskripsi'                 => $data['deskripsi'],
+        'is_invoiced'               => $data['is_invoiced'],
+        'is_bayar'                  => $data['is_bayar'],
+        'is_bayarclient'            => $data['is_bayarclient'],
+        'updated_by'                => $this->session->userdata('useractive_id'),
+        'updated_at'                => date('Y-m-d H:i:s', time())
+      );
+      $this->db->insert('progress_history', $data_arr);
+      return $this->db->affected_rows();
+    } else {
+      return $this->db->affected_rows();
+    }
   }
 
   public function approveAll($where, $data) {
@@ -1220,7 +1324,7 @@ class AppModel extends CI_Model
     $table = 'progress';
     $column_order = array(null, 'nama_project', null);
     $column_search = array('nama_project');
-    $order = array('progress_id' => 'asc');
+    $order = array('progress_id' => 'desc');
 
     $this->db->from($table);
     $this->db->select('project.project_id, project.nama_project, progress.*, site.*');
@@ -1386,7 +1490,7 @@ class AppModel extends CI_Model
     $table = 'site';
     $column_order = array(null, 'site_id', 'id_site', 'nama_site', 'lokasi', 'keterangan_site', null);
     $column_search = array('site_id', 'id_site', 'nama_site', 'lokasi', 'keterangan_site');
-    $order = array('site_id' => 'asc');
+    $order = array('site_id' => 'desc');
 
     $this->db->from($table);
 
@@ -1470,7 +1574,7 @@ class AppModel extends CI_Model
     $table = 'cluster';
     $column_order = array(null, 'cluster.homebase', 'cluster.wilayah', 'site.id_site', null);
     $column_search = array('cluster.homebase', 'cluster.wilayah', 'site.id_site');
-    $order = array('cluster.cluster_id' => 'asc');
+    $order = array('cluster.cluster_id' => 'desc');
 
     $this->db->from($table);
     $this->db->join('site', 'cluster.site_id = site.site_id');

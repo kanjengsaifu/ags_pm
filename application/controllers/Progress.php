@@ -43,6 +43,7 @@ class Progress extends MY_Controller
     if ($this->input->post('site_id')=="new_site") {
       $data_site = array(
         'id_site'           => $this->input->post('id_site'),
+        'id_site_telkom'    => $this->input->post('id_site_telkom'),
         'nama_site'         => $this->input->post('nama_site'),
         'lokasi'            => $this->input->post('lokasi_site'),
         'keterangan_site'   => $this->input->post('keterangan_site')
@@ -76,10 +77,12 @@ class Progress extends MY_Controller
                                      :
                                      (
                                        $this->input->post('site_id') == "new_site" ?
-                                       $this->appModel->getNewSiteID($this->input->post('id_site')) :
+                                       $this->appModel->getNewSiteID($this->input->post('id_site'), $this->input->post('id_site_telkom'), $this->input->post('nama_site')) :
                                        $this->input->post('site_id')
                                      )
-                                  )
+                                  ),
+      'created_by'            => $this->session->userdata('useractive_id'),
+      'created_at'            => date('Y-m-d', time())
     );
     $this->appModel->addProgress($data_progress);
   }
@@ -107,7 +110,7 @@ class Progress extends MY_Controller
       $row[]  = $no;
       $row[]  = $stfd->keterangan;
       $row[]  = $stfd->nama_project;
-      $row[]  = $stfd->id_site;
+      $row[]  = $stfd->id_site . ' ' . $stfd->id_site_telkom;
       $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
       $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
       $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
@@ -116,6 +119,9 @@ class Progress extends MY_Controller
       $row[]  = '
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
                   <i class="fas fa-search"></i>
+                </button>
+                <button type="button" href="" onclick="historyProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#historyProgress">
+                  <i class="fas fa-history"></i>
                 </button>
                 '.
                   ($stfd->is_bayarclient != NULL ?
@@ -156,7 +162,7 @@ class Progress extends MY_Controller
       $row[]  = $no;
       $row[]  = $stfd->keterangan;
       $row[]  = $stfd->nama_project;
-      $row[]  = $stfd->id_site;
+      $row[]  = $stfd->id_site . ' ' . $stfd->id_site_telkom;
       $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
       $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
       $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
@@ -165,6 +171,9 @@ class Progress extends MY_Controller
       $row[]  = '
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
                   <i class="fas fa-search"></i>
+                </button>
+                <button type="button" href="" onclick="historyProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#historyProgress">
+                  <i class="fas fa-history"></i>
                 </button>
                 ';
       $data[]  = $row;
@@ -431,5 +440,9 @@ class Progress extends MY_Controller
     );
 
     echo json_encode($output);
+  }
+
+  public function historyProgress($id) {
+    $this->appModel->historyProgress($id);
   }
 }

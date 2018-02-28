@@ -41,7 +41,7 @@
                               <select class="selectpicker form-control" name="site_id_filter" id="site_id_filter" data-live-search="true">
                                 <option selected disabled readonly>PILIH SITE</option>
                                 <?php foreach ($site_list->result() as $site_data): ?>
-                                  <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+                                  <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> <?=$site_data->id_site_telkom?> / <?=$site_data->lokasi?></option>
                                 <?php endforeach; ?>
                               </select>
                             </div>
@@ -199,14 +199,18 @@
                           <option selected disabled readonly>PILIH SITE</option>
                           <option value="new_site">New Site</option>
                           <?php foreach ($site_list->result() as $site_data): ?>
-                            <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+                            <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> <?=$site_data->id_site_telkom?> / <?=$site_data->lokasi?></option>
                           <?php endforeach; ?>
                         </select>
                       </div>
                       <div class="" id="new_site_div">
                         <div class="form-group">
                           <label for="">Site ID</label>
-                          <input type="text" class="form-control" name="id_site" value="" placeholder="ID Site">
+                          <input type="text" class="form-control" name="id_site" value="" placeholder="Site ID">
+                        </div>
+                        <div class="form-group">
+                          <label for="">PID</label>
+                          <input type="text" class="form-control" name="id_site_telkom" value="" placeholder="PID">
                         </div>
                         <div class="form-group">
                           <label for="">Nama Site</label>
@@ -271,6 +275,7 @@
                   </div>
                   <div class="modal-body">
                     <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
+                    <span style="float:right" id="created_by"></span>
                     <br><br>
                     <table class="table">
                       <tbody>
@@ -291,7 +296,7 @@
                           <td><span id="project_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">PID</th>
+                          <th width="250">Site</th>
                           <td><span id="pid_val"></span></td>
                         </tr>
                         <tr>
@@ -403,6 +408,26 @@
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END OF PROGRESS DETAIL -->
+            <!-- UPDATE HISTORY PROGRESS -->
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="historyProgress" role="dialog" tabindex="-1">
+              <div class="modal-dialog modal-lg" role="document" id="modalDetail">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">History Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <i class="fas fa-info-circle"></i> <b> HISTORY PROGRESS</b>
+                    <br><br>
+                    <div id="history"></div>
+                    <div id="history_cr"></div>
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
@@ -573,7 +598,7 @@
                   <th class="text-center">No</th>
                   <th class="text-center">Ket</th>
                   <th class="text-center">Nama Project</th>
-                  <th class="text-center">PID</th>
+                  <th class="text-center" width="50">Site</th>
                   <th class="text-center">Tanggal<br>CORMO</th>
                   <th class="text-center">Tanggal<br>PO</th>
                   <th class="text-center">Tanggal<br>Invoice</th>
@@ -1007,6 +1032,50 @@
     });
   }
 
+  function historyProgress(id) {
+    $.ajax({
+      url: "<?=site_url('progress/getProgressDetail/')?>" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        var row = '';
+        row+='<div class="text-center" style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;"><b>Dibuat pada '+moment(data.created_at).format('dddd, D MMMM Y') +' oleh '+ data.name +'</b></div>';
+        $('#history_cr').html(row);
+      }
+    });
+
+    $.ajax({
+      url: "<?=site_url('progress/historyProgress/')?>" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        $('id').html(data.progress_id);
+        var row1 = '';
+        var row = '';
+        for (var i = 0; i < data.length; i++) {
+          if (data[i] != null) {
+            row1+='<div style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;"><b>'+moment(data[i].updated_at).format('dddd, D MMMM Y HH:mm:ss') +' oleh '+ data[i].name +'</b><hr>'+
+              '<table class="table">'+
+              '<tr><td width="150">Corr</td><td colspan="2">'+ (data[i].tanggal_corr != null ? moment(data[i].tanggal_corr).format('dddd, D MMMM Y') : '-') + (data[i].no_corr != null ? ' - ' + data[i].no_corr : '') +'</td></tr>'+
+              '<tr><td width="150">PO</td><td colspan="2">'+ (data[i].tanggal_po != null ? moment(data[i].tanggal_po).format('dddd, D MMMM Y') : '-') + (data[i].no_po != null ? ' - ' + data[i].no_po : '') +'</td></tr>'+
+              '<tr><td width="150">BAST</td><td colspan="2">'+ (data[i].tanggal_bast != null ? moment(data[i].tanggal_bast).format('dddd, D MMMM Y') : '-') + (data[i].no_bast != null ? ' - ' + data[i].no_bast : '') +'</td></tr>'+
+              '<tr><td width="150">BAPP</td><td colspan="2">'+ (data[i].tanggal_bapp != null ? moment(data[i].tanggal_bapp).format('dddd, D MMMM Y') : '-') + (data[i].no_bapp != null ? ' - ' + data[i].no_bapp : '') +'</td></tr>'+
+              '<tr>'+
+              '<td colspan="3" class="text-center">'+ (data[i].is_invoiced != null ? '<i class=\'fas fa-check text-success\'></i> Invoiced' : '<i class=\'fas fa-times text-danger\'></i> Invoiced') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
+              (data[i].is_bayar != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar AG' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar AG') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
+              (data[i].is_bayarclient != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar Client' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar Client') +'</td>'+
+              '</tr>'+
+              '</table>'+
+            '</div>';
+          } else {
+            $('#history').html("Belum ada update.");
+          }
+        }
+        $('#history').html(row1);
+      }
+    });
+  }
+
   function detailProgress(id) {
     $.ajax({
       url: "<?=site_url('progress/getProgressDetail/')?>/" + id,
@@ -1014,6 +1083,7 @@
       dataType: "json",
       success: function(data) {
         $('id').html(data.progress_id);
+        $('#created_by').html("Created by <b>" + data.name + "</b>");
         if (data.tanggal_mulai != null) {
           $('[id=tanggal_mulai_val]').html(moment(data.tanggal_mulai).format('dddd, D MMMM Y'));
         } else {
@@ -1030,7 +1100,12 @@
         } else {
           $('[id=deskripsi_val]').html("-");
         }
-        $('[id=pid_val]').html(data.id_site);
+        if (data.site_id != "") {
+          $('[id=pid_val]').html(data.id_site + ' ' + data.id_site_telkom + ' / ' + data.nama_site);
+          $("#pid_div_det").show();
+        } else {
+          $("#pid_div_det").hide();
+        }
         $('[id=nama_site_val]').html(data.nama_site);
         $('[id=lokasi_site_val]').html(data.lokasi);
         if (data.no_corr != null) {
@@ -1329,6 +1404,11 @@
           $('[name=no_bast_vale]').val(data.no_bast);
         } else {
           $('[name=no_bast_vale]').val("");
+        }
+        if (data.deskripsi != null) {
+          $('[name=deskripsi_vale]').val(data.deskripsi);
+        } else {
+          $('[name=deskripsi_vale]').val("");
         }
         if (data.tanggal_kontrak != null) {
           $('[name=tanggal_kontrak_vale]').val(data.tanggal_kontrak);
