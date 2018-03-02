@@ -325,6 +325,18 @@ class AdminModel extends CI_Model
     return $this->db->count_all_results();
   }
 
+  public function countsudahdiapprove() {
+    $this->db->from('pengajuan');
+    $this->db->where('tanggal_approval !=', NULL);
+    return $this->db->count_all_results();
+  }
+
+  public function countbelumdiapprove() {
+    $this->db->from('pengajuan');
+    $this->db->where('tanggal_approval', NULL);
+    return $this->db->count_all_results();
+  }
+
   public function checkAll($data) {
     $this->db->where('is_bayarclient', NULL);
     $this->db->update('progress', $data);

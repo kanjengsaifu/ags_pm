@@ -330,6 +330,15 @@
 																	</div>
 																</td>
 															</tr>
+															<tr id="buktis_src_div">
+																<th width="250">Bukti Susulan</th>
+																<td>
+																	<div class="" id="buktis">
+																		<div id="buktis_dokumen"></div>
+																		<div id="mult_img_row2"></div>
+																	</div>
+																</td>
+															</tr>
 															<tr id="buktit_src_div">
 																<th width="250">Bukti Transaksi</th>
 																<td>
@@ -480,7 +489,66 @@
                 		</div>
                 	</div>
 									<!-- END OF UPDATE PROGRESS -->
-
+									<!-- EVIDENCE PROGRESS -->
+			            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="uploadBukti" role="dialog" tabindex="-1">
+			              <div class="modal-dialog modal-lg" role="document">
+			                <div class="modal-content">
+			                  <div class="modal-header">
+			                    <h5 class="modal-title" id="exampleModalLabel">Upload Bukti Susulan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+			                  </div>
+			                  <div class="modal-body">
+			                    <form class="" id="form_updatep" action="<?=site_url('submission/saveEvidence')?>" method="post" enctype="multipart/form-data">
+			                      <input type="hidden" name="idp" value="">
+			                      <div class="form-group">
+			                         <label for="">Bukti (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label> <i>*optional</i>
+			                         <!-- <div class="input-files">
+			                          <input type="file" name="file_upload-1">
+			                         </div>
+			                         <a id="add_more"><i class="fas fa-plus"></i> Add More</a> -->
+			                         <div class="file-loading">
+			                           <input id="input-ke-2" name="buktisusulan[]" type="file" multiple>
+			                         </div>
+			                      </div>
+			                      <div class="modal-footer">
+			                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+			                        <input type="submit" name="" value="Upload Bukti (SUSULAN)" class="btn btn-outline-primary">
+			                      </div>
+			                    </form>
+			                  </div>
+			                </div>
+			              </div>
+			            </div>
+			            <!-- END OF EVIDENCE PROGRESS -->
+									<!-- EVIDENCE PROGRESS -->
+			            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="uploadBuktiTransaksi" role="dialog" tabindex="-1">
+			              <div class="modal-dialog modal-lg" role="document">
+			                <div class="modal-content">
+			                  <div class="modal-header">
+			                    <h5 class="modal-title" id="exampleModalLabel">Upload Bukti Transaksi</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+			                  </div>
+			                  <div class="modal-body">
+			                    <form class="" id="form_updatep" action="<?=site_url('submission/saveTransaksi')?>" method="post" enctype="multipart/form-data">
+			                      <input type="hidden" name="idp" value="">
+			                      <div class="form-group">
+			                         <label for="">Bukti (allowed file types: .jpg, .jpeg, .png)</label> <i>*optional</i>
+			                         <!-- <div class="input-files">
+			                          <input type="file" name="file_upload-1">
+			                         </div>
+			                         <a id="add_more"><i class="fas fa-plus"></i> Add More</a> -->
+			                         <div class="file-loading">
+			                           <input id="input-ke-3" name="buktitransaksi[]" type="file" multiple>
+			                         </div>
+			                      </div>
+			                      <div class="modal-footer">
+			                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+			                        <input type="submit" name="" value="Upload Bukti Transaksi" class="btn btn-outline-primary">
+			                      </div>
+			                    </form>
+			                  </div>
+			                </div>
+			              </div>
+			            </div>
+			            <!-- END OF EVIDENCE PROGRESS -->
                 </div>
                 <br>
 								<!-- CUSTOM FILTER -->
@@ -630,6 +698,20 @@
 											HISTORY
 										</button>
 									<?php endif; ?>
+									<?php if (isAdminTasik()): ?>
+										<button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
+											SEMUA PENGAJUAN
+										</button>
+										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
+	                    BELUM DIAPPROVE
+	                  </button>
+										<button type="button" class="btn cur-p btn-secondary" id="on_progress">
+	                    ON PROGRESS
+	                  </button>
+										<button type="button" class="btn cur-p btn-success" id="history_btn">
+											HISTORY
+										</button>
+									<?php endif; ?>
 									<?php if (isApproval()): ?>
 										<div class="" id="approve_terpilih">
 											<br>
@@ -648,7 +730,7 @@
 	                  </button> -->
 										<br>
 										<a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
-										<a id="print_evi" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print-evidences')?>"><i class="fas fa-print"></i>&nbsp; PRINT EVIDENCES</a>
+										<a id="print_evi" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/print-evidences')?>"><i class="fas fa-print"></i>&nbsp; PRINT EVIDENCES <i>*exclude document files</i></a>
 										<a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('submission/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT ULANG YANG TERPILIH</a>
 										<a id="acc" class="btn btn-outline-primary" onclick="accTerpilih()">ACC YANG TERPILIH</a>
 										<button type="button" class="btn cur-p btn-outline-primary" id="check_all">
@@ -707,6 +789,26 @@
 
 			<script>
 				$("#input-ke-1").fileinput({
+					theme: "explorer",
+					minFileCount: 0,
+    			uploadUrl: "/public/assets/evidence",
+					showUpload: false,
+					showCancel: false,
+					overwriteInitial: false,
+					initialPreview: [],
+    			initialPreviewAsData: true,
+					initialPreviewConfig: []
+				});
+
+				$("#input-ke-2").fileinput({
+					theme: "explorer",
+					minFileCount: 0,
+					showUpload: false,
+					showCancel: false,
+					overwriteInitial: true
+				});
+
+				$("#input-ke-3").fileinput({
 					theme: "explorer",
 					minFileCount: 0,
 					showUpload: false,
@@ -869,7 +971,9 @@
 							$('#menampilkan').text("Pengajuan yang Terhold");
 							$("input[type=hidden]").val("N");
 							document.getElementById("on_progress_val").value = "Y";
-							document.getElementById("print").href = "<?=site_url('submission/re-print')?>";
+							<?php if(!isAdminTasik()) { ?>
+								document.getElementById("print").href = "<?=site_url('submission/re-print')?>";
+							<?php } ?>
 							$('#print').show();
 							$('#print_c').show();
 							$('#print_evi').hide();
@@ -922,7 +1026,9 @@
 						$('#belum_diapprove').click(function() {
 							$('#menampilkan').text("Pengajuan yang Belum diApprove");
 							$("input[type=hidden]").val("N");
-							document.getElementById("belum_diapprove_val").value = "Y";
+							<?php if(isAdminTasik()) { ?>
+								document.getElementById("belum_diapprove_val").value = "Y";
+							<?php } ?>
 							$('#approve_terpilih').show();
 							submission.ajax.reload();  //just reload table
 						});
@@ -939,7 +1045,9 @@
 							$('#menampilkan').text("History Pengajuan");
 							$("input[type=hidden]").val("N");
 							document.getElementById("history_val").value = "Y";
-							document.getElementById("print").href = "<?=site_url('submission/re-print-h')?>";
+							<?php if(!isAdminTasik()) { ?>
+								document.getElementById("print").href = "<?=site_url('submission/re-print-h')?>";
+							<?php } ?>
 							$('#print').show();
 							$('#print_c').hide();
 							$('#acc').hide();
@@ -1496,7 +1604,7 @@
 						type: "GET",
 						dataType: "json",
 						success: function(data) {
-							$('[name=id]').val(data.pengajuan_id);
+							$('[name=id]').val(data.pengajuan.pengajuan_id);
 							if (data.tanggal_approval_keuangan != null) {
 								document.getElementById("done").checked = true;
 								document.getElementById("done").value = data.tanggal_approval_keuangan;
@@ -1511,7 +1619,7 @@
 								document.getElementById("bayarclient").checked = true;
 							}
 							$('#updateProgress').modal('show');
-							$('.modal-title').text('Update Progress Pengajuan #ADP' + pad(data.pengajuan_id, 4));
+							$('.modal-title').text('Upload Evidence Pengajuan #ADP' + pad(data.pengajuan.pengajuan_id, 4));
 							reload_table();
 						}, error: function(jqXHR, textStatus, errorThrown) {
 							alert('Error get data from ajax');
@@ -1618,6 +1726,27 @@
 					});
 				});
 
+				function uploadBukti(id) {
+			    $.ajax({
+			      url: "<?=site_url('submission/getPengajuanDetail/')?>/" + id,
+			      type: "GET",
+			      dataType: "json",
+			      success: function(data) {
+			        $('[name=idp]').val(data.pengajuan.pengajuan_id);
+			      }
+			    });
+			  }
+
+				function uploadBuktiTransaksi(id) {
+			    $.ajax({
+			      url: "<?=site_url('submission/getPengajuanDetail/')?>/" + id,
+			      type: "GET",
+			      dataType: "json",
+			      success: function(data) {
+			        $('[name=idp]').val(data.pengajuan.pengajuan_id);
+			      }
+			    });
+			  }
 
 				function detailPengajuan(id) {
 					// if ($("#my_gallery").length > 0) {
@@ -1628,110 +1757,181 @@
 					$('#mult_img_row3').html("");
 					$('#bukti_dokumen').html("");
 					$.ajax({
-						url: "<?=site_url('submission/getPengajuanDetail/')?>/" + id,
-						type: "GET",
-						dataType: "json",
-						success: function(data) {
-							document.getElementById("id_val").value = data.pengajuan_id;
-							if (data.jenis_pengajuan == "Non Project" || data.jenis_pengajuan == "Operasional") {
-								$('[id=kategori_pengajuan_val]').html("NON-PROJECT");
-								$('[id=jenis_pengajuan_val]').html(data.jenis_pengajuan);
-								$('#no_spk_div_det').hide();
-								$('#start_penawaran_dmt_div_det').hide();
-								$('#nilai_sph_div_det').hide();
-								$('#nilai_corr_div_det').hide();
-								$('#nilai_po_div_det').hide();
-								$('#nama_project_div').hide();
-								$('#nilai_sph_div_det').hide();
-								$('#no_sph_div_det').hide();
-								$('#nilai_corr_div_det').hide();
-								$('#no_corr_div_det').hide();
-								$('#nilai_po_div_det').hide();
-								$('#no_po_div_det').hide();
-								$('#no_spk_div_det').hide();
+					  url: "<?=site_url('submission/getPengajuanDetail/')?>/" + id,
+					  type: "GET",
+					  dataType: "json",
+					  success: function(data) {
+					    document.getElementById("id_val").value = data.pengajuan.pengajuan_id;
+					    if (data.pengajuan.jenis_pengajuan == "Non Project" || data.pengajuan.jenis_pengajuan == "Operasional") {
+					      $('[id=kategori_pengajuan_val]').html("NON-PROJECT");
+					      $('[id=jenis_pengajuan_val]').html(data.pengajuan.jenis_pengajuan);
+					      $('#no_spk_div_det').hide();
+					      $('#start_penawaran_dmt_div_det').hide();
+					      $('#nilai_sph_div_det').hide();
+					      $('#nilai_corr_div_det').hide();
+					      $('#nilai_po_div_det').hide();
+					      $('#nama_project_div').hide();
+					      $('#nilai_sph_div_det').hide();
+					      $('#no_sph_div_det').hide();
+					      $('#nilai_corr_div_det').hide();
+					      $('#no_corr_div_det').hide();
+					      $('#nilai_po_div_det').hide();
+					      $('#no_po_div_det').hide();
+					      $('#no_spk_div_det').hide();
+					    } else {
+					      $('[id=kategori_pengajuan_val]').html("PROJECT");
+					      $('[id=jenis_pengajuan_val]').html(data.pengajuan.jenis_pengajuan);
+					      if (data.pengajuan.nilai_sph != "0") {
+					        $('[id=nilai_sph_val]').html("Rp. " + currency_format(data.pengajuan.nilai_sph));
+					        $('[id=no_sph_val]').html(data.pengajuan.no_sph);
+					        $('#nilai_sph_div_det').show();
+					        $('#no_sph_div_det').show();
+					      } else {
+					        $('#nilai_sph_div_det').hide();
+					        $('#no_sph_div_det').hide();
+					      }
+					      if (data.pengajuan.nilai_corr != "0") {
+					        $('[id=nilai_corr_val]').html("Rp. " + currency_format(data.pengajuan.nilai_corr));
+					        $('[id=no_corr_val]').html(data.pengajuan.no_corr);
+					        $('#nilai_corr_div_det').show();
+					        $('#no_corr_div_det').show();
+					      } else {
+					        $('#nilai_corr_div_det').hide();
+					        $('#no_corr_div_det').hide();
+					      }
+					      if (data.pengajuan.nilai_po != "0") {
+					        $('[id=nilai_po_val]').html("Rp. " + currency_format(data.pengajuan.nilai_po));
+					        $('[id=no_po_val]').html(data.pengajuan.no_po);
+					        $('#nilai_po_div_det').show();
+					        $('#no_po_div_det').show();
+					      } else {
+					        $('#nilai_po_div_det').hide();
+					        $('#no_po_div_det').hide();
+					      }
+					      $('[id=nama_project_val]').html(data.pengajuan.nama_project);
+					      $('#jenis_pengajuan_div').show();
+					      $('#nama_project_div').show();
+					    }
+					    $('[id=pengajuan]').html(data.pengajuan.pengajuan);
+					    if (data.pengajuan.tanggal_approval != null) {
+					      $('#editNilaiPengajuan').hide();
+					    } else {
+					      $('#editNilaiPengajuan').show();
+					    }
+					    $('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.pengajuan.nilai_pengajuan));
+					    $('[id=tanggal_pengajuan]').html(moment(data.pengajuan.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
+					    $('[id=realisasi_pengajuan]').html(moment(data.pengajuan.realisasi_pengajuan).format('dddd, D MMMM Y'));
+					    if (data.pengajuan.tanggal_approval_keuangan != null) {
+					      $('#tanggal_approval_keuangan_div').show();
+					      $('[id=tanggal_approval_keuangan]').html(moment(data.pengajuan.tanggal_approval_keuangan).format('dddd, D MMMM Y'));
+					    } else {
+					      $('#tanggal_approval_keuangan_div').hide();
+					    }
+					    if (data.pengajuan.site_id != "") {
+					      $('[id=pid_val]').html(data.pengajuan.id_site + ' ' + data.pengajuan.id_site_telkom + ' / ' + data.pengajuan.nama_site);
+					      $("#pid_div_det").show();
+					    } else {
+					      $("#pid_div_det").hide();
+					    }
+					    if (data.pengajuan.no_spk != "") {
+					      $('#no_spk_div_det').show();
+					      $('[id=no_spk_val]').html(data.pengajuan.no_spk);
+					    } else {
+					      $('#no_spk_div_det').hide();
+					    }
+					    if (data.pengajuan.start_penawaran_dmt != null) {
+					      $('#start_penawaran_dmt_div_det').show();
+					      $('[id=start_penawaran_dmt_val]').html(moment(data.pengajuan.start_penawaran_dmt).format('dddd, D MMMM Y') + " (Lama Progress : " +
+					        monthDiff(
+					          new Date(data.pengajuan.start_penawaran_dmt),
+					          new Date(data.pengajuan.tanggal_pengajuan)
+					        ) + " bulan)"
+					      );
+					    } else {
+					      $('#start_penawaran_dmt_div_det').hide();
+					    }
+					    if (data.pengajuan.keterangan != "") {
+					      $('[id=keterangan]').html(data.pengajuan.keterangan);
+					    } else {
+					      $('[id=keterangan]').html("-");
+					    }
+					    $('[id=pengaju]').html(data.pengajuan.name);
+
+					    if (data.es.length > 0) {
+								$('#buktis_src_div').show();
+								$.ajax({
+									url: "<?=site_url('submission/getEvidenceSusulanbyID')?>/" + data.pengajuan.pengajuan_id,
+									type: "GET",
+									dataType: "json",
+									success: function(evi) {
+										var img = '';
+										var row2 = '';
+											// for (var i = 0; i < evi[0].length; i++) {
+												// console.log(evi[0][i].url)
+														if (evi[0][0] != null) {
+															$('#print_bukti').show();
+															row2+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button></div><div id="my_gallery'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
+														}
+
+														for (var i = 0; i < evi[0][0].length; i++) {
+															if (evi[0][0][i] != null) {
+																row2+= '<a href="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" >'+evi[0][0][i].url.substring(14)+'</a>';
+															}
+														}
+
+														if (evi[0][0] != null) {
+															row2+= '</div>';
+														}
+													// row1+= (i == 0 ? '<br>' : '') + '<a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][i].url) +'" >Title Image1</a>';
+
+													// row2+='<div class="mySlides">'+
+													// 		'<img src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
+													// 	'</div>';
+													//
+													// row3+='<div class="column">'+
+													// 		'<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
+													// 	'</div>';
+												// }
+											// }
+										$('#mult_img_row2').html(row2);
+										// $('#mult_img_row2').html(row2);
+										// $('#mult_img_row3').html(row3);
+										$('#my_gallery'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'').nanogallery2('refresh');
+									}, error: function(jqXHR, textStatus, errorThrown) {
+										var err = eval("(" + jqXHR.responseText + ")");
+										alert(err.Message);
+									}
+								});
+
+								$.ajax({
+									url: "<?=site_url('submission/getEvidenceSusulanbyIDDokumen')?>/" + data.pengajuan.pengajuan_id,
+									type: "GET",
+									dataType: "json",
+									success: function(evi) {
+										var img = '';
+										var row5 = '';
+										for (var i = 0; i < evi[0][0].length; i++) {
+				              // console.log(evi[0][i].url)
+				              if (evi[0][0][i] != null) {
+				                row5+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
+				              }
+				            }
+
+				            $('#buktis_dokumen').html(row5);
+									}, error: function(jqXHR, textStatus, errorThrown) {
+										var err = eval("(" + jqXHR.responseText + ")");
+										alert(err.Message);
+									}
+								});
 							} else {
-								$('[id=kategori_pengajuan_val]').html("PROJECT");
-								$('[id=jenis_pengajuan_val]').html(data.jenis_pengajuan);
-								if (data.nilai_sph != "0") {
-									$('[id=nilai_sph_val]').html("Rp. " + currency_format(data.nilai_sph));
-									$('[id=no_sph_val]').html(data.no_sph);
-									$('#nilai_sph_div_det').show();
-									$('#no_sph_div_det').show();
-								} else {
-									$('#nilai_sph_div_det').hide();
-									$('#no_sph_div_det').hide();
-								}
-								if (data.nilai_corr != "0") {
-									$('[id=nilai_corr_val]').html("Rp. " + currency_format(data.nilai_corr));
-									$('[id=no_corr_val]').html(data.no_corr);
-									$('#nilai_corr_div_det').show();
-									$('#no_corr_div_det').show();
-								} else {
-									$('#nilai_corr_div_det').hide();
-									$('#no_corr_div_det').hide();
-								}
-								if (data.nilai_po != "0") {
-									$('[id=nilai_po_val]').html("Rp. " + currency_format(data.nilai_po));
-									$('[id=no_po_val]').html(data.no_po);
-									$('#nilai_po_div_det').show();
-									$('#no_po_div_det').show();
-								} else {
-									$('#nilai_po_div_det').hide();
-									$('#no_po_div_det').hide();
-								}
-								$('[id=nama_project_val]').html(data.nama_project);
-								$('#jenis_pengajuan_div').show();
-								$('#nama_project_div').show();
+								$('#buktis_src_div').hide();
 							}
-							$('[id=pengajuan]').html(data.pengajuan);
-							if (data.tanggal_approval != null) {
-								$('#editNilaiPengajuan').hide();
-							} else {
-								$('#editNilaiPengajuan').show();
-							}
-							$('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.nilai_pengajuan));
-							$('[id=tanggal_pengajuan]').html(moment(data.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
-							$('[id=realisasi_pengajuan]').html(moment(data.realisasi_pengajuan).format('dddd, D MMMM Y'));
-							if (data.tanggal_approval_keuangan != null) {
-								$('#tanggal_approval_keuangan_div').show();
-								$('[id=tanggal_approval_keuangan]').html(moment(data.tanggal_approval_keuangan).format('dddd, D MMMM Y'));
-							} else {
-								$('#tanggal_approval_keuangan_div').hide();
-							}
-							if (data.site_id != "") {
-								$('[id=pid_val]').html(data.id_site + ' ' + data.id_site_telkom + ' / ' + data.nama_site);
-								$("#pid_div_det").show();
-							} else {
-								$("#pid_div_det").hide();
-							}
-							if (data.no_spk != "") {
-								$('#no_spk_div_det').show();
-								$('[id=no_spk_val]').html(data.no_spk);
-							} else {
-								$('#no_spk_div_det').hide();
-							}
-							if (data.start_penawaran_dmt != null) {
-								$('#start_penawaran_dmt_div_det').show();
-								$('[id=start_penawaran_dmt_val]').html(moment(data.start_penawaran_dmt).format('dddd, D MMMM Y') + " (Lama Progress : " +
-									monthDiff(
-										new Date(data.start_penawaran_dmt),
-										new Date(data.tanggal_pengajuan)
-									) + " bulan)"
-								);
-							} else {
-								$('#start_penawaran_dmt_div_det').hide();
-							}
-							if (data.keterangan != "") {
-								$('[id=keterangan]').html(data.keterangan);
-							} else {
-								$('[id=keterangan]').html("-");
-							}
-							$('[id=pengaju]').html(data.name);
-							if (data.evidence_id != null) {
+
+							if (data.pengajuan.evidence_id != null) {
 								$('#bukti_src_div').show();
 								$('#print_bukti').show();
 								$.ajax({
-									url: "<?=site_url('submission/getEvidencebyID')?>/" + data.pengajuan_id,
+									url: "<?=site_url('submission/getEvidencebyID')?>/" + data.pengajuan.pengajuan_id,
 									type: "GET",
 									dataType: "json",
 									success: function(evi) {
@@ -1743,7 +1943,7 @@
 											// for (var i = 0; i < evi[0].length; i++) {
 												// console.log(evi[0][i].url)
 														if (evi[0][0] != null) {
-															row1+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti/')?>'+data.pengajuan_id+'"><i class="fas fa-print"></i></a></button></div><div id="my_gallery'+data.pengajuan_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
+															row1+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button></div><div id="my_gallerys'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
 														}
 
 														for (var i = 0; i < evi[0].length; i++) {
@@ -1770,7 +1970,7 @@
 										$('#mult_img_row1').html(row1);
 										// $('#mult_img_row2').html(row2);
 										// $('#mult_img_row3').html(row3);
-										$('#my_gallery'+data.pengajuan_id+moment().toDate().getTime()+'').nanogallery2('refresh');
+										$('#my_gallerys'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'').nanogallery2('refresh');
 									}, error: function(jqXHR, textStatus, errorThrown) {
 										var err = eval("(" + jqXHR.responseText + ")");
 									  alert(err.Message);
@@ -1779,9 +1979,9 @@
 							} else {
 								$('#bukti_src_div').hide();
 							}
-							if (data.evidence_id != null) {
+							if (data.pengajuan.evidence_id != null) {
 								$.ajax({
-									url: "<?=site_url('submission/getEvidencebyIDDokumen')?>/" + data.pengajuan_id,
+									url: "<?=site_url('submission/getEvidencebyIDDokumen')?>/" + data.pengajuan.pengajuan_id,
 									type: "GET",
 									dataType: "json",
 									success: function(evi) {
@@ -1808,7 +2008,7 @@
 							}
 
 							$.ajax({
-								url: "<?=base_url('submission/getEvidenceTransaksi')?>/" + data.pengajuan_id,
+								url: "<?=base_url('submission/getEvidenceTransaksi')?>/" + data.pengajuan.pengajuan_id,
 								type: "GET",
 								dataType: "json",
 								success: function(evi) {
@@ -1846,7 +2046,7 @@
 									alert(err.Message);
 								}
 							});
-							$('.modal-title').text('Pengajuan ' + "#ADP" + pad(data.pengajuan_id, 4));
+							$('.modal-title').text('Pengajuan ' + "#ADP" + pad(data.pengajuan.pengajuan_id, 4));
 						}, error: function(jqXHR, textStatus, errorThrown) {
 							alert('Error get data from ajax');
 						}

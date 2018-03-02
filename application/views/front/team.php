@@ -262,22 +262,44 @@
 							var input = data.kendaraan_id;
 							var output = input.replace(",", "\",\"");
 							var akhir = output;
+							// console.log("\[\""+akhir+"\"\]");
 							console.log(akhir);
-							$('#kendaraan_e').select2().select2("val", ["3"]);
-							// $.ajax({
-							// 	url: "<?=base_url('team/getCurrentCluster/')?>"+id,
-							// 	type: "GET",
-							// 	dataType: "json",
-							// 	success: function(data) {
-							//
-							// 	}
-							// });
+							$('#kendaraan_e').select2("val", '["'+akhir+'"]');
 						}
 					});
 				}
 
 				function reload_table() {
 					team.ajax.reload(null, false);
+				}
+
+				function update() {
+					$('#btnUpdate').text('Updating...');
+					$('#btnUpdate').attr('disabled', true);
+					var url;
+
+					url = "<?=site_url('team/update')?>";
+
+					$.ajax({
+						url: url,
+						type: "POST",
+						data: $('#form_update').serialize(),
+						success: function(data) {
+							if (data.status = 'true') {
+								$('.modal').removeClass('show');
+								$('.modal').removeClass('in');
+	              $('.modal').attr("aria-hidden","true");
+	              $('.modal-backdrop').remove();
+	              $('body').removeClass('modal-open');
+								$('#alert').modal('show');
+								console.log($('#kendaraan_e').val());
+								swal("Success!", "Data team berhasil diupdate!", "success");
+								reload_table();
+							}
+							$('#btnUpdate').text('Update');
+							$('#btnUpdate').attr('disabled', false);
+						}
+					});
 				}
 
 				function removeTeam(id) {

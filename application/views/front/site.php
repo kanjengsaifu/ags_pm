@@ -20,8 +20,8 @@
                               <input type="text" class="form-control" name="id_site" placeholder="Site ID" required>
                             </div>
 														<div class="form-group">
-                              <label for="inputAddress2">Site ID Telkom</label> <i>*optional</i>
-                              <input type="text" class="form-control" name="id_site_telkom" placeholder="Site ID Telkom" required>
+                              <label for="inputAddress2">PID</i>
+                              <input type="text" class="form-control" name="id_site_telkom" placeholder="PID" required>
                             </div>
 														<div class="form-group">
                               <label for="inputAddress2">Nama Site</label>
@@ -62,10 +62,11 @@
 											<tr>
 												<th width="30">No</th>
 												<th>Site ID</th>
+												<th>PID</th>
 												<th>Nama Site</th>
 												<th>Lokasi</th>
 												<th>Keterangan</th>
-												<th style="white-space:nowrap;" width="250">Action</th>
+												<th style="white-space:nowrap;" width="50">Action</th>
 											</tr>
 										</thead>
 									</table>
@@ -135,7 +136,7 @@
 					        },
 									{
 										"class": "dt-center",
-										"targets": [1, 2, 3, 4, 5]
+										"targets": [1, 2, 3, 4, 5, 6]
 									}
 				        ],
 				    });

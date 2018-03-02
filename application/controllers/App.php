@@ -25,6 +25,8 @@ class App extends MY_Controller
     $config['isbayarclient'] = $this->adminModel->countisbayarclient();
     $config['invoiced'] = $this->adminModel->countinvoiced();
     $config['belumsemua'] = $this->adminModel->countbelumsemua();
+    $config['sudahdiapprove'] = $this->adminModel->countsudahdiapprove();
+    $config['belumdiapprove'] = $this->adminModel->countbelumdiapprove();
     $this->loadPage($page, $config);
   }
 

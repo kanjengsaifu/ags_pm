@@ -87,7 +87,7 @@
 												<th>Homebase</th>
                         <th>Wilayah</th>
 												<th>Site</th>
-												<th style="white-space:nowrap;" width="100">Action</th>
+												<th style="white-space:nowrap;" width="50">Action</th>
 											</tr>
 										</thead>
 									</table>

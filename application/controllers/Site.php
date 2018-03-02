@@ -26,6 +26,7 @@ class Site extends MY_Controller
       $row = array();
       $row[]  = $no;
       $row[]  = $stfd->id_site;
+      $row[]  = $stfd->id_site_telkom;
       $row[]  = $stfd->nama_site;
       $row[]  = $stfd->lokasi;
       $row[]  = ($stfd->keterangan_site != "" ? $stfd->keterangan_site : "-");

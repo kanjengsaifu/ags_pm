@@ -31,9 +31,9 @@ class Submission extends MY_Controller
         $config['upload_path']    = './public/assets/evidence/';
         $config['allowed_types']  = 'jpg|jpeg|png|pdf|xlsx|xls|doc|docx';
         $config['overwrite']      = FALSE;
-        $config['file_name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
+        $config['file_name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['bukti']['name'][$i]));
 
-        $_FILES['f']['name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
+        $_FILES['f']['name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['bukti']['name'][$i]));
         $_FILES['f']['type']      = $_FILES['bukti']['type'][$i];
         $_FILES['f']['tmp_name']  = $_FILES['bukti']['tmp_name'][$i];
         $_FILES['f']['error']     = $_FILES['bukti']['error'][$i];
@@ -46,8 +46,9 @@ class Submission extends MY_Controller
           echo $this->upload->display_errors();
         } else {
           $data = $this->upload->data();
+          $digit = strlen(pathinfo($config['file_name'], PATHINFO_EXTENSION))+1;
           $data_evidence = array(
-            'url'             => $config['file_name'],
+            'url'             => str_replace('.', '_', substr($config['file_name'], 0, -$digit)).'.'.pathinfo($config['file_name'], PATHINFO_EXTENSION),
             'keterangan'      => '',
             'extension'       => pathinfo($config['file_name'], PATHINFO_EXTENSION),
             'uploaded_at'     => date('Y-m-d', time()),
@@ -296,9 +297,16 @@ class Submission extends MY_Controller
                   .'
                   '.
                     (isAdminTasik() ?
+                      '
+                      <button type="button" href="" onclick="uploadBukti('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBukti">
+                        <i class="fas fa-upload"></i>
+                      </button> '.
                       ($stfd->tanggal_approval_keuangan != NULL ?
                         '<button onclick="reset_cam('."'".$stfd->pengajuan_id."'".')" type="button" href="" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#captureEvidence">
                           <i class="fa fa-camera"></i>
+                        </button>
+                        <button type="button" href="" onclick="uploadBuktiTransaksi('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBuktiTransaksi">
+                          <i class="fas fa-paperclip"></i>
                         </button>' : ''
                       ) : ''
                     )
@@ -324,6 +332,16 @@ class Submission extends MY_Controller
 
   public function getEvidencebyID($id) {
     $data = $this->appModel->getEvidencebyID($id);
+    echo json_encode(array($data));
+  }
+
+  public function getEvidenceSusulanbyID($id) {
+    $data = $this->appModel->getEvidenceSusulanbyID($id);
+    echo json_encode(array($data));
+  }
+
+  public function getEvidenceSusulanbyIDDokumen($id) {
+    $data = $this->appModel->getEvidenceSusulanbyIDDokumen($id);
     echo json_encode(array($data));
   }
 
@@ -606,5 +624,89 @@ class Submission extends MY_Controller
 
   public function printEvidences() {
     $this->appModel->printEvidencesSekaligus();
+  }
+
+  public function saveEvidence() {
+    if ($_FILES['buktisusulan']['name']['0'] != "") {
+      $filesCount = count($_FILES['buktisusulan']['name']);
+
+      for ($i=0; $i < $filesCount; $i++) {
+        unset($config);
+        $config = array();
+        $config['upload_path']    = './public/assets/evidence/';
+        $config['allowed_types']  = 'jpg|jpeg|png|pdf|xlsx|xls|doc|docx';
+        $config['overwrite']      = FALSE;
+        $config['file_name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktisusulan']['name'][$i]));
+
+        $_FILES['f']['name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktisusulan']['name'][$i]));
+        $_FILES['f']['type']      = $_FILES['buktisusulan']['type'][$i];
+        $_FILES['f']['tmp_name']  = $_FILES['buktisusulan']['tmp_name'][$i];
+        $_FILES['f']['error']     = $_FILES['buktisusulan']['error'][$i];
+        $_FILES['f']['size']      = $_FILES['buktisusulan']['size'][$i];
+        // $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload('f')) {
+          echo $this->upload->display_errors();
+        } else {
+          $data = $this->upload->data();
+          $digit = strlen(pathinfo($config['file_name'], PATHINFO_EXTENSION))+1;
+          $data_evidence = array(
+            'pengajuan_id'    => $this->input->post('idp'),
+            'url'             => str_replace('.', '_', substr($config['file_name'], 0, -$digit)).'.'.pathinfo($config['file_name'], PATHINFO_EXTENSION),
+            'keterangan'      => '',
+            'extension'       => pathinfo($config['file_name'], PATHINFO_EXTENSION),
+            'uploaded_at'     => date('Y-m-d', time()),
+            'uploaded_by'     => $this->session->userdata('useractive_id')
+          );
+          $this->appModel->evidencePengajuanSave($data_evidence);
+        }
+      }
+
+      // echo "sukses";
+    }
+  }
+
+  public function saveTransaksi() {
+    if ($_FILES['buktitransaksi']['name']['0'] != "") {
+      $filesCount = count($_FILES['buktitransaksi']['name']);
+
+      for ($i=0; $i < $filesCount; $i++) {
+        unset($config);
+        $config = array();
+        $config['upload_path']    = './public/assets/evidence/transaksi/';
+        $config['allowed_types']  = 'jpg|jpeg|png|pdf';
+        $config['overwrite']      = FALSE;
+        $config['file_name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktitransaksi']['name'][$i]));
+
+        $_FILES['f']['name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktitransaksi']['name'][$i]));
+        $_FILES['f']['type']      = $_FILES['buktitransaksi']['type'][$i];
+        $_FILES['f']['tmp_name']  = $_FILES['buktitransaksi']['tmp_name'][$i];
+        $_FILES['f']['error']     = $_FILES['buktitransaksi']['error'][$i];
+        $_FILES['f']['size']      = $_FILES['buktitransaksi']['size'][$i];
+        // $ext = pathinfo($path, PATHINFO_EXTENSION);
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+        if (!$this->upload->do_upload('f')) {
+          echo $this->upload->display_errors();
+        } else {
+          $data = $this->upload->data();
+          $digit = strlen(pathinfo($config['file_name'], PATHINFO_EXTENSION))+1;
+          $data_evidence = array(
+            'pengajuan_id'    => $this->input->post('idp'),
+            'url'             => str_replace('.', '_', substr($config['file_name'], 0, -$digit)).'.'.pathinfo($config['file_name'], PATHINFO_EXTENSION),
+            'keterangan'      => '',
+            'extension'       => pathinfo($config['file_name'], PATHINFO_EXTENSION),
+            'uploaded_at'     => date('Y-m-d', time()),
+            'uploaded_by'     => $this->session->userdata('useractive_id')
+          );
+          $this->appModel->transaksiPengajuanSave($data_evidence);
+        }
+      }
+
+      // echo "sukses";
+    }
   }
 }

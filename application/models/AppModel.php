@@ -268,7 +268,7 @@ class AppModel extends CI_Model
 
   public function getKendaraanData() {
     $this->db->from('kendaraan');
-    $this->db->where('is_used', 'N');
+    // $this->db->where('is_used', 'N');
     return $this->db->get();
   }
 
@@ -363,7 +363,7 @@ class AppModel extends CI_Model
     $insert = $this->db->insert_id();
     if ($insert) {
       $from_email = 'info@admaresi.com';
-      $email = 'ahmad.uji1902@gmail.com';
+      $email = array('ahmad.uji1902@gmail.com', 'alven.gultom@gmail.com');
       $subject = 'Pengajuan Baru';
       $message = '<style>
                   table {
@@ -456,6 +456,30 @@ class AppModel extends CI_Model
     } else {
       $this->session->set_flashdata('notification', "Evidence gagal diupload!");
       redirect('/progress');
+    }
+  }
+
+  public function evidencePengajuanSave($data) {
+    $this->db->insert('evidence_susulan', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Evidence berhasil diupload!");
+      redirect('/submission');
+    } else {
+      $this->session->set_flashdata('notification', "Evidence gagal diupload!");
+      redirect('/submission');
+    }
+  }
+
+  public function transaksiPengajuanSave($data) {
+    $this->db->insert('evidence_transaksi', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Bukti transaksi berhasil diupload!");
+      redirect('/submission');
+    } else {
+      $this->session->set_flashdata('notification', "Bukti transaksi gagal diupload!");
+      redirect('/submission');
     }
   }
 
@@ -644,7 +668,17 @@ class AppModel extends CI_Model
     }
     $this->db->where('pengajuan.pengajuan_id', $id);
     $query = $this->db->get();
-    return $query->row();
+    $q1 = $query->row();
+
+    $this->db->select('*');
+    $this->db->from('evidence_susulan');
+    $this->db->where('pengajuan_id', $id);
+    $es = $this->db->get()->result_array();
+    $arr = array();
+    foreach ($es as $key => $value) {
+      $arr[] = $value['url'];
+    }
+    return array('pengajuan' => $q1, 'es' => $arr);
   }
 
   public function getProgressByID($id) {
@@ -673,6 +707,22 @@ class AppModel extends CI_Model
       $arr[] = $queryvi->row();
     }
     return $arr;
+  }
+
+  public function getEvidenceSusulanbyID($id) {
+    $this->db->from('evidence_susulan');
+    $this->db->where('pengajuan_id', $id);
+    $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $evidence_q[] = $this->db->get()->result();
+    return $evidence_q;
+  }
+
+  public function getEvidenceSusulanbyIDDokumen($id) {
+    $this->db->from('evidence_susulan');
+    $this->db->where('pengajuan_id', $id);
+    $this->db->where_not_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $evidence_q[] = $this->db->get()->result();
+    return $evidence_q;
   }
 
   public function getEvidenceProgressbyID($id) {
@@ -1550,6 +1600,11 @@ class AppModel extends CI_Model
 
   public function updateSite($where, $data) {
     $this->db->update('site', $data, $where);
+    return $this->db->affected_rows();
+  }
+
+  public function updateTeam($where, $data) {
+    $this->db->update('team', $data, $where);
     return $this->db->affected_rows();
   }
 

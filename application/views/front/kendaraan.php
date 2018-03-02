@@ -55,7 +55,7 @@
 												<th>Nomor<br>Polisi</th>
                         <th>Jenis<br>Kendaraan</th>
                         <th>Posisi</th>
-												<th style="white-space:nowrap;" width="100">Action</th>
+												<th style="white-space:nowrap;" width="80">Action</th>
 											</tr>
 										</thead>
 									</table>

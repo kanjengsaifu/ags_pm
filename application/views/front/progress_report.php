@@ -352,6 +352,7 @@
                   </div>
                   <div class="modal-body">
                     <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
+                    <span style="float:right" id="created_by"></span>
                     <br><br>
                     <table class="table">
                       <tbody>
@@ -372,7 +373,7 @@
                           <td><span id="project_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">PID</th>
+                          <th width="250">Site</th>
                           <td><span id="pid_val"></span></td>
                         </tr>
                         <tr>
@@ -653,7 +654,7 @@
                   <th class="text-center">No</th>
                   <th class="text-center">Ket</th>
                   <th class="text-center">Nama Project</th>
-                  <th class="text-center">PID</th>
+                  <th class="text-center">Site</th>
                   <th class="text-center">Tanggal<br>CORMO</th>
                   <th class="text-center">Tanggal<br>PO</th>
                   <th class="text-center">Tanggal<br>Invoice</th>
@@ -1094,6 +1095,7 @@
       dataType: "json",
       success: function(data) {
         $('id').html(data.progress_id);
+        $('#created_by').html("Created by <b>" + data.name + "</b>");
         if (data.tanggal_mulai != null) {
           $('[id=tanggal_mulai_val]').html(moment(data.tanggal_mulai).format('dddd, D MMMM Y'));
         } else {

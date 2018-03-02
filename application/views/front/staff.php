@@ -75,7 +75,7 @@
 												<th width="30">No</th>
 												<th>Full Name</th>
 												<th>Position</th>
-												<th style="white-space:nowrap;" width="250">Action</th>
+												<th style="white-space:nowrap;" width="50">Action</th>
 											</tr>
 										</thead>
 									</table>

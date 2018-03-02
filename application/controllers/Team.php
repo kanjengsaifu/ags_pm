@@ -30,11 +30,7 @@ class Team extends MY_Controller
       $no++;
       $row = array();
       $row[]  = $no;
-      $row[]  = '
-                  <button type="button" href="'.site_url('team/detail/'.$stfd->team_id).'" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#teamD'.$stfd->team_id.'">
-                    #ADT'.sprintf('%03d', $stfd->team_id)
-                  .'</button>
-                ';
+      $row[]  = '#ADT'.sprintf('%03d', $stfd->team_id);
       $row[]  = $genset_total;
       $row[]  = $stfd->genset_mobile_75;
       $row[]  = $stfd->genset_mobile_10;
@@ -101,5 +97,18 @@ class Team extends MY_Controller
   public function getTeamDetail($id) {
     $data = $this->appModel->getTeambyID($id);
     echo json_encode($data);
+  }
+
+  public function update() {
+    echo implode(',', $this->input->post('kendaraan_e'));
+    // $data = array(
+    //   'cluster_id'         => $this->input->post('cluster_id_e'),
+    //   'genset_mobile_75'   => $this->input->post('genset_mobile_75_e'),
+    //   'genset_mobile_10'   => $this->input->post('genset_mobile_10_e'),
+    //   'genset_mobile_12'   => $this->input->post('genset_mobile_12_e'),
+    //   'kendaraan_id'       => implode(',', $this->input->post('kendaraan_e'))
+    // );
+    // $insert = $this->appModel->updateTeam(array('team_id' => $this->input->post('id')), $data);
+    // echo json_encode(array("status" => TRUE));
   }
 }
