@@ -462,25 +462,11 @@ class AppModel extends CI_Model
   public function evidencePengajuanSave($data) {
     $this->db->insert('evidence_susulan', $data);
     $insert = $this->db->insert_id();
-    if ($insert) {
-      $this->session->set_flashdata('notification', "Evidence berhasil diupload!");
-      redirect('/submission');
-    } else {
-      $this->session->set_flashdata('notification', "Evidence gagal diupload!");
-      redirect('/submission');
-    }
   }
 
   public function transaksiPengajuanSave($data) {
     $this->db->insert('evidence_transaksi', $data);
     $insert = $this->db->insert_id();
-    if ($insert) {
-      $this->session->set_flashdata('notification', "Bukti transaksi berhasil diupload!");
-      redirect('/submission');
-    } else {
-      $this->session->set_flashdata('notification', "Bukti transaksi gagal diupload!");
-      redirect('/submission');
-    }
   }
 
   public function siteSave($data) {
@@ -651,6 +637,14 @@ class AppModel extends CI_Model
   public function countSubData() {
     $this->db->from('pengajuan');
     return $this->db->count_all_results();
+  }
+
+  public function getApprovalName($id) {
+    $this->db->from('pengajuan');
+    $this->db->join('users', 'users.user_id = pengajuan.approved_by');
+    $this->db->where('users.user_id', $id);
+    $query = $this->db->get();
+    return $query->row();
   }
 
   public function getPengajuanByID($id) {
@@ -1994,6 +1988,7 @@ class AppModel extends CI_Model
       $queryvi = $this->db->get();
       $arr[] = $queryvi->row();
     }
+
     echo "
           <body onload='window.print()'>
           <style>
@@ -2054,6 +2049,160 @@ class AppModel extends CI_Model
 
   }
 
+  public function printEvidencesSusulan($id) {
+    // $this->db->select('evidence_id','pengajuan');
+    $this->db->from('evidence_susulan');
+    $this->db->join('pengajuan', 'pengajuan.pengajuan_id = evidence_susulan.pengajuan_id', 'left outer');
+    $this->db->where('evidence_susulan.pengajuan_id', $id);
+    $this->db->where_in('evidence_susulan.extension', array('jpg', 'png', 'jpeg'));
+    $data = $this->db->get();
+    $evi_s = $data->result();
+    echo "
+          <body onload='window.print()'>
+          <style>
+            @media print{@page {size: landscape}}
+            .image {
+              display: inline-block;
+              margin: 4px;
+              background-position: center center;
+              background-repeat: no-repeat;
+            }
+            .image.scale-fit {
+              background-size: contain;
+            }
+            .image.scale-fill {
+              background-size: cover;
+            }
+            .image img {
+              display: none;
+            }";
+
+            switch ($data->num_rows()) {
+              case '1':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 100%;
+                    height: 90%;
+                  }";
+                break;
+              case '2':
+                  echo "
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 70%;
+                  }";
+                break;
+              case '6':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+              default:
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+            }
+
+    echo "</style>
+        Evidence susulan untuk pengajuan ".$data->row()->pengajuan."<br>";
+    foreach ($evi_s as $key => $value) {
+      echo "
+            <div class=\"image size-fluid scale-fit\" style=\"background-image: url('".base_url('public/assets/evidence/'.$value->url)."');\"><img src=".base_url('public/assets/evidence/'.$value->url)." alt=\"Orientation: Square\"></div>
+           ";
+    }
+  }
+
+  public function printEvidencesBoth($id) {
+    // $this->db->select('evidence_id','pengajuan');
+    $this->db->from('pengajuan');
+    $this->db->where('pengajuan_id', $id);
+    $query = $this->db->get();
+    $data = $query->row();
+    $evidence_list = explode(',', $data->evidence_id);
+    $arr = array();
+    foreach ($evidence_list as $evi) {
+      $this->db->select('url');
+      $this->db->from('evidence');
+      $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+      $this->db->where('id_evidence', $evi);
+      $queryvi = $this->db->get();
+      $arr[] = $queryvi->row()->url;
+    }
+
+
+    $this->db->from('evidence_susulan');
+    $this->db->where('pengajuan_id', $id);
+    $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $data2 = $this->db->get();
+    $evi_s = $data2->result();
+    foreach ($evi_s as $key => $value) {
+      $arr[] = $value->url;
+    }
+
+    echo "
+          <body onload='window.print()'>
+          <style>
+            @media print{@page {size: landscape}}
+            .image {
+              display: inline-block;
+              margin: 4px;
+              background-position: center center;
+              background-repeat: no-repeat;
+            }
+            .image.scale-fit {
+              background-size: contain;
+            }
+            .image.scale-fill {
+              background-size: cover;
+            }
+            .image img {
+              display: none;
+            }";
+
+            switch (count(array_filter($arr))) {
+              case '1':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 100%;
+                    height: 90%;
+                  }";
+                break;
+              case '2':
+                  echo "
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 70%;
+                  }";
+                break;
+              case '6':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+              default:
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+            }
+
+    echo "</style>
+        Evidence untuk pengajuan $data->pengajuan<br>";
+    foreach (array_filter($arr) as $key => $value) {
+      echo "
+            <div class=\"image size-fluid scale-fit\" style=\"background-image: url('".base_url('public/assets/evidence/'.$value)."');\"><img src=".base_url('public/assets/evidence/'.$value)." alt=\"Orientation: Square\"></div>
+           ";
+    }
+
+  }
+
   public function printEvidencesSekaligus() {
     $this->db->select("GROUP_CONCAT(evidence_id) as evidence_id");
     $this->db->from('pengajuan');
@@ -2065,17 +2214,32 @@ class AppModel extends CI_Model
     $query = $this->db->get();
     $data = $query->row();
     $evidence_list = explode(',', $data->evidence_id);
+
     $arr = array();
     foreach ($evidence_list as $evi) {
-      $this->db->select('url');
       $this->db->from('evidence');
       $this->db->where_in('extension', array('jpg', 'png', 'gif', 'jpeg'));
       $this->db->where('id_evidence', $evi);
       $queryvi = $this->db->get();
       $arr[] = $queryvi->row();
     }
+
+
+    $this->db->from('evidence_susulan');
+    $this->db->join('pengajuan', 'pengajuan.pengajuan_id = evidence_susulan.pengajuan_id', 'left outer');
+    $this->db->where('pengajuan.is_printed', 'N');
+    $this->db->where('pengajuan.success_print', 'N');
+    $this->db->where('pengajuan.status_admin_dmt', NULL);
+    $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
+    $this->db->where_in('evidence_susulan.extension', array('jpg', 'png', 'gif', 'jpeg'));
+    $data2 = $this->db->get();
+    $evi_s = $data2->result();
+    foreach ($evi_s as $key => $value) {
+      $arr[] = $value;
+    }
+
     echo "
-          <!--<body onload='window.print()'>-->
+          <body onload='window.print()'>
           <style>
             @media print{@page {size: landscape}}
             .image {

@@ -1000,26 +1000,26 @@
 												// console.log(evi[0][i].url)
 														if (evi[0][0] != null) {
 															$('#print_bukti').show();
+															row2+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti-susulan/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button>&nbsp;&nbsp;<button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-all-evidence/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i> PRINT SEMUA BUKTI</a></button></div><div id="my_gallery'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
 														}
-														row2+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti-susulan/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button>&nbsp;&nbsp;<button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-all-evidence/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i> PRINT SEMUA BUKTI</a></button></div><div id="my_gallery'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{thumbnailHeight: "auto", thumbnailWidth: 100}\'>';
 
 														for (var i = 0; i < evi[0][0].length; i++) {
 															if (evi[0][0][i] != null) {
-																row2+= '<a href="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" >'+evi[0][0][i].url.substring(14)+'</a>';
+																row2+= '<a href="../public/assets/evidence/'+ escape(evi[0][0][i].url) +'" data-ngthumb="../public/assets/evidence/'+ escape(evi[0][0][i].url) +'" >'+evi[0][0][i].url.substring(14)+'</a>';
 															}
 														}
 
 														if (evi[0][0] != null) {
 															row2+= '</div>';
 														}
-													// row1+= (i == 0 ? '<br>' : '') + '<a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][i].url) +'" >Title Image1</a>';
+													// row1+= (i == 0 ? '<br>' : '') + '<a href="../public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="../public/assets/evidence/'+ escape(evi[0][i].url) +'" >Title Image1</a>';
 
 													// row2+='<div class="mySlides">'+
-													// 		'<img src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
+													// 		'<img src="../public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
 													// 	'</div>';
 													//
 													// row3+='<div class="column">'+
-													// 		'<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
+													// 		'<img class="demo cursor" src="../public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
 													// 	'</div>';
 												// }
 											// }
@@ -1043,7 +1043,7 @@
 										for (var i = 0; i < evi[0][0].length; i++) {
 				              // console.log(evi[0][i].url)
 				              if (evi[0][0][i] != null) {
-				                row5+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
+				                row5+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="../public/assets/evidence/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
 				              }
 				            }
 
@@ -1078,21 +1078,21 @@
 
 														for (var i = 0; i < evi[0].length; i++) {
 															if (evi[0][i] != null) {
-																row1+= '<a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][i].url) +'" >'+evi[0][i].url.substring(14)+'</a>';
+																row1+= '<a href="../public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="../public/assets/evidence/'+ escape(evi[0][i].url) +'" >'+evi[0][i].url.substring(14)+'</a>';
 															}
 														}
 
 														if (evi[0][0] != null) {
 															row1+= '</div>';
 														}
-													// row1+= (i == 0 ? '<br>' : '') + '<a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="public/assets/evidence/'+ escape(evi[0][i].url) +'" >Title Image1</a>';
+													// row1+= (i == 0 ? '<br>' : '') + '<a href="../public/assets/evidence/'+ escape(evi[0][i].url) +'" data-ngthumb="../public/assets/evidence/'+ escape(evi[0][i].url) +'" >Title Image1</a>';
 
 													// row2+='<div class="mySlides">'+
-													// 		'<img src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
+													// 		'<img src="../public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%">'+
 													// 	'</div>';
 													//
 													// row3+='<div class="column">'+
-													// 		'<img class="demo cursor" src="public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
+													// 		'<img class="demo cursor" src="../public/assets/evidence/'+ escape(evi[0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][i].keterangan +'">'+
 													// 	'</div>';
 												// }
 												angka++;
@@ -1122,7 +1122,7 @@
 											// console.log(evi[0][i].url)
 											$('#bukti_dokumen').show();
 											if (evi[0][i] != null) {
-												row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/'+ escape(evi[0][i].url) +'" target="_blank">'+ evi[0][i].url.slice(14) +'</a></div>';
+												row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="../public/assets/evidence/'+ escape(evi[0][i].url) +'" target="_blank">'+ evi[0][i].url.slice(14) +'</a></div>';
 											} else {
 												$('#bukti_dokumen').hide();
 											}
@@ -1152,15 +1152,15 @@
 										for (var i = 0; i < evi[0][0].length; i++) {
 											// console.log(evi[0][i].url)
 												trow1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
-													'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="openModal2();tcurrentSlide(\''+ tangka +'\')" class="hover-shadow cursor">'+
+													'<img src="../public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="openModal2();tcurrentSlide(\''+ tangka +'\')" class="hover-shadow cursor">'+
 												'</div>';
 
 												trow2+='<div class="mySlides">'+
-														'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%">'+
+														'<img src="../public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%">'+
 													'</div>';
 
 												trow3+='<div class="column">'+
-														'<img class="demo cursor" src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="tcurrentSlide(\''+ tangka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+														'<img class="demo cursor" src="../public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="tcurrentSlide(\''+ tangka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
 													'</div>';
 											tangka++;
 										}

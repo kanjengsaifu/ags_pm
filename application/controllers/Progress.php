@@ -22,7 +22,7 @@ class Progress extends MY_Controller
 
   public function main_report($page = 'progress_report') {
     isLoggedIn();
-    $config['title']  = "Progress Report" . $this->title;
+    $config['title']  = "Monitor Progress" . $this->title;
     $config['kategori_pengajuan'] = $this->appModel->getEnumKategoriPengajuan();
     $config['site_list']          = $this->appModel->getSiteData();
     $config['project_list']       = $this->appModel->getProjectDataforProgress();

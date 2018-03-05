@@ -21,8 +21,8 @@ class Admin extends MY_Controller
       $row[]  = $no;
       $row[]  = $stfd->pengajuan;
       $row[]  = strtoupper($stfd->jenis_pengajuan);
+      $row[]  = date('l, d-m-Y', strtotime($stfd->tanggal_pengajuan));
       $row[]  = date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan));
-      $row[]  = ($stfd->nilai_sph == "0" ? "-" : number_format($stfd->nilai_sph, '0','.','.'));
       $row[]  = ($stfd->nilai_corr == "0" ? "-" : number_format($stfd->nilai_corr, '0','.','.'));
       $row[]  = ($stfd->nilai_po == "0" ? "-" : number_format($stfd->nilai_po, '0','.','.'));
       $row[]  = ($stfd->nilai_pengajuan == "0" ? "-" : number_format($stfd->nilai_pengajuan, '0','.','.'));
@@ -44,35 +44,8 @@ class Admin extends MY_Controller
       // $row[]  = ($stfd->is_bayarclient == "N" ? "&#x2714" : '');
       $row[]  = '
                   <button type="button" href="" onclick="detailPengajuan('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailPengajuan">
-                    DETAIL
+                    <i class="fas fa-search"></i>
                   </button>
-                  '.
-                    (isApproval() || isAdministrator() ?
-                      ($stfd->tanggal_approval != null ?
-                        '
-
-                        '
-                        :
-                        '
-                          <a href="#" onclick="accPengajuan('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-success">APPROVE</a>
-                        '
-                      ) : ''
-                    )
-                  .'
-                  '.
-                    (isAdminJakarta() || isAdministrator() ?
-                      ($stfd->is_printed == "Y" ?
-                        ($stfd->tanggal_approval_keuangan != NULL ?
-                          '' :
-                          ($stfd->is_printed == "Y" ?
-                            '<button type="button" href="" onclick="'. ($stfd->nama_project != "" ? 'accBos('."'".$stfd->pengajuan_id."'".')' : 'accLangsung('."'".$stfd->pengajuan_id."'".')') .'" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
-                              ACC
-                            </button>' : ''
-                          )
-                        ) : ''
-                      ) : ''
-                    )
-                  .'
                 ';
       $data[]  = $row;
     }

@@ -15,7 +15,7 @@ class App extends MY_Controller
     $config['title']  = "Welcome" . $this->title;
     $config['totalpengajuan'] = $this->appModel->totalPengajuan();
     $config['pengajuanterhold'] = $this->appModel->pengajuanTerhold();
-    if (isViewer()) {
+    if (isViewer() || $this->session->userdata('username') == "stadmaresi") {
       $config['kategori_pengajuan'] = $this->appModel->getEnumKategoriPengajuan();
       $config['getPengajuUser']     = $this->appModel->getPengajuUser();
     }

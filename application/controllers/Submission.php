@@ -582,6 +582,14 @@ class Submission extends MY_Controller
     $this->appModel->printEvidences($id);
   }
 
+  public function printBuktiSusulan($id) {
+    $this->appModel->printEvidencesSusulan($id);
+  }
+
+  public function printEvidencesBoth($id) {
+    $this->appModel->printEvidencesBoth($id);
+  }
+
   public function checkAll() {
     // check all on progress
     $data = array(
@@ -627,6 +635,7 @@ class Submission extends MY_Controller
   }
 
   public function saveEvidence() {
+    // echo count($_FILES['buktisusulan']['name']);
     if ($_FILES['buktisusulan']['name']['0'] != "") {
       $filesCount = count($_FILES['buktisusulan']['name']);
 
@@ -663,8 +672,8 @@ class Submission extends MY_Controller
           $this->appModel->evidencePengajuanSave($data_evidence);
         }
       }
-
-      // echo "sukses";
+      $this->session->set_flashdata('notification', "Evidence berhasil diupload!");
+      redirect('/submission');
     }
   }
 
@@ -676,7 +685,7 @@ class Submission extends MY_Controller
         unset($config);
         $config = array();
         $config['upload_path']    = './public/assets/evidence/transaksi/';
-        $config['allowed_types']  = 'jpg|jpeg|png|pdf';
+        $config['allowed_types']  = 'jpg|jpeg|png';
         $config['overwrite']      = FALSE;
         $config['file_name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktitransaksi']['name'][$i]));
 
@@ -705,8 +714,41 @@ class Submission extends MY_Controller
           $this->appModel->transaksiPengajuanSave($data_evidence);
         }
       }
+      $this->session->set_flashdata('notification', "Bukti transaksi berhasil diupload!");
+      redirect('/submission');
 
       // echo "sukses";
     }
+  }
+
+  public function getApprovalName($id) {
+    $data = $this->appModel->getApprovalName($id);
+    echo json_encode($data);
+  }
+
+  public function main_report($page = 'submission_report') {
+    isLoggedIn();
+    $config['title']  = "Monitor Pengajuan" . $this->title;
+    if (isViewer() || $this->session->userdata('username') == "stadmaresi") {
+      $config['kategori_pengajuan'] = $this->appModel->getEnumKategoriPengajuan();
+      $config['getPengajuUser']     = $this->appModel->getPengajuUser();
+    }
+    $config['totalpengajuan'] = $this->appModel->totalPengajuan();
+    $config['pengajuanterhold'] = $this->appModel->pengajuanTerhold();
+    $config['belumSelesai'] = $this->adminModel->countBlmSelesai();
+    $config['sudahSelesai'] = $this->adminModel->countSdhSelesai();
+    $config['isbayar'] = $this->adminModel->countisbayar();
+    $config['isbayarclient'] = $this->adminModel->countisbayarclient();
+    $config['invoiced'] = $this->adminModel->countinvoiced();
+    $config['belumsemua'] = $this->adminModel->countbelumsemua();
+    $config['sudahdiapprove'] = $this->adminModel->countsudahdiapprove();
+    $config['belumdiapprove'] = $this->adminModel->countbelumdiapprove();
+    $config['kategori_pengajuan'] = $this->appModel->getEnumKategoriPengajuan();
+    $config['site_list']          = $this->appModel->getSiteData();
+    $config['project_list']       = $this->appModel->getProjectDataforProgress();
+    $config['totalprogress']      = $this->appModel->totalprogress();
+    $config['progressbelumselesai'] = $this->appModel->progressBelumSelesai();
+    $config['progresssudahselesai'] = $this->appModel->progressSudahSelesai();
+    $this->loadPage($page, $config);
   }
 }

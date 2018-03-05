@@ -296,6 +296,10 @@
 																<th width="250">Pengaju</th>
 																<td><span id="pengaju"></span></td>
 															</tr>
+															<tr id="approval_detail">
+																<th width="250">Tanggal Approval</th>
+																<td><span id="approved_by"></span></td>
+															</tr>
 															<tr id="bukti_src_div">
 																<th width="250">Bukti</th>
 																<td>
@@ -500,13 +504,13 @@
 			                    <form class="" id="form_updatep" action="<?=site_url('submission/saveEvidence')?>" method="post" enctype="multipart/form-data">
 			                      <input type="hidden" name="idp" value="">
 			                      <div class="form-group">
-			                         <label for="">Bukti (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label> <i>*optional</i>
+			                         <label for="">Bukti Susulan (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label>
 			                         <!-- <div class="input-files">
 			                          <input type="file" name="file_upload-1">
 			                         </div>
 			                         <a id="add_more"><i class="fas fa-plus"></i> Add More</a> -->
 			                         <div class="file-loading">
-			                           <input id="input-ke-2" name="buktisusulan[]" type="file" multiple>
+			                           <input id="input-ke-2" name="buktisusulan[]" type="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.txt" multiple="multiple">
 			                         </div>
 			                      </div>
 			                      <div class="modal-footer">
@@ -530,13 +534,13 @@
 			                    <form class="" id="form_updatep" action="<?=site_url('submission/saveTransaksi')?>" method="post" enctype="multipart/form-data">
 			                      <input type="hidden" name="idp" value="">
 			                      <div class="form-group">
-			                         <label for="">Bukti (allowed file types: .jpg, .jpeg, .png)</label> <i>*optional</i>
+			                         <label for="">Bukti Transaksi (allowed file types: .jpg, .jpeg, .png)</label>
 			                         <!-- <div class="input-files">
 			                          <input type="file" name="file_upload-1">
 			                         </div>
 			                         <a id="add_more"><i class="fas fa-plus"></i> Add More</a> -->
 			                         <div class="file-loading">
-			                           <input id="input-ke-3" name="buktitransaksi[]" type="file" multiple>
+			                           <input id="input-ke-3" name="buktitransaksi[]" type="file" accept=".jpg,.jpeg,.png" multiple>
 			                         </div>
 			                      </div>
 			                      <div class="modal-footer">
@@ -794,7 +798,7 @@
     			uploadUrl: "/public/assets/evidence",
 					showUpload: false,
 					showCancel: false,
-					overwriteInitial: false,
+					overwriteInitial: true,
 					initialPreview: [],
     			initialPreviewAsData: true,
 					initialPreviewConfig: []
@@ -802,8 +806,7 @@
 
 				$("#input-ke-2").fileinput({
 					theme: "explorer",
-					minFileCount: 0,
-					showUpload: false,
+					showUpload: true,
 					showCancel: false,
 					overwriteInitial: true
 				});
@@ -1733,6 +1736,7 @@
 			      dataType: "json",
 			      success: function(data) {
 			        $('[name=idp]').val(data.pengajuan.pengajuan_id);
+							$('.modal-title').text('Upload Bukti Susulan untuk Pengajuan ' + "#ADP" + pad(data.pengajuan.pengajuan_id, 4));
 			      }
 			    });
 			  }
@@ -1744,6 +1748,7 @@
 			      dataType: "json",
 			      success: function(data) {
 			        $('[name=idp]').val(data.pengajuan.pengajuan_id);
+							$('.modal-title').text('Upload Bukti Transaksi untuk Pengajuan ' + "#ADP" + pad(data.pengajuan.pengajuan_id, 4));
 			      }
 			    });
 			  }
@@ -1856,7 +1861,19 @@
 					      $('[id=keterangan]').html("-");
 					    }
 					    $('[id=pengaju]').html(data.pengajuan.name);
-
+							if (data.pengajuan.tanggal_approval != null) {
+								$('#approval_detail').show();
+								$.ajax({
+									url: "<?=site_url('submission/getApprovalName/')?>" + data.pengajuan.approved_by,
+									type: "GET",
+									dataType: "json",
+									success: function(app) {
+										$('[id=approved_by]').html(moment(data.pengajuan.tanggal_approval).format('dddd, D MMMM Y') + ' by ' + app.name);
+									}
+								});
+							} else {
+								$('#approval_detail').hide();
+							}
 					    if (data.es.length > 0) {
 								$('#buktis_src_div').show();
 								$.ajax({
@@ -1870,7 +1887,7 @@
 												// console.log(evi[0][i].url)
 														if (evi[0][0] != null) {
 															$('#print_bukti').show();
-															row2+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button></div><div id="my_gallery'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
+															row2+= '<hr><div id="print_bukti_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti-susulan/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button>&nbsp;&nbsp;<button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-all-evidence/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i> PRINT BOTH</a></button></div><div id="my_gallery'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
 														}
 
 														for (var i = 0; i < evi[0][0].length; i++) {
@@ -1913,7 +1930,7 @@
 										for (var i = 0; i < evi[0][0].length; i++) {
 				              // console.log(evi[0][i].url)
 				              if (evi[0][0][i] != null) {
-				                row5+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
+				                row5+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
 				              }
 				            }
 

@@ -67,6 +67,8 @@ $route['submission/print'] = 'submission/printed';
 $route['submission/re-print'] = 'submission/reprinted';
 $route['submission/re-print-h'] = 'submission/printTerpilih';
 $route['submission/print-bukti/(:any)'] = 'submission/printBukti/$1';
+$route['submission/print-bukti-susulan/(:any)'] = 'submission/printBuktiSusulan/$1';
+$route['submission/print-all-evidence/(:any)'] = 'submission/printEvidencesBoth/$1';
 $route['submission/print-evidences'] = 'submission/printEvidences';
 
 // evidences
@@ -76,5 +78,6 @@ $route['evidences/transaksi/document'] = 'transaksi/main_document';
 $route['evidences/progress/document'] = 'progress/main_document';
 $route['evidences/progress/picture'] = 'progress/main_picture';
 
-
 $route['progress/report'] = 'progress/main_report';
+$route['monitoring/progress'] = 'progress/main_report';
+$route['monitoring/submission'] = 'submission/main_report';

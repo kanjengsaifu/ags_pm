@@ -11,7 +11,12 @@
 </footer>
 <?php if (isAdminJakarta() || isAdminTasik()): ?>
   <script type="text/javascript" src="https://pixlcore.com/demos/webcamjs/webcam.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/modal.min.js"></script>
   <script language="JavaScript">
+    $('.ui.modal')
+      .modal('show')
+    ;
     $(document).ready(function() {
       $('#history_btn').click(function() {
           Webcam.set({

@@ -161,7 +161,7 @@ class AdminModel extends CI_Model
     // $this->excel->getActiveSheet()->setTitle('test worksheet');
 
     $this->db->from('pengajuan');
-    $this->db->join('site', 'progress.site_id = site.site_id', 'left');
+    $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
 
     if ($data['on_progress'] != 'N') {
       $this->db->where('progress.is_printed', 'Y');
@@ -240,15 +240,14 @@ class AdminModel extends CI_Model
     $this->excel->getActiveSheet()->setCellValue("B1", "PENGAJUAN");
     $this->excel->getActiveSheet()->setCellValue("C1", "JENIS PENGAJUAN");
     $this->excel->getActiveSheet()->setCellValue("D1", "NAMA PROJECT");
-    $this->excel->getActiveSheet()->setCellValue("E1", "NILAI SPH");
-    $this->excel->getActiveSheet()->setCellValue("F1", "NOMOR COR");
-    $this->excel->getActiveSheet()->setCellValue("G1", "NILAI CORR");
-    $this->excel->getActiveSheet()->setCellValue("H1", "NOMOR PO");
-    $this->excel->getActiveSheet()->setCellValue("I1", "NILAI PO");
-    $this->excel->getActiveSheet()->setCellValue("J1", "NOMOR SPK");
-    $this->excel->getActiveSheet()->setCellValue("K1", "NILAI PENGAJUAN");
-    $this->excel->getActiveSheet()->setCellValue("L1", "TANGGAL PENGAJUAN");
-    $this->excel->getActiveSheet()->setCellValue("M1", "REALISASI PENGAJUAN");
+    $this->excel->getActiveSheet()->setCellValue("E1", "NOMOR CORR");
+    $this->excel->getActiveSheet()->setCellValue("F1", "NILAI SPH/CORR");
+    $this->excel->getActiveSheet()->setCellValue("G1", "NOMOR PO");
+    $this->excel->getActiveSheet()->setCellValue("H1", "NILAI PO");
+    $this->excel->getActiveSheet()->setCellValue("I1", "NOMOR SPK");
+    $this->excel->getActiveSheet()->setCellValue("J1", "NILAI PENGAJUAN");
+    $this->excel->getActiveSheet()->setCellValue("K1", "TANGGAL PENGAJUAN");
+    $this->excel->getActiveSheet()->setCellValue("L1", "REALISASI PENGAJUAN");
     $this->excel->getActiveSheet()->setCellValue("M1", "KETERANGAN");
 
     $no = 2;
@@ -258,16 +257,15 @@ class AdminModel extends CI_Model
       ->setCellValue("B$no", ($value->pengajuan != NULL ? $value->pengajuan : "-"))
       ->setCellValue("C$no", ($value->jenis_pengajuan != NULL ? $value->jenis_pengajuan : "-"))
       ->setCellValue("D$no", ($value->nama_project != NULL ? $value->nama_project : "-"))
-      ->setCellValue("E$no", ($value->nilai_sph != NULL ? $value->nilai_sph : "-"))
-      ->setCellValue("F$no", ($value->no_corr != NULL ? $value->no_corr : "-"))
-      ->setCellValue("G$no", ($value->nilai_corr != NULL ? $value->nilai_corr : "-"))
-      ->setCellValue("H$no", ($value->no_po != NULL ? $value->no_po : "-"))
-      ->setCellValue("I$no", ($value->nilai_po != NULL ? $value->nilai_po : "-"))
-      ->setCellValue("J$no", ($value->no_spk != NULL ? $value->no_spk : "-"))
-      ->setCellValue("K$no", ($value->nilai_pengajuan != NULL ? $value->nilai_pengajuan : "-"))
-      ->setCellValue("L$no", ($value->tanggal_pengajuan != NULL ? $value->tanggal_pengajuan : "-"))
-      ->setCellValue("M$no", ($value->realisasi_pengajuan != NULL ? $value->realisasi_pengajuan : "-"))
-      ->setCellValue("N$no", ($value->keterangan != NULL ? $value->keterangan : "-"));
+      ->setCellValue("E$no", ($value->no_corr != NULL ? $value->no_corr : "-"))
+      ->setCellValue("F$no", ($value->nilai_corr != NULL ? $value->nilai_corr : "-"))
+      ->setCellValue("G$no", ($value->no_po != NULL ? $value->no_po : "-"))
+      ->setCellValue("H$no", ($value->nilai_po != NULL ? $value->nilai_po : "-"))
+      ->setCellValue("I$no", ($value->no_spk != NULL ? $value->no_spk : "-"))
+      ->setCellValue("J$no", ($value->nilai_pengajuan != NULL ? $value->nilai_pengajuan : "-"))
+      ->setCellValue("K$no", ($value->tanggal_pengajuan != NULL ? $value->tanggal_pengajuan : "-"))
+      ->setCellValue("L$no", ($value->realisasi_pengajuan != NULL ? $value->realisasi_pengajuan : "-"))
+      ->setCellValue("M$no", ($value->keterangan != NULL ? $value->keterangan : "-"));
       $no++;
     }
 

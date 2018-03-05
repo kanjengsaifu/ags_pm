@@ -22,6 +22,9 @@
     <?=css('css/ekko-lightbox.css')?>
     <?=css('css/font-awesome.min.css')?>
     <?=css('css/theme.min.css?ver=201801102302')?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/table.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/modal.min.css">
     <link href="https://unpkg.com/nanogallery2@2.0.0/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -45,7 +48,10 @@
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script> -->
     <style media="screen">
-
+    
+      table, tr, td {
+        padding: 5px !important;
+      }
       .caret {
         visibility: hidden;
       }
@@ -432,23 +438,6 @@
               <li class="nav-item mT-30 active">
                 <a class="sidebar-link" href="<?=site_url('')?>"><span class="icon-holder"><i class="fas fa-home"></i></span> <span class="title">Dashboard</span></a>
               </li>
-              <?php if (isAdministrator() || isApproval()) { ?>
-                <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('staff')?>"><span class="icon-holder"><i class="fas fa-user"></i></span> <span class="title">Staff</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('site')?>"><span class="icon-holder"><i class="fas fa-map-marker"></i></span> <span class="title">Site</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('cluster')?>"><span class="icon-holder"><i class="fas fa-sitemap"></i></span> <span class="title">Cluster</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('kendaraan')?>"><span class="icon-holder"><i class="fas fa-car"></i></span> <span class="title">Kendaraan</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('team')?>"><span class="icon-holder"><i class="fas fa-users"></i></span> <span class="title">Team</span></a>
-                </li>
-              <?php } ?>
               <?php if (isAdministrator() || isApproval() || isAdminJakarta() || isAdminTasik()): ?>
                 <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('submission')?>"><span class="icon-holder"><i class="fas fa-file"></i></span> <span class="title">Pengajuan</span></a>
@@ -482,50 +471,103 @@
                   </a>
                   <ul class="dropdown-menu" style="display: none;">
 
-                    <li class="nav-item dropdown">
-                      <a href="javascript:void(0);">
-                        <span>Pengajuan</span>
-                        <span class="arrow">
-                          <i class="ti-angle-right"></i>
-                        </span>
-                      </a>
-                      <ul class="dropdown-menu" style="display: block;">
-                        <li>
-                          <a href="<?=site_url('evidences/submission/document')?>">Dokumen</a>
-                        </li>
-                        <li>
-                          <a href="<?=site_url('evidences/submission/picture')?>">Picture</a>
-                        </li>
-                      </ul>
-                    </li>
+                    <?php if (!isAdm()): ?>
+                      <li class="nav-item dropdown">
+                        <a href="javascript:void(0);">
+                          <span>Pengajuan</span>
+                          <span class="arrow">
+                            <i class="ti-angle-right"></i>
+                          </span>
+                        </a>
+                        <ul class="dropdown-menu" style="display: block;">
+                          <li>
+                            <a href="<?=site_url('evidences/submission/document')?>">Dokumen</a>
+                          </li>
+                          <li>
+                            <a href="<?=site_url('evidences/submission/picture')?>">Picture</a>
+                          </li>
+                        </ul>
+                      </li>
+                    <?php endif; ?>
 
-                    <li class="nav-item dropdown">
-                      <a href="<?=site_url('evidences/transaksi/document')?>">
-                        <span>Transaksi</span>
-                      </a>
-                    </li>
+                    <?php if (!isAdm()): ?>
+                      <li class="nav-item dropdown">
+                        <a href="<?=site_url('evidences/transaksi/document')?>">
+                          <span>Transaksi</span>
+                        </a>
+                      </li>
+                    <?php endif; ?>
 
-                    <li class="nav-item dropdown">
-                      <a href="javascript:void(0);">
-                        <span>Progress</span>
-                        <span class="arrow">
-                          <i class="ti-angle-right"></i>
-                        </span>
-                      </a>
-                      <ul class="dropdown-menu" style="display: block;">
-                        <li>
-                          <a href="<?=site_url('evidences/progress/document')?>">Dokumen</a>
-                        </li>
-                        <li>
-                          <a href="<?=site_url('evidences/progress/picture')?>">Picture</a>
-                        </li>
-                      </ul>
-                    </li>
+                    <?php if (isAdm() || isViewer() || $this->session->userdata('username') == "stadmaresi"): ?>
+                      <li class="nav-item dropdown">
+                        <a href="javascript:void(0);">
+                          <span>Progress</span>
+                          <span class="arrow">
+                            <i class="ti-angle-right"></i>
+                          </span>
+                        </a>
+                        <ul class="dropdown-menu" style="display: block;">
+                          <li>
+                            <a href="<?=site_url('evidences/progress/document')?>">Dokumen</a>
+                          </li>
+                          <li>
+                            <a href="<?=site_url('evidences/progress/picture')?>">Picture</a>
+                          </li>
+                        </ul>
+                      </li>
+                    <?php endif; ?>
                   </ul>
                 </li>
               <?php endif; ?>
+              <?php if ($this->session->userdata('username') == "stadmaresi"): ?>
+                <li class="nav-item dropdown">
+                  <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                      <i class="fas fa-eye"></i>
+                    </span>
+                    <span class="title">Monitoring</span>
+                    <span class="arrow">
+                      <i class="ti-angle-right"></i>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu" style="display: none;">
+
+                    <li class="nav-item dropdown">
+                      <a href="<?=site_url('monitoring/submission')?>">
+                        <span>Pengajuan</span>
+                      </a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                      <a href="<?=site_url('monitoring/progress')?>">
+                        <span>Progress</span>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              <?php endif; ?>
+              <?php if (isAdministrator() || isApproval()) { ?>
+                <hr>
+                <li class="nav-item">
+                  <a class="sidebar-link" href="<?=site_url('staff')?>"><span class="icon-holder"><i class="fas fa-user"></i></span> <span class="title">Staff</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="sidebar-link" href="<?=site_url('site')?>"><span class="icon-holder"><i class="fas fa-map-marker"></i></span> <span class="title">Site</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="sidebar-link" href="<?=site_url('cluster')?>"><span class="icon-holder"><i class="fas fa-sitemap"></i></span> <span class="title">Cluster</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="sidebar-link" href="<?=site_url('kendaraan')?>"><span class="icon-holder"><i class="fas fa-car"></i></span> <span class="title">Kendaraan</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="sidebar-link" href="<?=site_url('team')?>"><span class="icon-holder"><i class="fas fa-users"></i></span> <span class="title">Team</span></a>
+                </li>
+              <?php } ?>
+              <hr>
               <li class="nav-item">
-                <a class="sidebar-link" href="" data-toggle="modal" data-target="#feedback"><span class="icon-holder"><i class="fas fa-comment"></i></span> <span class="title">Feedback</span></a>
+                <a class="sidebar-link" href="" data-toggle="modal" data-target="#feedback" onclick="feedback()"><span class="icon-holder"><i class="fas fa-comment"></i></span> <span class="title">Pesan untuk Developer</span></a>
               </li>
             </ul>
           </div>
@@ -534,7 +576,7 @@
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Pengajuan Baru</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                <h5 class="modal-title" id="exampleModalLabel">Message for Developer</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
               </div>
               <div class="modal-body">
                 <form id="form_addfeed" class="" action="<?=site_url('feedback/save')?>" method="post" enctype="multipart/form-data">
@@ -555,14 +597,14 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="">Content</label>
+                    <label for="">Pesan</label>
                     <textarea name="content" class="form-control" rows="8" cols="80"></textarea>
                   </div>
 
               </div>
               <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnAddFeed" onclick="savefeed()">Submit</button>
+                <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnAddFeed" onclick="savefeed()">Kirim</button>
               </div>
               </form>
             </div>
@@ -573,3 +615,8 @@
     <div class="page-container">
       <?php navbar() ?>
   <?php endif; ?>
+  <script>
+    function feedback() {
+      $('.modal-title').text('Message for Developer');
+    }
+  </script>
