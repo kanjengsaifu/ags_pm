@@ -22,12 +22,13 @@
     <?=css('css/ekko-lightbox.css')?>
     <?=css('css/font-awesome.min.css')?>
     <?=css('css/theme.min.css?ver=201801102302')?>
+    <?=css('css/jquery.filer.css')?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/table.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/modal.min.css">
     <link href="https://unpkg.com/nanogallery2@2.0.0/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
     <?=js('js/jquery.validate.min.js')?>
     <script type="text/javascript" src="https://unpkg.com/nanogallery2@2.0.0/dist/jquery.nanogallery2.min.js"></script>
     <?=js('js/piexif.min.js')?>
@@ -45,10 +46,38 @@
     <?=js('js/ekko-lightbox.min.js')?>
     <?=js('js/jquery.dataTables.min.js')?>
     <?=js('js/Chart.min.js')?>
+    <?=js('js/jquery.filer.js')?>
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script> -->
     <style media="screen">
-    
+
+      .file_input{
+          display: inline-block;
+          padding: 10px 16px;
+          outline: none;
+          cursor: pointer;
+          text-decoration: none;
+          text-align: center;
+          white-space: nowrap;
+          font-family: sans-serif;
+          font-weight: bold !important;
+          border-radius: 3px;
+          color: #008BFF;
+          border: 1px solid #008BFF;
+          vertical-align: middle;
+          background-color: #fff;
+          margin-bottom: 10px;
+          box-shadow: 0px 1px 5px rgba(0,0,0,0.05);
+          -webkit-transition: all 0.2s;
+          -moz-transition: all 0.2s;
+          transition: all 0.2s;
+      }
+      .file_input:hover,
+      .file_input:active {
+          background: #008BFF;
+          color: #fff !important;
+      }
+
       table, tr, td {
         padding: 5px !important;
       }

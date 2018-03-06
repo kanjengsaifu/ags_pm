@@ -240,8 +240,8 @@ class Submission extends MY_Controller
                   );
       }
       $row[]  = $no;
-      $row[]  = "#ADP".sprintf('%04d', $stfd->pengajuan_id);
       $row[]  = $stfd->pengajuan;
+      $row[]  = date('l, d-m-Y', strtotime($stfd->tanggal_pengajuan));
       if (isApproval()) {
         $row[]  = ($stfd->nama_project != "" ? $stfd->nama_project : "-");
       }
