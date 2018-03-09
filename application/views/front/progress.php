@@ -19,7 +19,7 @@
 
 
                         <div class="form-group">
-                            <label for="FirstName" class="col-sm-2 control-label">Keterangan Progress</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Nama Pekerjaan</label>
                             <div class="col-sm-6">
                                 <input type="text" name="keterangan_filter" class="form-control" id="keterangan_filter">
                             </div>
@@ -169,8 +169,8 @@
                   <div class="modal-body">
                     <form class="" method="post" action="<?=site_url('progress/save')?>">
                       <div class="form-group">
-                        <label for="">Keterangan Progress</label>
-                        <input type="text" class="form-control" name="keterangan" value="" placeholder="Keterangan Progress">
+                        <label for="">Nama Pekerjaan</label>
+                        <input type="text" class="form-control" name="keterangan" value="" placeholder="Nama Pekerjaan">
                       </div>
                       <div class="form-group">
                         <label for="">Tanggal Mulai Progress</label>
@@ -284,7 +284,7 @@
                           <td><span id="tanggal_mulai_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Keterangan Progress</th>
+                          <th width="250">Nama Pekerjaan</th>
                           <td><span id="keterangan_val"></span></td>
                         </tr>
                         <tr>
@@ -596,7 +596,7 @@
                 <tr>
                   <th class="text-center"></th>
                   <th class="text-center">No</th>
-                  <th class="text-center">Ket</th>
+                  <th class="text-center">Nama<br>Pekerjaan</th>
                   <th class="text-center">Nama Project</th>
                   <th class="text-center" width="50">Site</th>
                   <th class="text-center">Tanggal<br>CORMO</th>
@@ -1185,9 +1185,7 @@
             var angka = 1;
             for (var i = 0; i < evi[0][0].length; i++) {
               // console.log(evi[0][i].url)
-              if (evi[0][0][i] != null) {
                 row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
-              }
               angka++;
             }
 
@@ -1209,7 +1207,6 @@
             var row3 = '';
             var angka = 1;
               if (evi[0][0].length > 0) {
-                $('#bukti_src_div').show();
                 for (var i = 0; i < evi[0][0].length; i++) {
                   // console.log(evi[0][i].url)
                     row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
@@ -1225,8 +1222,6 @@
                       '</div>';
                   angka++;
                 }
-              } else {
-                $('#bukti_src_div').hide();
               }
 
             console.log(evi[0][0].length);

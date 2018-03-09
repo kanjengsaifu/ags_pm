@@ -10,9 +10,7 @@
   <span>2017 | Admaresi Globalindo</span>
 </footer>
 <?php if (isAdminJakarta() || isAdminTasik()): ?>
-  <script type="text/javascript" src="https://pixlcore.com/demos/webcamjs/webcam.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/modal.min.js"></script>
+  <?=js('js/webcam.min.js')?>
   <script language="JavaScript">
     $('.ui.modal')
       .modal('show')
@@ -202,10 +200,10 @@ function savefeed() {
     });
   }
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
-<script type="text/javascript" src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="http://demo.harviacode.com/select2/select2.min.js"></script>
+<?=js('js/bootstrap-select.min.js')?>
+<?=js('js/moment.js')?>
+<?=js('js/bootstrap-tagsinput.min.js')?>
+<?=js('js/select2.min.js')?>
 <?=js('theme/adminator/colorlib.com/polygon/adminator/vendor.js')?>
 <?=js('theme/adminator/colorlib.com/polygon/adminator/bundle.js')?>
 </body>

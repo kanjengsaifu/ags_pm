@@ -23,14 +23,11 @@
     <?=css('css/font-awesome.min.css')?>
     <?=css('css/theme.min.css?ver=201801102302')?>
     <?=css('css/jquery.filer.css')?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/semantic.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/table.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.0/components/modal.min.css">
     <link href="https://unpkg.com/nanogallery2@2.0.0/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
     <?=js('js/jquery.validate.min.js')?>
-    <script type="text/javascript" src="https://unpkg.com/nanogallery2@2.0.0/dist/jquery.nanogallery2.min.js"></script>
+    <?=js('js/jquery.nanogallery2.min.js')?>
     <?=js('js/piexif.min.js')?>
     <?=js('js/sortable.min.js')?>
     <?=js('js/purify.min.js')?>
@@ -47,6 +44,7 @@
     <?=js('js/jquery.dataTables.min.js')?>
     <?=js('js/Chart.min.js')?>
     <?=js('js/jquery.filer.js')?>
+    <script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
     <!-- <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script> -->
     <style media="screen">
@@ -469,7 +467,9 @@
               </li>
               <?php if (isAdministrator() || isApproval() || isAdminJakarta() || isAdminTasik()): ?>
                 <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('submission')?>"><span class="icon-holder"><i class="fas fa-file"></i></span> <span class="title">Pengajuan</span></a>
+                  <a class="sidebar-link" href="<?=site_url('submission')?>"><span class="icon-holder"><i class="fas fa-file"></i></span> <span class="title">
+                    <?php if (isApproval()) { echo "Approvement"; } else { echo "Pengajuan"; } ?>
+                  </span></a>
                 </li>
               <?php endif; ?>
               <?php if (isAdm()): ?>
@@ -548,7 +548,7 @@
                   </ul>
                 </li>
               <?php endif; ?>
-              <?php if ($this->session->userdata('username') == "stadmaresi"): ?>
+              <?php if ($this->session->userdata('username') == "stadmaresi" || isApproval() || isAdminJakarta()): ?>
                 <li class="nav-item dropdown">
                   <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
@@ -561,17 +561,21 @@
                   </a>
                   <ul class="dropdown-menu" style="display: none;">
 
-                    <li class="nav-item dropdown">
-                      <a href="<?=site_url('monitoring/submission')?>">
-                        <span>Pengajuan</span>
-                      </a>
-                    </li>
+                    <?php if (!isAdminJakarta()): ?>
+                      <li class="nav-item dropdown">
+                        <a href="<?=site_url('monitoring/submission')?>">
+                          <span>Pengajuan</span>
+                        </a>
+                      </li>
+                    <?php endif; ?>
 
-                    <li class="nav-item dropdown">
-                      <a href="<?=site_url('monitoring/progress')?>">
-                        <span>Progress</span>
-                      </a>
-                    </li>
+                    <?php if ($this->session->userdata('username') == "stadmaresi" || isAdminJakarta()): ?>
+                      <li class="nav-item dropdown">
+                        <a href="<?=site_url('monitoring/progress')?>">
+                          <span>Progress</span>
+                        </a>
+                      </li>
+                    <?php endif; ?>
 
                   </ul>
                 </li>
@@ -585,13 +589,29 @@
                   <a class="sidebar-link" href="<?=site_url('site')?>"><span class="icon-holder"><i class="fas fa-map-marker"></i></span> <span class="title">Site</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('cluster')?>"><span class="icon-holder"><i class="fas fa-sitemap"></i></span> <span class="title">Cluster</span></a>
-                </li>
-                <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('kendaraan')?>"><span class="icon-holder"><i class="fas fa-car"></i></span> <span class="title">Kendaraan</span></a>
                 </li>
-                <li class="nav-item">
-                  <a class="sidebar-link" href="<?=site_url('team')?>"><span class="icon-holder"><i class="fas fa-users"></i></span> <span class="title">Team</span></a>
+                <li class="nav-item dropdown">
+                  <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                      <i class="fas fa-sitemap"></i>
+                    </span>
+                    <span class="title">Cluster</span>
+                    <span class="arrow">
+                      <i class="ti-angle-right"></i>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu" style="display: none;">
+
+                    <li class="nav-item">
+                      <a class="sidebar-link" href="<?=site_url('cluster')?>"><span class="icon-holder"></span> <span class="title">Data Wilayah</span></a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a class="sidebar-link" href="<?=site_url('team')?>"><span class="icon-holder"></span> <span class="title">Cluster</span></a>
+                    </li>
+
+                  </ul>
                 </li>
               <?php } ?>
               <hr>

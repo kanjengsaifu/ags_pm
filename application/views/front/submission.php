@@ -49,6 +49,19 @@
 															});
 															</script>
                             </div> -->
+														<?php if (isAdminTasik()): ?>
+															<div class="form-group">
+																<label for="">Target Approval</label>
+																<select id="target_approval" style="width:100%" class="form-control selectpicker" name="target_approval">
+																	<option value="" selected disabled readonly>PILIH TARGET APPROVAL</option>
+																	<?php foreach ($approval_list->result() as $key => $value): ?>
+																		<option value="<?=$value->user_id?>"><?=$value->name?></option>
+																	<?php endforeach; ?>
+																</select>
+															</div>
+															<hr>
+														<?php endif; ?>
+
 														<div class="form-group">
 															<label for="">Kategori Pengajuan</label>
 															<select id="kategori_pengajuan" style="width:100%;" class="form-control selectpicker" name="kategori_pengajuan" >
@@ -198,7 +211,7 @@
 														</div>
 														<div class="form-group">
 															<label for="">Keterangan Pengajuan</label>
-															<textarea name="keterangan" class="form-control" rows="8" cols="80" placeholder="Keterangan Pengajuan"></textarea>
+															<textarea name="keterangan" id="keterangan" class="form-control" rows="8" cols="80" placeholder="Keterangan Pengajuan"></textarea>
 														</div>
 														<!-- <div class="form-group">
 															<label for="">Bukti (Gambar) *optional</label>
@@ -238,6 +251,16 @@
                 					<h5 class="modal-title" id="exampleModalLabel">Pengajuan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                 				</div>
                 				<div class="modal-body">
+													<?php if (!isAdminTasik()): ?>
+														<b>Remark</b><br>
+														<table class="table">
+															<tbody>
+																<input id="id_val" type="hidden" value="">
+																<div id="history_k"></div>
+															</tbody>
+															<br><br>
+														</table>
+													<?php endif; ?>
 													<b>KATEGORI</b>
 													<table class="table">
 														<tbody>
@@ -343,39 +366,22 @@
 																	</div>
 																</td>
 															</tr>
-															<tr id="buktit_src_div">
+															<!-- <tr id="buktit_src_div">
 																<th width="250">Bukti Transaksi</th>
 																<td>
 																	<div class="" id="buktit">
 
 																		<div class="" id="tmult_img_row1">
 																		</div>
-
-																		<!-- <div id="myModal2" style="height:100%" class="modal" data-backdrop="static" data-keyboard="false">
-																		  <span class="close cursor" onclick="closeModal2()">&times;</span>
-																		  <div class="modal-content">
-
-																		    <div class="" id="tmult_img_row2">
-																		    </div>
-
-																		    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-																		    <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
-																		    <div class="caption-container">
-																		      <p id="caption"></p>
-																		    </div>
-
-
-																		    <div class="" id="tmult_img_row3">
-																		    </div>
-
-																				<div class="modal-footer">
-																					<button class="btn btn-secondary" onclick="closeModal2()" type="button">Close</button>
-																				</div>
-																		  </div>
-																		</div> -->
 																	</div>
-																	<!-- <button type="button" name="button" class="btn btn-outline-primary" id="print_bukti">PRINT BUKTI</button> -->
+																</td>
+															</tr> -->
+															<tr id="buktit_src_div">
+																<th width="250">Bukti Transaksi</th>
+																<td>
+																	<div class="" id="buktit">
+																		<div id="mult_img_row_t"></div>
+																	</div>
 																</td>
 															</tr>
 														</tbody>
@@ -421,6 +427,42 @@
 																</td>
 															</tr>
 														</tbody>
+													</table>
+                				</div>
+                				<div class="modal-footer">
+                					<button id="detailClose" class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                				</div>
+                			</div>
+                		</div>
+                	</div>
+									<!-- END OF PENGAJUAN DETAIL -->
+									<!-- PENGAJUAN DETAIL -->
+									<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="remarkPengajuan" role="dialog" tabindex="-1">
+                		<div class="modal-dialog modal-lg" role="document" id="modalDetail">
+                			<div class="modal-content">
+                				<div class="modal-header">
+                					<h5 class="modal-title" id="exampleModalLabel">Remark Pengajuan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                				</div>
+                				<div class="modal-body">
+													<?php if (isApproval()): ?>
+														<form class="" action="<?=site_url('submission/saveRemark')?>" method="post">
+															<input type="hidden" name="idp_r" id="idp_r" value="">
+															<div class="form-group">
+																<label>Remark</label>
+																<textarea class="form-control" name="remark" rows="8" cols="80"></textarea>
+															</div>
+															<div class="form-group">
+																<input style="float:right" type="submit" class="btn btn-primary" name="" value="Submit">
+															</div>
+														</form>
+														<br><br><hr>
+													<?php endif; ?>
+													<table class="table">
+														<tbody>
+															<input id="id_val" type="hidden" value="">
+															<div id="history"></div>
+														</tbody>
+														<br><br>
 													</table>
                 				</div>
                 				<div class="modal-footer">
@@ -569,6 +611,8 @@
 
 														<input type="hidden" name="belum_diapprove_val" id="belum_diapprove_val" value="N">
 														<input type="hidden" name="sudah_diapprove_val" id="sudah_diapprove_val" value="N">
+														<input type="hidden" name="belum_diproses_val" id="belum_diproses_val" value="N">
+														<input type="hidden" name="sudah_diproses_val" id="sudah_diproses_val" value="N">
 														<input type="hidden" name="belum_diprint_val" id="belum_diprint_val" value="N">
 														<input type="hidden" name="on_progress_val" id="on_progress_val" value="N">
 														<input type="hidden" name="semua_pengajuan_val" id="semua_pengajuan_val" value="N">
@@ -688,12 +732,28 @@
 	                  </button> -->
 									<?php endif; ?>
 									<?php if (isApproval()): ?>
+										<?php if ($this->session->userdata('username') == "stadmaresi"): ?>
+											<button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
+		                    SEMUA PENGAJUAN
+		                  </button>
+										<?php endif; ?>
 										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
-	                    BELUM DIAPPROVE
+	                    MENUNGGU APPROVE ANDA
 	                  </button>
-										<button type="button" class="btn cur-p btn-success" id="sudah_diapprove">
-	                    SUDAH DIAPPROVE
-	                  </button>
+										<?php if ($this->session->userdata('username') == "stadmaresi"): ?>
+											<button type="button" class="btn cur-p btn-success" id="belum_diproses">
+												BELUM DIPROSES
+											</button>
+										<?php endif; ?>
+										<?php if ($this->session->userdata('username') == "stadmaresi") { ?>
+											<button type="button" class="btn cur-p btn-secondary" id="sudah_diproses">
+		                    SUDAH DIAPPROVE / HISTORY
+		                  </button>
+										<?php } else { ?>
+											<button type="button" class="btn cur-p btn-secondary" id="sudah_diapprove">
+												SUDAH DIAPPROVE / HISTORY
+											</button>
+										<?php } ?>
 									<?php endif; ?>
 									<?php if (isAdminJakarta()): ?>
 										<button type="button" class="btn cur-p btn-success" id="belum_diprint">
@@ -799,6 +859,31 @@
 			</main>
 
 			<script>
+
+				CKEDITOR.replace('keterangan', {
+					toolbarGroups: [
+						{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+						{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+						{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+						{ name: 'forms', groups: [ 'forms' ] },
+						'/',
+						{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+						{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+						{ name: 'links', groups: [ 'links' ] },
+						{ name: 'insert', groups: [ 'insert' ] },
+						'/',
+						{ name: 'styles', groups: [ 'styles' ] },
+						{ name: 'colors', groups: [ 'colors' ] },
+						{ name: 'tools', groups: [ 'tools' ] },
+						{ name: 'others', groups: [ 'others' ] },
+						{ name: 'about', groups: [ 'about' ] }
+					],
+					removeButtons: 'Image,Flash,Link,Unlink,BidiRtl,BidiLtr,JustifyLeft,CreateDiv,Blockquote,JustifyCenter,Indent,Outdent,NumberedList,BulletedList,RemoveFormat,CopyFormatting,Bold,Underline,Italic,Strike,Subscript,Superscript,Form,Checkbox,Radio,TextField,Textarea,Select,ImageButton,Button,Scayt,SelectAll,Find,Replace,Redo,Undo,Cut,Copy,Paste,PasteText,PasteFromWord,JustifyBlock,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,JustifyRight,Language,Anchor,Styles,TextColor,Maximize,About,ShowBlocks,BGColor,Format,Font,FontSize,Source,Save,NewPage,Preview,Print,Templates,HiddenField'
+				});
+
+				$(document).on({'show.bs.modal': function () {
+                 $(this).removeAttr('tabindex');
+      } }, '.modal');
 
 				$(document).ready(function() {
 							$('#input1').filer();
@@ -1247,6 +1332,8 @@
 											data.semua_pengajuan = $('#semua_pengajuan_val').val();
 											data.belum_diapprove = $('#belum_diapprove_val').val();
 											data.sudah_diapprove = $('#sudah_diapprove_val').val();
+											data.belum_diproses = $('#belum_diproses_val').val();
+											data.sudah_diproses = $('#sudah_diproses_val').val();
 
 											data.is_printed = $('#hold').val();
 											data.pengajuan = $('#pengajuan_filter').val();
@@ -1323,6 +1410,8 @@
 							document.getElementById("progress_project_val").value = "N";
 							document.getElementById("belum_diapprove_val").value = "N";
 							document.getElementById("sudah_diapprove_val").value = "N";
+							document.getElementById("belum_diproses_val").value = "N";
+							document.getElementById("sudah_diproses_val").value = "N";
 							document.getElementById("semua_pengajuan_val").value = "N";
 							submission.ajax.reload();  //just reload table
 							$('#print_c').hide();
@@ -1355,9 +1444,7 @@
 						$('#belum_diapprove').click(function() {
 							$('#menampilkan').text("Pengajuan yang Belum diApprove");
 							$("input[type=hidden]").val("N");
-							<?php if(isAdminTasik()) { ?>
-								document.getElementById("belum_diapprove_val").value = "Y";
-							<?php } ?>
+							document.getElementById("belum_diapprove_val").value = "Y";
 							$('#approve_terpilih').show();
 							submission.ajax.reload();  //just reload table
 						});
@@ -1366,6 +1453,22 @@
 							$('#menampilkan').text("Pengajuan yang Sudah diApprove");
 							$("input[type=hidden]").val("N");
 							document.getElementById("sudah_diapprove_val").value = "Y";
+							$('#approve_terpilih').hide();
+							submission.ajax.reload();  //just reload table
+						});
+
+						$('#belum_diproses').click(function() {
+							$('#menampilkan').text("Pengajuan yang Belum diProses");
+							$("input[type=hidden]").val("N");
+							document.getElementById("belum_diproses_val").value = "Y";
+							$('#approve_terpilih').hide();
+							submission.ajax.reload();  //just reload table
+						});
+
+						$('#sudah_diproses').click(function() {
+							$('#menampilkan').text("Pengajuan yang Sudah diProses");
+							$("input[type=hidden]").val("N");
+							document.getElementById("sudah_diproses_val").value = "Y";
 							$('#approve_terpilih').hide();
 							submission.ajax.reload();  //just reload table
 						});
@@ -1891,6 +1994,24 @@
 					});
 				}
 
+				function accPengajuanAkhir(id) {
+					url = "<?=site_url('submission/approveAkhir')?>";
+					$.ajax({
+						url: url,
+						data: {id: id},
+						type: "POST",
+						success: function(data) {
+							if (data.status = 'true') {
+								swal("Success!", "Pengajuan berhasil diapprove!", "success");
+								reload_table();
+							} else {
+								swal("Error!", "Pengajuan gagal diapprove!", "success");
+								reload_table();
+							}
+						}
+					});
+				}
+
 				function accBos(id) {
 					url = "<?=site_url('submission/acc_edwin')?>";
 					$.ajax({
@@ -2009,7 +2130,7 @@
 							type: "GET",
 							dataType: "json",
 							success: function(data) {
-								$('[name=nilai_pengajuan_edit]').val(data.nilai_pengajuan);
+								$('[name=nilai_pengajuan_edit]').val(data.pengajuan.nilai_pengajuan);
 							}
 						});
 					});
@@ -2042,7 +2163,7 @@
 										type: "GET",
 										dataType: "json",
 										success: function(data) {
-											$('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.nilai_pengajuan));
+											$('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.pengajuan.nilai_pengajuan));
 										}
 									});
 									swal("Success!", "Nilai pengajuan berhasil dirubah!", "success");
@@ -2079,6 +2200,31 @@
 			    });
 			  }
 
+				function remarkPengajuan(id) {
+					$.ajax({
+			      url: "<?=site_url('submission/historyRemark/')?>" + id,
+			      type: "GET",
+			      dataType: "json",
+			      success: function(data) {
+			        document.getElementById("idp_r").value = id;
+			        var row1 = '';
+			        var row = '';
+							console.log(data.length);
+							if (data.length != 0) {
+			        	for (var i = 0; i < data.length; i++) {
+			            row1+='<div style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;">'+
+										'<span style="font-size:11px !important;margin:auto !important;">'+ data[i].name +' pada ' + moment(data[i].remark_at).format('dddd, D MMMM Y') +'</span>'+
+			              '<br><span>'+ data[i].remark +'</span>'+
+			            '</div>';
+			          }
+			        } else {
+								row1+='Tidak ada remark';
+							}
+			        $('#history').html(row1);
+			      }
+			    });
+				}
+
 				function detailPengajuan(id) {
 					// if ($("#my_gallery").length > 0) {
 					// 	document.getElementById("my_gallery").remove();
@@ -2087,6 +2233,26 @@
 					$('#mult_img_row2').html("");
 					$('#mult_img_row3').html("");
 					$('#bukti_dokumen').html("");
+					$.ajax({
+			      url: "<?=site_url('submission/historyRemark/')?>" + id,
+			      type: "GET",
+			      dataType: "json",
+			      success: function(data) {
+			        var row_h = '';
+							console.log(data.length);
+							if (data.length != 0) {
+			        	for (var i = 0; i < data.length; i++) {
+			            row_h+='<div style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;">'+
+										'<span style="font-size:11px !important;margin:auto !important;">'+ data[i].name +' pada ' + moment(data[i].remark_at).format('dddd, D MMMM Y') +'</span>'+
+			              '<br><span>'+ data[i].remark +'</span>'+
+			            '</div>';
+			          }
+			        } else {
+								row_h+='Tidak ada remark';
+							}
+			        $('#history_k').html(row_h);
+			      }
+			    });
 					$.ajax({
 					  url: "<?=site_url('submission/getPengajuanDetail/')?>/" + id,
 					  type: "GET",
@@ -2144,7 +2310,7 @@
 					      $('#nama_project_div').show();
 					    }
 					    $('[id=pengajuan]').html(data.pengajuan.pengajuan);
-					    if (data.pengajuan.tanggal_approval != null) {
+					    if (data.pengajuan.tanggal_approval_keuangan != null) {
 					      $('#editNilaiPengajuan').hide();
 					    } else {
 					      $('#editNilaiPengajuan').show();
@@ -2355,39 +2521,59 @@
 								type: "GET",
 								dataType: "json",
 								success: function(evi) {
-									var img = '';
-									var trow1 = '';
-									var trow2 = '';
-									var trow3 = '';
-									var tangka = 1;
+									var rowt = '';
+
 									if (evi[0][0].length > 0) {
 										$('#buktit_src_div').show();
+										rowt+= '<div id="print_bukti_transaksi_btn"><button class="btn btn-outline-default" type="button" name="button"><a id="print_bukti" target="_blank" href="<?=site_url('submission/print-bukti-transaksi/')?>'+data.pengajuan.pengajuan_id+'"><i class="fas fa-print"></i></a></button></div><div id="my_galleryt'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'" data-nanogallery2=\'{"thumbnailWidth": 100,"thumbnailHeight": 100}\'>';
 										for (var i = 0; i < evi[0][0].length; i++) {
-											// console.log(evi[0][i].url)
-												trow1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
-													'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="openModal2();tcurrentSlide(\''+ tangka +'\')" class="hover-shadow cursor">'+
-												'</div>';
-
-												trow2+='<div class="mySlides">'+
-														'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%">'+
-													'</div>';
-
-												trow3+='<div class="column">'+
-														'<img class="demo cursor" src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="tcurrentSlide(\''+ tangka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
-													'</div>';
-											tangka++;
+												rowt+= '<a href="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" data-ngthumb="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" >'+evi[0][0][i].url.substring(14)+'</a>';
 										}
+										rowt+= '</div>';
+
+										$('#mult_img_row_t').html(rowt);
+										$('#my_galleryt'+data.pengajuan.pengajuan_id+data.pengaju_id+moment().toDate().getTime()+'').nanogallery2('refresh');
 									} else {
 										$('#buktit_src_div').hide();
 									}
-
-									$('#tmult_img_row1').html(trow1);
-									$('#tmult_img_row2').html(trow2);
-									$('#tmult_img_row3').html(trow3);
 								}, error: function(jqXHR, textStatus, errorThrown) {
 									var err = eval("(" + jqXHR.responseText + ")");
 									alert(err.Message);
 								}
+								// success: function(evi) {
+								// 	var img = '';
+								// 	var trow1 = '';
+								// 	var trow2 = '';
+								// 	var trow3 = '';
+								// 	var tangka = 1;
+								// 	if (evi[0][0].length > 0) {
+								// 		$('#buktit_src_div').show();
+								// 		for (var i = 0; i < evi[0][0].length; i++) {
+								// 			// console.log(evi[0][i].url)
+								// 				trow1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
+								// 					'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="openModal2();tcurrentSlide(\''+ tangka +'\')" class="hover-shadow cursor">'+
+								// 				'</div>';
+								//
+								// 				trow2+='<div class="mySlides">'+
+								// 						'<img src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%">'+
+								// 					'</div>';
+								//
+								// 				trow3+='<div class="column">'+
+								// 						'<img class="demo cursor" src="public/assets/evidence/transaksi/'+ escape(evi[0][0][i].url) +'" style="width:50%" onclick="tcurrentSlide(\''+ tangka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+								// 					'</div>';
+								// 			tangka++;
+								// 		}
+								// 	} else {
+								// 		$('#buktit_src_div').hide();
+								// 	}
+								//
+								// 	$('#tmult_img_row1').html(trow1);
+								// 	$('#tmult_img_row2').html(trow2);
+								// 	$('#tmult_img_row3').html(trow3);
+								// }, error: function(jqXHR, textStatus, errorThrown) {
+								// 	var err = eval("(" + jqXHR.responseText + ")");
+								// 	alert(err.Message);
+								// }
 							});
 							$('.modal-title').text('Pengajuan ' + "#ADP" + pad(data.pengajuan.pengajuan_id, 4));
 						}, error: function(jqXHR, textStatus, errorThrown) {
@@ -2572,7 +2758,5 @@
 				  dots[slideIndex-1].className += " active";
 				  captionText.innerHTML = dots[slideIndex-1].alt;
 				}
-
-
 
 			</script>

@@ -19,6 +19,10 @@ class Staff extends MY_Controller
     $this->loadPage($page, $config);
   }
 
+  public function awdawd() {
+    $this->appModel->teamData();
+  }
+
   public function save() {
     $name                         = $this->input->post('nama');
     $telp                         = $this->input->post('telp');

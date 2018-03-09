@@ -53,6 +53,10 @@
 															</select>
 														</div>
 														<div class="form-group">
+															<label for="">MAC Address</label>
+															<input type="text" class="form-control" name="mac_address" value="">
+														</div>
+														<div class="form-group">
 															<label for="">Jumlah Genset 7,5 KVA</label>
 															<input type="text" class="form-control" name="genset_mobile_75" value="">
 														</div>
@@ -105,7 +109,8 @@
                       </tr>
 											<tr>
 												<th class="text-center" width="30">NO</th>
-                        <th class="text-center">TEAM ID</th>
+												<th class="text-center" width="250">Cluster</th>
+												<th class="text-center">MAC Address</th>
 												<th class="text-center">Total<br>Genset</th>
                         <th class="text-center">Genset<br>7,5 KVA</th>
                         <th class="text-center">Genset<br>10 KVA</th>
@@ -134,6 +139,10 @@
 																<td><span id="cluster"></span></td>
 															</tr>
 															<tr>
+																<th width="250">MAC Address</th>
+																<td><span id="mac_add"></span></td>
+															</tr>
+															<tr>
 																<th width="250">Jumlah Genset 7,5 KVA</th>
 																<td><span id="genset_75"></span></td>
 															</tr>
@@ -144,6 +153,14 @@
 															<tr>
 																<th width="250">Jumlah Genset 12 KVA</th>
 																<td><span id="genset_12"></span></td>
+															</tr>
+															<tr>
+																<th width="250">Anggota Tim</th>
+																<td><span id="anggota"></span></td>
+															</tr>
+															<tr>
+																<th width="250">Nomor Telepon</th>
+																<td><span id="telpon"></span></td>
 															</tr>
 															<tr>
 																<th width="250">Kendaraan</th>
@@ -169,6 +186,10 @@
                 				<div class="modal-body">
 													<form class="" id="form_update" action="#">
 														<input type="hidden" name="id" value="">
+                            <div class="form-group">
+                              <label for="inputAddress2">Mac Address</label>
+                              <input type="text" class="form-control" name="mac_address_e" placeholder="Mac Address" required>
+                            </div>
                             <div class="form-group">
                               <label for="inputAddress2">Genset 7.5</label>
                               <input type="text" class="form-control" name="genset_mobile_75_e" placeholder="Genset 7.5" required>
@@ -242,7 +263,7 @@
 						      },
 									{
 										"class": "dt-center",
-										"targets": [1, 2, 3, 4, 5, 6]
+										"targets": [1, 2, 3, 4, 5, 6, 7]
 									}
 				        ],
 				    });
@@ -254,6 +275,8 @@
 						type: "GET",
 						dataType: "json",
 						success: function(data) {
+							$('[name=id]').val(data.team_id);
+							$('[name=mac_address_e]').val(data.mac_address);
 							$('[name=genset_mobile_75_e]').val(data.genset_mobile_75);
 							$('[name=genset_mobile_10_e]').val(data.genset_mobile_10);
 							$('[name=genset_mobile_12_e]').val(data.genset_mobile_12);
@@ -339,10 +362,31 @@
 						success: function(data) {
 							$('id').html(data.id);
 							$('[id=cluster]').html(data.homebase+" - "+data.wilayah);
+							if (data.mac_address != null) {
+								$('[id=mac_add]').html(data.mac_address);
+							} else {
+								$('[id=mac_add]').html("-");
+							}
 							$('[id=genset_75]').html(data.genset_mobile_75);
 							$('[id=genset_10]').html(data.genset_mobile_10);
 							$('[id=genset_12]').html(data.genset_mobile_12);
 							$('[id=kendaraan]').html(data.plat);
+							$.ajax({
+								url: "<?=site_url('team/getAnggota/')?>" + id,
+								type: "GET",
+								dataType: "json",
+								success: function(ang) {
+									$('[id=anggota]').html(ang.join(", "));
+								}
+							});
+							$.ajax({
+								url: "<?=site_url('team/getAnggotaTelp/')?>" + id,
+								type: "GET",
+								dataType: "json",
+								success: function(telp) {
+									$('[id=telpon]').html(telp.join(", "));
+								}
+							});
 							$('.modal-title').text('CLUSTER ' + data.homebase);
 						}, error: function(jqXHR, textStatus, errorThrown) {
 							alert('Error get data from ajax');

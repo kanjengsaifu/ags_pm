@@ -75,7 +75,7 @@
 												<th width="30">No</th>
 												<th>Full Name</th>
 												<th>Position</th>
-												<th style="white-space:nowrap;" width="50">Action</th>
+												<th style="white-space:nowrap;" width="250">Action</th>
 											</tr>
 										</thead>
 									</table>
@@ -148,7 +148,7 @@
 															<select style="width:100%;" class="form-control selectpicker" id="team_id" name="team_id" data-live-search="true">
 																<option value="" selected disabled readonly>SELECT TEAM</option>
 																<?php foreach ($team_list->result() as $team_data): ?>
-																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?></option>
+																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?> - <?=$team_data->homebase?> / <?=$team_data->wilayah?></option>
 																<?php endforeach; ?>
 															</select>
 														</div>
@@ -178,7 +178,7 @@
 															<select style="width:100%;" class="form-control selectpicker" id="team_id_c" name="team_id" data-live-search="true">
 																<option value="selected" selected disabled readonly>SELECT TEAM</option>
 																<?php foreach ($team_list->result() as $team_data): ?>
-																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?></option>
+																	<option value="<?=$team_data->team_id?>">#ADT<?=sprintf('%03d', $team_data->team_id)?> - <?=$team_data->homebase?> / <?=$team_data->wilayah?></option>
 																<?php endforeach; ?>
 															</select>
 															<hr>
@@ -206,36 +206,36 @@
 													<form class="" id="form_update" action="#">
 														<input type="hidden" name="id" value="">
                             <div class="form-group">
-                              <label for="inputAddress2">Full Name</label>
+                              <label for="inputAddress2">Nama Lengkap</label>
                               <input type="text" class="form-control" name="nama_e" placeholder="Full Name" required>
                             </div>
                             <div class="form-group">
-                              <label for="inputAddress2">Telp</label>
+                              <label for="inputAddress2">Nomor Telepon</label>
                               <input type="text" class="form-control" name="telp_e" placeholder="Telp" required>
                             </div>
                             <div class="form-group">
-                              <label for="inputAddress2">Position</label>
-                              <input type="text" class="form-control" name="posisi_e" placeholder="Position" required>
+                              <label for="inputAddress2">Posisi</label>
+                              <input type="text" class="form-control" name="posisi_e" placeholder="Position">
                             </div>
                             <div class="form-group">
-                              <label for="inputAddress2">Date of Birth</label>
+                              <label for="inputAddress2">Tanggal Lahir</label>
 															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="dob_e"/>
                             </div>
                             <div class="form-group">
-                              <label for="inputAddress2">Address</label>
+                              <label for="inputAddress2">Alamat</label>
                               <textarea class="form-control" name="alamat_e" rows="8" cols="80" placeholder="Address" required></textarea>
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Additional Information</label>
-                              <input type="text" class="form-control" name="keterangan_e" placeholder="Additional Information" required>
+                              <input type="text" class="form-control" name="keterangan_e" placeholder="Additional Information">
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Keluarga yang Bisa Dihubungi</label>
-                              <input type="text" class="form-control" name="keluarga_yg_bisa_dihub_e" placeholder="Nama Kelurga yang Bisa Dihubungi" required>
+                              <input type="text" class="form-control" name="keluarga_yg_bisa_dihub_e" placeholder="Nama Kelurga yang Bisa Dihubungi">
                             </div>
                             <div class="form-group">
                               <label for="inputAddress2">Kontak Keluarga</label>
-                              <input type="text" class="form-control" name="telp_keluarga_yg_bisa_dihub_e" placeholder="Kontak Keluarga" required>
+                              <input type="text" class="form-control" name="telp_keluarga_yg_bisa_dihub_e" placeholder="Kontak Keluarga">
                             </div>
 	                				</div>
 													</form>

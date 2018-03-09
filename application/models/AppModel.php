@@ -19,6 +19,7 @@ class AppModel extends CI_Model
 
   public function pengajuanTerhold() {
     $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('tanggal_approval_akhir !=', NULL);
     $this->db->where('tanggal_approval_keuangan', NULL);
     $this->db->where('is_printed', 'Y');
     $this->db->from('pengajuan');
@@ -181,7 +182,10 @@ class AppModel extends CI_Model
 
   // TEAM
   public function getTeamData() {
-    return $this->db->get('team');
+    $this->db->select('team.*, cluster.homebase, cluster.wilayah');
+    $this->db->from('team');
+    $this->db->join('cluster', 'cluster.cluster_id = team.cluster_id', 'left outer');
+    return $this->db->get();
   }
 
   public function getTeamJSON() {
@@ -195,11 +199,12 @@ class AppModel extends CI_Model
 
   public function teamJSON_query() {
     $table = 'team';
-    $column_order = array(null, 'team_id', 'genset_total', 'genset_mobile_75', 'genset_mobile_10', 'genset_mobile_12', 'genset_fix_75', 'genset_fix_10', 'genset_fix_12', null);
-    $column_search = array('team_id', 'genset_total', 'genset_mobile_75', 'genset_mobile_10', 'genset_mobile_12', 'genset_fix_75', 'genset_fix_10', 'genset_fix_12');
-    $order = array('team_id' => 'desc');
+    $column_order = array(null, 'team.team_id', '', 'team.genset_total', 'team.genset_mobile_75', 'team.genset_mobile_10', 'team.genset_mobile_12', 'team.genset_fix_75', 'team.genset_fix_10', 'team.genset_fix_12', null);
+    $column_search = array('team.team_id', '', 'team.genset_total', 'team.genset_mobile_75', 'team.genset_mobile_10', 'team.genset_mobile_12', 'team.genset_fix_75', 'team.genset_fix_10', 'team.genset_fix_12');
+    $order = array('team.team_id' => 'desc');
 
     $this->db->from($table);
+    $this->db->join('cluster', 'cluster.cluster_id = team.cluster_id', 'left outer');
 
     $i = 0;
     foreach ($column_search as $item) {
@@ -239,15 +244,24 @@ class AppModel extends CI_Model
   // STAFF JSON DATA
   public function getStaffbyID($id) {
     $this->db->from('staff');
+    $this->db->join('team', 'staff.team_id = team.team_id', 'left outer');
+    $this->db->where('staff.staff_id', $id);
     $query = $this->db->get();
     $data = $query->row();
-    if ($data->team_id != "") {
+    if ($data->team_id != NULL) {
       $this->db->select('*');
       $this->db->from('staff');
-      $this->db->join('team', 'staff.team_id = team.team_id');
+      $this->db->join('team', 'staff.team_id = team.team_id', 'left outer');
       $this->db->where('staff.staff_id', $id);
-      $d = $this->db->get();
-      return $d->row();
+      return $d = $this->db->get()->row();
+      // $this->db->select('team.*, cluster.homebase, cluster.wilayah');
+      // $this->db->from('staff');
+      // $this->db->join('team', 'staff.team_id = team.team_id', 'left outer');
+      // $this->db->join('cluster', 'cluster.cluster_id = team.cluster_id', 'left outer');
+      // $this->db->where('staff.staff_id', $id);
+      // $this->db->where('cluster.cluster_id', $d->cluster_id);
+      // return $this->db->get();
+      // return $d->row();
     } else {
       return $data;
     }
@@ -306,7 +320,10 @@ class AppModel extends CI_Model
   }
 
   public function teamData() {
-    return $this->db->get('team');
+    $this->db->select('team.*, cluster.homebase, cluster.wilayah');
+    $this->db->from('team');
+    $this->db->join('cluster', 'cluster.cluster_id = team.cluster_id', 'left outer');
+    return $this->db->get();
   }
 
   public function addToTeam($where, $data) {
@@ -358,71 +375,83 @@ class AppModel extends CI_Model
     return $this->db->get();
   }
 
+  public function saveRemark($data) {
+    $this->db->insert('remark_history', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Remark berhasil disubmit!");
+      redirect('/submission');
+    } else {
+      $this->session->set_flashdata('notification', "Remark gagal disubmit!");
+      redirect('/submission');
+    }
+  }
+
   public function subSave($data) {
     $this->db->insert('pengajuan', $data);
     $insert = $this->db->insert_id();
     if ($insert) {
-      $from_email = 'info@admaresi.com';
-      $email = array('ahmad.uji1902@gmail.com', 'alven.gultom@gmail.com');
-      $subject = 'Pengajuan Baru';
-      $message = '<style>
-                  table {
-                      font-family: arial, sans-serif;
-                      border-collapse: collapse;
-                      width: 100%;
-                  }
-
-                  td, th {
-                      border: 1px solid #dddddd;
-                      text-align: left;
-                      padding: 8px;
-                  }
-
-                  tr:nth-child(even) {
-                      background-color: #dddddd;
-                  }
-                  </style>
-                  Dear Approval,<br /><br />
-                  Notifikasi Pengajuan Baru :<br>
-                  <table>
-                    <tr>
-                      <td>Diajukan oleh</td>
-                      <td>'.$this->session->userdata('name').'</td>
-                    </tr>
-                    <tr>
-                      <td>Deskripsi Pengajuan</td>
-                      <td>'.$data['pengajuan'].'</td>
-                    </tr>
-                    <tr>
-                      <td>Tanggal Realisasi</td>
-                      <td>'.$data['realisasi_pengajuan'].'</td>
-                    </tr>
-                    <tr>
-                      <td>Nilai Pengajuan</td>
-                      <td>'.$data['nilai_pengajuan'].'</td>
-                    </tr>
-                  </table>
-                  <br>Thanks<br />
-                  Admaresi Globalindo PT';
-      $config['protocol'] = 'smtp';
-      $config['smtp_host'] = 'ssl://mail.admaresi.com';
-      $config['smtp_timeout'] = '10';
-      $config['smtp_port'] = '465';
-      $config['smtp_user'] = $from_email;
-      $config['smtp_pass'] = 'info@Admaresi';
-      $config['mailtype'] = 'html';
-      $config['charset'] = 'iso-8859-1';
-      $config['wordwrap'] = TRUE;
-      $config['mailtype'] = 'html';
-      $config['newline'] = "\r\n";
-      $config['crlf'] = "\r\n";
-      $this->email->initialize($config);
-      $this->email->from($from_email, 'Admaresi Globalindo PT');
-      $this->email->to($email);
-      $this->email->subject($subject);
-      $this->email->message($message);
-      echo $this->email->print_debugger();
-      $this->email->send();
+      // $from_email = 'info@admaresi.com';
+      // $email = array('ahmad.uji1902@gmail.com', 'alven.gultom@gmail.com');
+      // $subject = 'Pengajuan Baru';
+      // $message = '<style>
+      //             table {
+      //                 font-family: arial, sans-serif;
+      //                 border-collapse: collapse;
+      //                 width: 100%;
+      //             }
+      //
+      //             td, th {
+      //                 border: 1px solid #dddddd;
+      //                 text-align: left;
+      //                 padding: 8px;
+      //             }
+      //
+      //             tr:nth-child(even) {
+      //                 background-color: #dddddd;
+      //             }
+      //             </style>
+      //             Dear Approval,<br /><br />
+      //             Notifikasi Pengajuan Baru :<br>
+      //             <table>
+      //               <tr>
+      //                 <td>Diajukan oleh</td>
+      //                 <td>'.$this->session->userdata('name').'</td>
+      //               </tr>
+      //               <tr>
+      //                 <td>Deskripsi Pengajuan</td>
+      //                 <td>'.$data['pengajuan'].'</td>
+      //               </tr>
+      //               <tr>
+      //                 <td>Tanggal Realisasi</td>
+      //                 <td>'.$data['realisasi_pengajuan'].'</td>
+      //               </tr>
+      //               <tr>
+      //                 <td>Nilai Pengajuan</td>
+      //                 <td>'.$data['nilai_pengajuan'].'</td>
+      //               </tr>
+      //             </table>
+      //             <br>Thanks<br />
+      //             Admaresi Globalindo PT';
+      // $config['protocol'] = 'smtp';
+      // $config['smtp_host'] = 'ssl://mail.admaresi.com';
+      // $config['smtp_timeout'] = '10';
+      // $config['smtp_port'] = '465';
+      // $config['smtp_user'] = $from_email;
+      // $config['smtp_pass'] = 'info@Admaresi';
+      // $config['mailtype'] = 'html';
+      // $config['charset'] = 'iso-8859-1';
+      // $config['wordwrap'] = TRUE;
+      // $config['mailtype'] = 'html';
+      // $config['newline'] = "\r\n";
+      // $config['crlf'] = "\r\n";
+      // $this->email->initialize($config);
+      // $this->email->from($from_email, 'Admaresi Globalindo PT');
+      // $this->email->to($email);
+      // $this->email->subject($subject);
+      // $this->email->message($message);
+      // echo $this->email->print_debugger();
+      // $this->email->send();
 
       $this->session->set_flashdata('notification', "Pengajuan berhasil disubmit!");
       redirect('/submission');
@@ -508,7 +537,9 @@ class AppModel extends CI_Model
 
     $this->db->from($table);
 
-
+    if (isApproval() && $this->session->userdata('username') != "stadmaresi") {
+      $this->db->where('target_approval', $this->session->userdata('useractive_id'));
+    }
 
     if ($this->input->post('on_progress') != 'N') {
       $this->db->where('is_printed', 'Y');
@@ -531,18 +562,35 @@ class AppModel extends CI_Model
       $this->db->where('tanggal_approval_keuangan', NULL);
     }
 
-    if ($this->input->post('belum_diapprove') != 'N') {
-      $this->db->where('tanggal_approval', NULL);
-    }
-
-    if ($this->input->post('sudah_diapprove') != 'N') {
-      $this->db->where('tanggal_approval !=', NULL);
-    } else {
-      if (isAdminJakarta()) {
-        $this->db->where('tanggal_approval !=', NULL);
-      }
-      if (isApproval()) {
+    if ($this->session->userdata('username') != "stadmaresi") {
+      if ($this->input->post('belum_diapprove') != 'N') {
         $this->db->where('tanggal_approval', NULL);
+      }
+
+      if ($this->input->post('sudah_diapprove') != 'N') {
+        $this->db->where('tanggal_approval !=', NULL);
+        $this->db->where('target_approval', $this->session->userdata('useractive_id'));
+      } else {
+        if (isAdminJakarta()) {
+          $this->db->where('tanggal_approval !=', NULL);
+          $this->db->where('tanggal_approval_akhir !=', NULL);
+        }
+        if (isApproval()) {
+          $this->db->where('tanggal_approval', NULL);
+        }
+      }
+    } else if ($this->session->userdata('username') == "stadmaresi") {
+      if ($this->input->post('semua_pengajuan') != 'N') {
+
+      } else if ($this->input->post('belum_diproses') != 'N') {
+        $this->db->where('tanggal_approval !=', NULL);
+        $this->db->where('tanggal_approval_akhir', NULL);
+      } else if ($this->input->post('sudah_diproses') != 'N') {
+        $this->db->where('tanggal_approval !=', NULL);
+        $this->db->where('tanggal_approval_akhir !=', NULL);
+      } else if ($this->input->post('belum_diapprove') != 'N') {
+        $this->db->where('tanggal_approval', NULL);
+        $this->db->where('target_approval', $this->session->userdata('useractive_id'));
       }
     }
 
@@ -642,6 +690,14 @@ class AppModel extends CI_Model
   public function getApprovalName($id) {
     $this->db->from('pengajuan');
     $this->db->join('users', 'users.user_id = pengajuan.approved_by');
+    $this->db->where('users.user_id', $id);
+    $query = $this->db->get();
+    return $query->row();
+  }
+
+  public function getTargetApproval($id) {
+    $this->db->from('pengajuan');
+    $this->db->join('users', 'users.user_id = pengajuan.target_approval');
     $this->db->where('users.user_id', $id);
     $query = $this->db->get();
     return $query->row();
@@ -761,6 +817,15 @@ class AppModel extends CI_Model
     echo json_encode($query->result());
   }
 
+  public function historyRemark($id) {
+    $this->db->from('remark_history');
+    $this->db->join('users', 'users.user_id = remark_history.remark_by', 'left');
+    $this->db->where('remark_history.pengajuan_id', $id);
+    $this->db->order_by('remark_history.remark_id', 'desc');
+    $query = $this->db->get();
+    echo json_encode($query->result());
+  }
+
   public function accPengajuan($where, $data) {
     $this->db->update('pengajuan', $data, $where);
     return $this->db->affected_rows();
@@ -786,10 +851,12 @@ class AppModel extends CI_Model
     $this->db->set('status_admin_dmt', date('Y-m-d', time()));
     $this->db->where('is_printed', 'N');
     $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('tanggal_approval_akhir !=', NULL);
     $update = $this->db->update('pengajuan');
     if ($update) {
       $this->db->distinct();
       $this->db->select('jenis_pengajuan');
+      $this->db->where('tanggal_approval_akhir !=', NULL);
       $this->db->where('success_print', 'N');
       $data = $this->db->get('pengajuan');
 
@@ -859,6 +926,7 @@ class AppModel extends CI_Model
         $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
         $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
         $this->db->where('pengajuan.tanggal_approval !=', NULL);
+        $this->db->where('pengajuan.tanggal_approval_akhir !=', NULL);
         $this->db->where('pengajuan.success_print', 'N');
         $this->db->order_by('pengajuan.jenis_pengajuan');
         $data2 = $this->db->get();
@@ -922,6 +990,7 @@ class AppModel extends CI_Model
       </table>';
       $this->db->set('success_print', 'Y');
       $this->db->where('success_print', 'N');
+      $this->db->where('tanggal_approval_akhir !=', NULL);
       $this->db->update('pengajuan');
     } else {
       echo "Something wrong";
@@ -935,9 +1004,11 @@ class AppModel extends CI_Model
     if ($this->uri->segment(2) == "re-print-h") {
       $this->db->where('is_checked_h', 'Y');
       $this->db->where('tanggal_approval_keuangan !=', NULL);
+      $this->db->where('tanggal_approval_akhir !=', NULL);
     } else {
       $this->db->where('is_checked', 'Y');
       $this->db->where('tanggal_approval_keuangan', NULL);
+      $this->db->where('tanggal_approval_akhir !=', NULL);
     }
     $data = $this->db->get('pengajuan');
 
@@ -1008,6 +1079,7 @@ class AppModel extends CI_Model
       $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
       $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
+      $this->db->where('pengajuan.tanggal_approval_akhir !=', NULL);
       $this->db->where('pengajuan.is_printed', 'Y');
       $this->db->where('pengajuan.success_print', 'Y');
       if ($this->uri->segment(2) == "re-print-h") {
@@ -1084,6 +1156,7 @@ class AppModel extends CI_Model
     $this->db->distinct();
     $this->db->select('jenis_pengajuan');
     $this->db->where('tanggal_approval_keuangan', NULL);
+    $this->db->where('tanggal_approval_akhir !=', NULL);
     $data = $this->db->get('pengajuan');
 
     echo '
@@ -1154,6 +1227,7 @@ class AppModel extends CI_Model
       $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left outer');
       $this->db->where('pengajuan.jenis_pengajuan', $row->jenis_pengajuan);
       $this->db->where('pengajuan.tanggal_approval !=', NULL);
+      $this->db->where('pengajuan.tanggal_approval_akhir !=', NULL);
       $this->db->where('pengajuan.is_printed', 'Y');
       $this->db->where('pengajuan.success_print', 'Y');
       $this->db->where('pengajuan.tanggal_approval_keuangan', NULL);
@@ -1521,6 +1595,12 @@ class AppModel extends CI_Model
     return $this->db->get();
   }
 
+  public function getApprovalData() {
+    $this->db->from('users');
+    $this->db->where('permission', 'APPROVAL');
+    return $this->db->get();
+  }
+
   public function getSiteJSON() {
     $this->siteJSON_query();
     if ($_POST['length'] != -1) {
@@ -1597,6 +1677,11 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
+  public function updateKendaraan($where, $data) {
+    $this->db->update('kendaraan', $data, $where);
+    return $this->db->affected_rows();
+  }
+
   public function updateTeam($where, $data) {
     $this->db->update('team', $data, $where);
     return $this->db->affected_rows();
@@ -1604,6 +1689,28 @@ class AppModel extends CI_Model
 
   // CLUSTER
   // SITE
+
+  public function getAnggota($id) {
+    $this->db->from('staff');
+    $this->db->where('team_id', $id);
+    $evidence_q = $this->db->get()->result();
+    $nama = array();
+    foreach ($evidence_q as $key => $value) {
+      $nama[] = $value->nama;
+    }
+    return $nama;
+  }
+
+  public function getAnggotaTelp($id) {
+    $this->db->from('staff');
+    $this->db->where('team_id', $id);
+    $evidence_q = $this->db->get()->result();
+    $telp = array();
+    foreach ($evidence_q as $key => $value) {
+      $telp[] = $value->telp;
+    }
+    return $telp;
+  }
 
   public function getClusterDataJ() {
     $this->db->from('cluster');
@@ -1699,6 +1806,7 @@ class AppModel extends CI_Model
     $column_order = array(null, 'kendaraan.nama_kendaraan', 'kendaraan.jenis_kendaraan', 'kendaraan.plat_kendaraan', null);
     $column_search = array('kendaraan.nama_kendaraan', 'kendaraan.jenis_kendaraan', 'kendaraan.plat_kendaraan');
 
+    $this->db->select('kendaraan.*, team.team_id');
     $this->db->from($table);
     $this->db->join('team', 'find_in_set(kendaraan.kendaraan_id, team.kendaraan_id)', 'left outer', false);
     // $this->db->query("select a.*, b.team_id from kendaraan a left outer join team b on find_in_set(a.kendaraan_id, b.kendaraan_id) order by a.kendaraan_id asc");
@@ -1754,6 +1862,14 @@ class AppModel extends CI_Model
     $this->db->from('team');
     $this->db->join('cluster', 'cluster.cluster_id=team.cluster_id', 'left outer');
     $this->db->where('team.team_id', $id);
+    $query = $this->db->get();
+
+    return $query->row();
+  }
+
+  public function getVehicleEditbyID($id) {
+    $this->db->from('kendaraan');
+    $this->db->where('kendaraan_id', $id);
     $query = $this->db->get();
 
     return $query->row();
@@ -2116,6 +2232,73 @@ class AppModel extends CI_Model
     }
   }
 
+  public function printEvidencesTransaksi($id) {
+    // $this->db->select('evidence_id','pengajuan');
+    $this->db->from('evidence_transaksi');
+    $this->db->join('pengajuan', 'pengajuan.pengajuan_id = evidence_transaksi.pengajuan_id', 'left outer');
+    $this->db->where('evidence_transaksi.pengajuan_id', $id);
+    $this->db->where_in('evidence_transaksi.extension', array('jpg', 'png', 'jpeg'));
+    $data = $this->db->get();
+    $evi_s = $data->result();
+    echo "
+          <body onload='window.print()'>
+          <style>
+            @media print{@page {size: landscape}}
+            .image {
+              display: inline-block;
+              margin: 4px;
+              background-position: center center;
+              background-repeat: no-repeat;
+            }
+            .image.scale-fit {
+              background-size: contain;
+            }
+            .image.scale-fill {
+              background-size: cover;
+            }
+            .image img {
+              display: none;
+            }";
+
+            switch ($data->num_rows()) {
+              case '1':
+                  echo "
+                  @media print{@page {size: portrait}}
+                  .image.size-fluid {
+                    width: 100%;
+                    height: 90%;
+                  }";
+                break;
+              case '2':
+                  echo "
+                  .image.size-fluid {
+                    width: 48%;
+                    height: 70%;
+                  }";
+                break;
+              case '6':
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+              default:
+                  echo ".image.size-fluid {
+                    width: 32%;
+                    height: 45%;
+                  }";
+                break;
+            }
+
+    echo "</style>
+        Evidence trnsaksi untuk pengajuan ".$data->row()->pengajuan."<br>";
+    foreach ($evi_s as $key => $value) {
+      echo "
+            <div class=\"image size-fluid scale-fit\" style=\"background-image: url('".base_url('public/assets/evidence/transaksi/'.$value->url)."');\"><img src=".base_url('public/assets/evidence/transaksi/'.$value->url)." alt=\"Orientation: Square\"></div>
+           ";
+    }
+  }
+
   public function printEvidencesBoth($id) {
     // $this->db->select('evidence_id','pengajuan');
     $this->db->from('pengajuan');
@@ -2333,6 +2516,7 @@ class AppModel extends CI_Model
 
   public function checkAll($data) {
     $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('tanggal_approval_akhir !=', NULL);
     $this->db->where('status_admin_dmt !=', NULL);
     // $this->db->where('tanggal_approval_keuangan', NULL);
     $this->db->where('is_printed', 'Y');
@@ -2343,6 +2527,7 @@ class AppModel extends CI_Model
 
   public function hCheckAll($data) {
     $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('tanggal_approval_akhir !=', NULL);
     $this->db->where('status_admin_dmt !=', NULL);
     $this->db->where('tanggal_approval_keuangan !=', NULL);
     $this->db->where('is_printed', 'Y');

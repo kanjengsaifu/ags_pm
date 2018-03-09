@@ -101,7 +101,7 @@
 											</div>
 										</div>
 									</div>
-									<?php if (isViewer() || $this->session->userdata('username') == "stadmaresi"): ?>
+  									<?php if (isViewer() || $this->session->userdata('username') == "stadmaresi" || isApproval()): ?>
 										<!-- <div class="col-md-12" id="chart">
 											<div class="col-md-6">
 												<canvas id="myChart" width="400" height="200"></canvas>
@@ -178,6 +178,10 @@
 																<tr>
 																	<th width="250">Pengaju</th>
 																	<td><span id="pengaju"></span></td>
+																</tr>
+                                <tr>
+																	<th width="250">Diajukan ke</th>
+																	<td><span id="target_approval"></span></td>
 																</tr>
 																<tr id="approval_detail">
 																	<th width="250">Tanggal Approval</th>
@@ -973,7 +977,15 @@
 					    } else {
 					      $('[id=keterangan]').html("-");
 					    }
-					    $('[id=pengaju]').html(data.pengajuan.name);
+              $('[id=pengaju]').html(data.pengajuan.name);
+              $.ajax({
+                url: "<?=site_url('submission/getTargetApproval/')?>" + data.pengajuan.target_approval,
+                type: "GET",
+                dataType: "json",
+                success: function(apr) {
+                  $('[id=target_approval]').html(apr.name);
+                }
+              });
 							if (data.pengajuan.tanggal_approval != null) {
 								$('#approval_detail').show();
 								$.ajax({

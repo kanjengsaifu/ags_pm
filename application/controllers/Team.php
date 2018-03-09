@@ -26,11 +26,13 @@ class Team extends MY_Controller
     $data       = array();
     $no         = $_POST['start'];
     foreach ($team_data as $stfd) {
-      $genset_total = $stfd->genset_mobile_75+$stfd->genset_mobile_10+$stfd->genset_mobile_12+$stfd->genset_fix_75+$stfd->genset_fix_10+$stfd->genset_fix_12;
+      $genset_total = $stfd->genset_mobile_75+$stfd->genset_mobile_10+$stfd->genset_mobile_12;
       $no++;
       $row = array();
       $row[]  = $no;
-      $row[]  = '#ADT'.sprintf('%03d', $stfd->team_id);
+      // $row[]  = '#ADT'.sprintf('%03d', $stfd->team_id);
+      $row[]  = $stfd->homebase . ' - ' . $stfd->wilayah;
+      $row[]  = $stfd->mac_address;
       $row[]  = $genset_total;
       $row[]  = $stfd->genset_mobile_75;
       $row[]  = $stfd->genset_mobile_10;
@@ -82,6 +84,16 @@ class Team extends MY_Controller
     echo json_encode($data);
   }
 
+  public function getAnggota($id) {
+    $data = $this->appModel->getAnggota($id);
+    echo json_encode($data);
+  }
+
+  public function getAnggotaTelp($id) {
+    $data = $this->appModel->getAnggotaTelp($id);
+    echo json_encode($data);
+  }
+
   public function getCurrentCluster($id) {
     $data = $this->appModel->getCurrentCluster($id);
     echo json_encode($data);
@@ -100,15 +112,16 @@ class Team extends MY_Controller
   }
 
   public function update() {
-    echo implode(',', $this->input->post('kendaraan_e'));
-    // $data = array(
-    //   'cluster_id'         => $this->input->post('cluster_id_e'),
-    //   'genset_mobile_75'   => $this->input->post('genset_mobile_75_e'),
-    //   'genset_mobile_10'   => $this->input->post('genset_mobile_10_e'),
-    //   'genset_mobile_12'   => $this->input->post('genset_mobile_12_e'),
-    //   'kendaraan_id'       => implode(',', $this->input->post('kendaraan_e'))
-    // );
-    // $insert = $this->appModel->updateTeam(array('team_id' => $this->input->post('id')), $data);
-    // echo json_encode(array("status" => TRUE));
+    // echo implode(',', $this->input->post('kendaraan_e'));
+    $data = array(
+      'cluster_id'         => $this->input->post('cluster_id_e'),
+      'mac_address'        => $this->input->post('mac_address_e'),
+      'genset_mobile_75'   => $this->input->post('genset_mobile_75_e'),
+      'genset_mobile_10'   => $this->input->post('genset_mobile_10_e'),
+      'genset_mobile_12'   => $this->input->post('genset_mobile_12_e'),
+      'kendaraan_id'       => implode(',', $this->input->post('kendaraan_e'))
+    );
+    $insert = $this->appModel->updateTeam(array('team_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
   }
 }

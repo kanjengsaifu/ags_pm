@@ -70,6 +70,7 @@ $route['submission/print-bukti/(:any)'] = 'submission/printBukti/$1';
 $route['submission/print-bukti-susulan/(:any)'] = 'submission/printBuktiSusulan/$1';
 $route['submission/print-all-evidence/(:any)'] = 'submission/printEvidencesBoth/$1';
 $route['submission/print-evidences'] = 'submission/printEvidences';
+$route['submission/print-bukti-transaksi/(:any)'] = 'submission/printBuktiTransaksi/$1';
 
 // evidences
 $route['evidences/submission/document'] = 'submission/main_document';
