@@ -160,21 +160,21 @@
                 					<h5 class="modal-title" id="exampleModalLabel">Ubah Data Kendaraan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                 				</div>
                 				<div class="modal-body">
-													<form class="" id="form_update" action="#">
-														<input type="hidden" name="id" value="">
+													<form class="" id="form_service" action="#">
+														<input type="hidden" name="ids" value="">
                             <div class="form-group">
                               <label for="inputAddress2">Tanggal Service</label>
                               <input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="tgl_service_s" placeholder="" />
                             </div>
 														<div class="form-group">
                               <label for="inputAddress2">Keterangan Service</label>
-                              <textarea name="keterangan_service_e" class="form-control" rows="8" cols="80"></textarea>
+                              <textarea name="keterangan_service_s" class="form-control" rows="8" cols="80"></textarea>
                             </div>
 	                				</div>
 													</form>
 	                				<div class="modal-footer">
 														<button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-														<input type="submit" class="btn btn-primary" name="" value="Submit">
+														<button class="btn btn-primary" data-dismiss="modal" type="button" id="btnService" onclick="servicePressed()">Submit</button>
 	                				</div>
                 				</div>
                 			</div>
@@ -253,6 +253,19 @@
 							}
 							$('#btnAdd').text('Save');
 							$('#btnAdd').attr('disabled', false);
+						}
+					});
+				}
+
+				function service(id) {
+					$.ajax({
+						url: "<?=base_url('kendaraan/getVehiclesData/')?>"+id,
+						type: "GET",
+						dataType: "json",
+						success: function(data) {
+							$('[name=ids]').val(data.kendaraan_id);
+							$('[name=tgl_service_s]').val("");
+							$('[name=keterangan_service_s]').val("");
 						}
 					});
 				}
@@ -344,6 +357,34 @@
 							}
 							$('#btnUpdate').text('Update');
 							$('#btnUpdate').attr('disabled', false);
+						}
+					});
+				}
+
+				function servicePressed() {
+					$('#btnService').text('Updating...');
+					$('#btnService').attr('disabled', true);
+					var url;
+
+					url = "<?=site_url('kendaraan/serviceUpdate')?>";
+
+					$.ajax({
+						url: url,
+						type: "POST",
+						data: $('#form_service').serialize(),
+						success: function(data) {
+							if (data.status = 'true') {
+								$('.modal').removeClass('show');
+								$('.modal').removeClass('in');
+	              $('.modal').attr("aria-hidden","true");
+	              $('.modal-backdrop').remove();
+	              $('body').removeClass('modal-open');
+								$('#alert').modal('show');
+								swal("Success!", "Data service kendaraan berhasil disubmit!", "success");
+								reload_table();
+							}
+							$('#btnService').text('Update');
+							$('#btnService').attr('disabled', false);
 						}
 					});
 				}

@@ -58,6 +58,15 @@ class Kendaraan extends MY_Controller
     echo json_encode($output);
   }
 
+  public function serviceUpdate() {
+    $data = array(
+      'tgl_service'           => ($this->input->post('tgl_service_s') != "" ? $this->input->post('tgl_service_s') : NULL),
+      'keterangan_service'    => ($this->input->post('keterangan_service_s') != "" ? $this->input->post('keterangan_service_s') : NULL)
+    );
+    $insert = $this->appModel->updateService(array('kendaraan_id' => $this->input->post('ids')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
   public function save() {
     $data = array(
       'plat_kendaraan'      => ($this->input->post('plat_kendaraan') != "" ? $this->input->post('plat_kendaraan') : NULL),

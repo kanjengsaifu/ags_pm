@@ -1403,6 +1403,22 @@ class AppModel extends CI_Model
     }
   }
 
+  public function updateService($where, $data) {
+    $updateData = array(
+      'tgl_service' => $data['tgl_service']
+    );
+    $update = $this->db->update('kendaraan', $updateData, $where);
+    if ($update) {
+      $data_arr = array(
+        'kendaraan_id'             => $where['kendaraan_id'],
+        'tgl_service'              => $data['tgl_service'],
+        'keterangan_service'       => $data['keterangan_service']
+      );
+      $this->db->insert('service_history', $data_arr);
+      return $this->db->affected_rows();
+    }
+  }
+
   public function approveAll($where, $data) {
     $this->db->update('pengajuan', $data, $where);
     return $this->db->affected_rows();
@@ -1850,8 +1866,22 @@ class AppModel extends CI_Model
     $this->db->insert('kendaraan', $data);
     $insert = $this->db->insert_id();
     if ($insert) {
-      $this->session->set_flashdata('notification', "Data kendaraan berhasil disimpan!");
-      redirect('/kendaraan');
+      if ($data['tgl_service'] != "") {
+        $this->db->select('kendaraan_id');
+        $this->db->from('kendaraan');
+        $this->db->where('plat_kendaraan', $data['plat_kendaraan']);
+        $data_kid = $this->db->get();
+        $value_kid = $data_kid->row();
+        $data_h = array(
+          'tgl_service'         => $data['tgl_service'],
+          'keterangan_service'  => $data['keterangan'],
+          'kendaraan_id'        => $value_kid->kendaraan_id
+        );
+        $this->db->insert('service_history', $data_h);
+
+        $this->session->set_flashdata('notification', "Data kendaraan berhasil disimpan!");
+        redirect('/kendaraan');
+      }
     } else {
       $this->session->set_flashdata('notification', "Data kendaraan gagal disimpan!");
       redirect('/kendaraan');
