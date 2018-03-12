@@ -103,7 +103,7 @@ class AppModel extends CI_Model
       "nama" => $name,
       "telp"  => $telp,
       "posisi" => $posisi,
-      "dob" => date("Y-m-d", strtotime($dob)),
+      "dob" => ($dob != "" ? date("Y-m-d", strtotime($dob)) : NULL),
       "alamat" => $alamat,
       "keterangan" => $keterangan,
       "keluarga_yg_bisa_dihub" => $keluarga_yg_bisa_dihub,
@@ -1744,12 +1744,14 @@ class AppModel extends CI_Model
 
   public function clusterJSON_query() {
     $table = 'cluster';
-    $column_order = array(null, 'cluster.homebase', 'cluster.wilayah', 'site.id_site', null);
-    $column_search = array('cluster.homebase', 'cluster.wilayah', 'site.id_site');
+    // $column_order = array(null, 'cluster.homebase', 'cluster.wilayah', 'site.id_site', null);
+    // $column_search = array('cluster.homebase', 'cluster.wilayah', 'site.id_site');
+    $column_order = array(null, 'cluster.homebase', 'cluster.wilayah', null);
+    $column_search = array('cluster.homebase', 'cluster.wilayah');
     $order = array('cluster.cluster_id' => 'desc');
 
     $this->db->from($table);
-    $this->db->join('site', 'cluster.site_id = site.site_id');
+    // $this->db->join('site', 'cluster.site_id = site.site_id');
 
     $i = 0;
     foreach ($column_search as $item) {
@@ -1880,6 +1882,9 @@ class AppModel extends CI_Model
         $this->db->insert('service_history', $data_h);
 
         $this->session->set_flashdata('notification', "Data kendaraan berhasil disimpan!");
+        redirect('/kendaraan');
+      } else {
+        $this->session->set_flashdata('notification', "Data kendaraan gagal disimpan!");
         redirect('/kendaraan');
       }
     } else {

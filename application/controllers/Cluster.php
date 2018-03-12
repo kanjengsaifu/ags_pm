@@ -28,7 +28,7 @@ class Cluster extends MY_Controller
       $row[]  = $no;
       $row[]  = $stfd->homebase;
       $row[]  = $stfd->wilayah;
-      $row[]  = $stfd->id_site . " - " . $stfd->nama_site;
+      // $row[]  = $stfd->id_site . " - " . $stfd->nama_site;
       $row[]  = '
                   <button type="button" href="" onclick="edit_cluster('."'".$stfd->cluster_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editCluster">
                     <i class="fas fa-edit"></i>

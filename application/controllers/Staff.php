@@ -27,7 +27,7 @@ class Staff extends MY_Controller
     $name                         = $this->input->post('nama');
     $telp                         = $this->input->post('telp');
     $posisi                       = $this->input->post('posisi');
-    $dob                          = $this->input->post('dob');
+    $dob                          = ($this->input->post('dob') != "" ? $this->input->post('dob') : NULL);
     $alamat                       = $this->input->post('alamat');
     $keterangan                   = $this->input->post('keterangan');
     $keluarga_yg_bisa_dihub       = $this->input->post('keluarga_yg_bisa_dihub');
@@ -108,7 +108,7 @@ class Staff extends MY_Controller
       'telp'                         => $this->input->post('telp_e'),
       'nama'                         => $this->input->post('nama_e'),
       'posisi'                       => $this->input->post('posisi_e'),
-      'dob'                          => $this->input->post('dob_e'),
+      'dob'                          => ($this->input->post('dob_e') != "" ? $this->input->post('dob_e') : NULL),
       'alamat'                       => $this->input->post('alamat_e'),
       'keterangan'                   => $this->input->post('keterangan_e'),
       'keluarga_yg_bisa_dihub'       => $this->input->post('keluarga_yg_bisa_dihub_e'),

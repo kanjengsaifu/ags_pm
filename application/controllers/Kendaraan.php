@@ -79,7 +79,6 @@ class Kendaraan extends MY_Controller
       'tgl_pajak'           => ($this->input->post('tgl_pajak') != "" ? $this->input->post('tgl_pajak') : NULL),
       'tgl_stnk'            => ($this->input->post('tgl_stnk') != "" ? $this->input->post('tgl_stnk') : NULL),
       'tgl_service'         => ($this->input->post('tgl_service') != "" ? $this->input->post('tgl_service') : NULL),
-      'plat_kendaraan'      => ($this->input->post('plat_kendaraan') != "" ? $this->input->post('plat_kendaraan') : NULL),
       'keterangan'          => $this->input->post('keterangan')
     );
 

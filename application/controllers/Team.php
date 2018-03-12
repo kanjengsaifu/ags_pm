@@ -69,12 +69,13 @@ class Team extends MY_Controller
   }
 
   public function save() {
+    // echo count($this->input->post('kendaraan'));
     $data = array(
       'cluster_id'        => $this->input->post('cluster'),
       'genset_mobile_75'  => $this->input->post('genset_mobile_75'),
       'genset_mobile_10'  => $this->input->post('genset_mobile_10'),
       'genset_mobile_12'  => $this->input->post('genset_mobile_12'),
-      'kendaraan_id'      => implode(',',$this->input->post('kendaraan'))
+      'kendaraan_id'      => (count($this->input->post('kendaraan')) > 1 ? implode(',',$this->input->post('kendaraan')) : implode(',',$this->input->post('kendaraan')))
     );
     $this->appModel->saveTeam($data);
   }

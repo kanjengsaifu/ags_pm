@@ -15,7 +15,7 @@
                 				</div>
                 				<div class="modal-body">
                 					<form class="" method="post" action="<?=site_url('cluster/save')?>">
-                            <div id="site_id_div">
+                            <!-- <div id="site_id_div">
 															<div class="form-group">
 																<label for="">Pilih Site</label>
 																<select class="selectpicker form-control" name="site_id" id="site_id" data-live-search="true">
@@ -48,8 +48,8 @@
 																	<textarea name="keterangan_site" class="form-control" rows="8" cols="80" placeholder="Keterangan Site"></textarea>
 																</div>
 															</div>
-														</div>
-                            <hr>
+														</div> -->
+                            <!-- <hr> -->
                             <div class="form-group">
                               <label for="inputAddress2">Homebase</label>
                               <input type="text" class="form-control" name="homebase" placeholder="Homebase" required>
@@ -86,7 +86,7 @@
 												<th width="30">No</th>
 												<th>Homebase</th>
                         <th>Wilayah</th>
-												<th>Site</th>
+												<!-- <th>Site</th> -->
 												<th style="white-space:nowrap;" width="50">Action</th>
 											</tr>
 										</thead>
@@ -101,15 +101,15 @@
                 				<div class="modal-body">
 													<form class="" id="form_update" action="#">
 														<input type="hidden" name="id_e" value="">
-														<div class="form-group">
+														<!-- <div class="form-group">
 															<label for="">Site ID</label>
 															<select class="form-control selectpicker" id="siteide" name="site_id_e" data-live-search="true">
-																<!-- <option value="new_site">New Site</option> -->
-																<?php foreach ($site_list->result() as $site_data): ?>
-																	<option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
-																<?php endforeach; ?>
-															</select>
-														</div>
+																<option value="new_site">New Site</option> -->
+																<?php //foreach ($site_list->result() as $site_data): ?>
+																	<!-- <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option> -->
+																<?php //endforeach; ?>
+															<!--</select>
+														</div> -->
                             <div class="form-group">
                               <label for="inputAddress2">Homebase</label>
                               <input type="text" class="form-control" name="homebase_e" placeholder="Homebase" required>
@@ -154,23 +154,23 @@
 					        },
 									{
 										"class": "dt-center",
-										"targets": [4]
+										"targets": [3]
 									}
 				        ],
 				    });
 				});
 
-        $('#new_site_div').hide();
-
-        $(document).ready(function() {
-					$('#site_id').change(function() {
-						if ($(this).val() === 'new_site') {
-							$('#new_site_div').show();
-						} else {
-							$('#new_site_div').hide();
-						}
-					});
-				});
+        // $('#new_site_div').hide();
+				//
+        // $(document).ready(function() {
+				// 	$('#site_id').change(function() {
+				// 		if ($(this).val() === 'new_site') {
+				// 			$('#new_site_div').show();
+				// 		} else {
+				// 			$('#new_site_div').hide();
+				// 		}
+				// 	});
+				// });
 
 				function changeValueSave() {
 					$('#btnSave').text('Saving...');
@@ -419,7 +419,7 @@
 							$('[name=id_e]').val(data.cluster_id);
 							$('[name=homebase_e]').val(data.homebase);
 							$('[name=wilayah_e]').val(data.wilayah);
-							$('#siteide option[value='+data.site_id+']').attr('selected', true);
+							// $('#siteide option[value='+data.site_id+']').attr('selected', true);
 							$('.selectpicker').selectpicker('render');
 							$('#editCluster').modal('show');
 							$('.modal-title').text('Update Data Cluster ' + data.homebase);
