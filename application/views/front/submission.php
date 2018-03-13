@@ -883,7 +883,7 @@
 
 				$(document).on({'show.bs.modal': function () {
                  $(this).removeAttr('tabindex');
-      } }, '.modal');
+      	}}, '.modal');
 
 				$(document).ready(function() {
 							$('#input1').filer();

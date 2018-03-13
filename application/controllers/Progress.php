@@ -33,13 +33,6 @@ class Progress extends MY_Controller
   }
 
   public function save() {
-    if ($this->input->post('project_id')=="new_project") {
-      $data_site = array(
-        'nama_project'      => $this->input->post('nama_project')
-      );
-      $this->appModel->projectSave($data_site);
-    }
-
     if ($this->input->post('site_id')=="new_site") {
       $data_site = array(
         'id_site'           => $this->input->post('id_site'),
@@ -53,7 +46,6 @@ class Progress extends MY_Controller
 
     $data_progress = array(
       'tanggal_mulai'         => ($this->input->post('tanggal_mulai') != "" ? $this->input->post('tanggal_mulai') : NULL),
-      'keterangan'            => ($this->input->post('keterangan') != "" ? $this->input->post('keterangan') : NULL),
       'no_corr'               => ($this->input->post('no_corr') != "" ? $this->input->post('no_corr') : NULL),
       'no_po'                 => ($this->input->post('no_po') != "" ? $this->input->post('no_po') : NULL),
       'tanggal_corr'          => ($this->input->post('tanggal_corr') != "" ? $this->input->post('tanggal_corr') : NULL),
@@ -61,16 +53,7 @@ class Progress extends MY_Controller
       'tanggal_kontrak'       => ($this->input->post('tanggal_kontrak') != "" ? $this->input->post('tanggal_kontrak') : NULL),
       'tanggal_akhir_kontrak' => ($this->input->post('tanggal_akhir_kontrak') != "" ? $this->input->post('tanggal_akhir_kontrak') : NULL),
       'deskripsi'             => ($this->input->post('deskripsi') != "" ? $this->input->post('deskripsi') : NULL),
-      'project_id'            => (
-                                  $this->input->post('project_id') == "" ?
-                                    ""
-                                    :
-                                    (
-                                      $this->input->post('project_id') == "new_project" ?
-                                      $this->appModel->getNewProjectID($this->input->post('nama_project')) :
-                                      $this->input->post('project_id')
-                                    )
-                                  ),
+      'tipe_pekerjaan'        => $this->input->post('tipe_pekerjaan'),
       'site_id'               => (
                                    $this->input->post('site_id') == "" ?
                                      ""
@@ -84,7 +67,12 @@ class Progress extends MY_Controller
       'created_by'            => $this->session->userdata('useractive_id'),
       'created_at'            => date('Y-m-d', time())
     );
-    $this->appModel->addProgress($data_progress);
+    $this->appModel->addProgress($data_progress, $this->input->post('keterangan'));
+
+    // $ket_count = count($this->input->post('keterangan'));
+    // for ($i=0; $i < $ket_count; $i++) {
+    //   'keterangan'            => $this->input->post('keterangan')[$i]
+    // }
   }
 
   public function data() {
@@ -108,13 +96,11 @@ class Progress extends MY_Controller
                   )
                 );
       $row[]  = $no;
-      $row[]  = $stfd->keterangan;
-      $row[]  = $stfd->nama_project;
       $row[]  = $stfd->id_site . ' ' . $stfd->id_site_telkom;
       $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
       $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
-      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
       $row[]  = ($stfd->is_bayar != NULL ? date('Y-m-d', strtotime($stfd->is_bayar)) : 'PROGRESS');
+      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
       $row[]  = ($stfd->is_bayarclient != NULL ? date('Y-m-d', strtotime($stfd->is_bayarclient)) : 'PROGRESS');
       $row[]  = '
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
@@ -127,15 +113,26 @@ class Progress extends MY_Controller
                   ($stfd->is_bayarclient != NULL ?
                   ''
                   :
-                  '<button type="button" href="" onclick="updateProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#updateProgress">
-                    UPDATE
+                  '
+                  <button type="button" href="" onclick="remarkProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#remarkProgress">
+                    <i class="fas fa-plus"></i>
                   </button>
+                  <!--<button type="button" href="" onclick="remarkProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#remarkProgress">
+                    REMARK
+                  </button>-->
+                  <button type="button" href="" onclick="updateProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#updateProgress">
+                    UPD
+                  </button>
+                  <!--<button type="button" href="" onclick="editProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editProgress">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>-->
                   <button type="button" href="" onclick="uploadBuktiProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBuktiProgress">
                     <i class="fas fa-upload"></i>
                   </button>
                   <button type="button" href="" onclick="deleteProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger" data-toggle="modal" data-target="#deleteProgress">
                     <i class="fas fa-trash"></i>
-                  </button>'
+                  </button>
+                  '
                   )
                 .'
                 ';
@@ -217,6 +214,17 @@ class Progress extends MY_Controller
       'is_bayarclient'          => ($this->input->post('bayarclient_vale') != null ? $this->input->post('bayarclient_vale') : NULL)
     );
     $insert = $this->appModel->updateProgress(array('progress_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function update_detail() {
+    $data = array(
+      'keterangan'              => ($this->input->post('pekerjaan_vale') != null ? $this->input->post('pekerjaan_vale') : NULL),
+      'tanggal_mulai'           => ($this->input->post('tanggal_mulai_pekerjaan_vale') != null ? $this->input->post('tanggal_mulai_pekerjaan_vale') : NULL)
+      // 'site_id'                 => ($this->input->post('site_vale') != null ? $this->input->post('site_vale') : NULL),
+      // 'project_id'              => ($this->input->post('project_vale') != null ? $this->input->post('project_vale') : NULL)
+    );
+    $insert = $this->appModel->editProgress(array('progress_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));
   }
 
@@ -444,5 +452,9 @@ class Progress extends MY_Controller
 
   public function historyProgress($id) {
     $this->appModel->historyProgress($id);
+  }
+
+  public function getListPekerjaan($id) {
+    $this->appModel->getListPekerjaan($id);
   }
 }

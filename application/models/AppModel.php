@@ -817,6 +817,13 @@ class AppModel extends CI_Model
     echo json_encode($query->result());
   }
 
+  public function getListPekerjaan($id) {
+    $this->db->from('list_pekerjaan');
+    $this->db->where('progress_id', $id);
+    $query = $this->db->get();
+    echo json_encode($query->result());
+  }
+
   public function historyRemark($id) {
     $this->db->from('remark_history');
     $this->db->join('users', 'users.user_id = remark_history.remark_by', 'left');
@@ -1403,6 +1410,15 @@ class AppModel extends CI_Model
     }
   }
 
+  public function editProgress($where, $data) {
+    $update = $this->db->update('progress', $data, $where);
+    if ($update) {
+      return $this->db->affected_rows();
+    } else {
+      return $this->db->affected_rows();
+    }
+  }
+
   public function updateService($where, $data) {
     $updateData = array(
       'tgl_service' => $data['tgl_service']
@@ -1429,13 +1445,23 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
-  public function addProgress($data) {
+  public function addProgress($data, $ket) {
     $this->db->insert('progress', $data);
     $insert = $this->db->insert_id();
     if ($insert) {
+      $data = array();
+      for ($i=0; $i < count($ket); $i++) {
+        $data[$i] = array(
+          'progress_id' => $insert,
+          'pekerjaan'   => $ket[$i]
+        );
+      }
+      $this->db->insert_batch('list_pekerjaan', $data);
+      // echo "sukses";
       $this->session->set_flashdata('notification', "Progress berhasil dibuat!");
       redirect('/progress');
     } else {
+      // echo "gagal";
       $this->session->set_flashdata('notification', "Progress gagal dibuat!");
       redirect('/progress');
     }
@@ -1462,8 +1488,8 @@ class AppModel extends CI_Model
 
     $this->db->from($table);
     $this->db->select('project.project_id, project.nama_project, progress.*, site.*');
-    $this->db->join('project', 'progress.project_id = project.project_id');
-    $this->db->join('site', 'progress.site_id = site.site_id');
+    $this->db->join('project', 'progress.project_id = project.project_id', 'left outer');
+    $this->db->join('site', 'progress.site_id = site.site_id', 'left outer');
 
 
     if ($this->input->post('sudah_selesai') != "N") {

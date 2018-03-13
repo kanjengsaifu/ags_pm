@@ -25,13 +25,12 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="FirstName" class="col-sm-2 control-label">Project</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Tipe Pekerjaan</label>
                             <div class="col-sm-6">
                               <select class="selectpicker form-control" name="project_filter" id="project_filter" data-live-search="true">
-                                <option selected disabled readonly>PILIH PROJECT</option>
-                                <?php foreach ($project_list->result() as $project_data): ?>
-                                  <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
-                                <?php endforeach; ?>
+                                <option selected disabled readonly>PILIH TIPE PEKERJAAN</option>
+                                <option value="CSR">CSR</option>
+                                <option value="Imbas Petir">IMBAS PETIR</option>
                               </select>
                             </div>
                         </div>
@@ -168,23 +167,23 @@
                   </div>
                   <div class="modal-body">
                     <form class="" method="post" action="<?=site_url('progress/save')?>">
-                      <div class="form-group">
-                        <label for="">Nama Pekerjaan</label>
-                        <input type="text" class="form-control" name="keterangan" value="" placeholder="Nama Pekerjaan">
-                      </div>
-                      <div class="form-group">
-                        <label for="">Tanggal Mulai Progress</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Progress">
+                      <div class="form-group input_wrap">
+                        <button class="btn btn-outline-primary add_field_button">Tambah List Pekerjaan</button>
+                        <br><label style="margin-top:10px;" for="">Daftar Pekerjaan</label>
+                        <input type="text" class="form-control" name="keterangan[]" value="" placeholder="Pekerjaan">
                       </div>
                       <hr>
-                      <div class="form-group" id="project_id_div">
-                        <label for="">Pilih Project</label>
-                        <select class="selectpicker form-control" name="project_id" id="project_id" data-live-search="true">
-                          <option selected disabled readonly>PILIH PROJECT</option>
-                          <option value="new_project">New Project</option>
-                          <?php foreach ($project_list->result() as $project_data): ?>
-                            <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
-                          <?php endforeach; ?>
+                      <div class="form-group">
+                        <label for="">Tanggal Mulai Pekerjaan</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Pekerjaan">
+                      </div>
+                      <hr>
+                      <div class="form-group">
+                        <label for="FirstName">Tipe Pekerjaan</label>
+                        <select class="selectpicker form-control" name="tipe_pekerjaan" id="tipe_pekerjaan" data-live-search="true">
+                          <option selected disabled readonly>PILIH TIPE PEKERJAAN</option>
+                          <option value="CSR">CSR</option>
+                          <option value="Imbas Petir">IMBAS PETIR</option>
                         </select>
                       </div>
                       <div class="" id="new_project_div">
@@ -274,26 +273,27 @@
                     <h5 class="modal-title" id="exampleModalLabel">Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                   </div>
                   <div class="modal-body">
-                    <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
                     <span style="float:right" id="created_by"></span>
+                    <i class="fas fa-info-circle"></i> <b> LIST PEKERJAAN</b>
+                    <br><br>
+                    <div id="list_val"></div>
+                    <br>
+
+                    <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
                     <br><br>
                     <table class="table">
                       <tbody>
                         <tr>
-                          <th width="250">Tanggal Mulai Progress</th>
+                          <th width="250">Tanggal Mulai Pekerjaan</th>
                           <td><span id="tanggal_mulai_val"></span></td>
-                        </tr>
-                        <tr>
-                          <th width="250">Nama Pekerjaan</th>
-                          <td><span id="keterangan_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Tanggal Kontrak</th>
                           <td><span id="tanggal_kontrak_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Project</th>
-                          <td><span id="project_val"></span></td>
+                          <th width="250">Tipe Pekerjaan</th>
+                          <td><span id="tipe_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Site</th>
@@ -521,6 +521,54 @@
               </div>
             </div>
             <!-- END OF UPDATE PROGRESS -->
+            <!-- UPDATE PROGRESS -->
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editProgress" role="dialog" tabindex="-1">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="" id="form_update_e" action="#">
+                      <input type="hidden" name="id" value="">
+                      <div class="form-group">
+                        <label for="inputAddress2">Nama Pekerjaan</label>
+                        <input id="pekerjaan_vale" type="text" class="form-control" name="pekerjaan_vale" placeholder="Nama Pekerjaan" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Mulai Pekerjaan</label>
+                        <input id="tanggal_mulai_pekerjaan_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai_pekerjaan_vale" placeholder="Tanggal Mulai Pekerjaan">
+                      </div>
+                      <hr>
+                      <!-- <div class="form-group">
+                        <label for="FirstName">Project</label>
+                        <select class="selectpicker form-control" id="project_vale" name="project_vale" data-live-search="true">
+                          <option value="default">PILIH PROJECT</option>
+                          <?php foreach ($project_list->result() as $project_data): ?>
+                            <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Site ID</label>
+                        <select class="form-control selectpicker" id="site_vale" name="site_vale" data-live-search="true">
+                          <option value="default">PILIH SITE</option>
+                          <?php foreach ($site_list->result() as $site_data): ?>
+                            <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div> -->
+                    </div>
+                    </form>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                      <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnEdit" onclick="edit()">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END OF UPDATE PROGRESS -->
             <!-- EVIDENCE PROGRESS -->
             <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="uploadBuktiProgress" role="dialog" tabindex="-1">
               <div class="modal-dialog modal-lg" role="document">
@@ -596,15 +644,13 @@
                 <tr>
                   <th class="text-center"></th>
                   <th class="text-center">No</th>
-                  <th class="text-center">Nama<br>Pekerjaan</th>
-                  <th class="text-center">Nama Project</th>
                   <th class="text-center" width="50">Site</th>
                   <th class="text-center">Tanggal<br>CORMO</th>
                   <th class="text-center">Tanggal<br>PO</th>
-                  <th class="text-center">Tanggal<br>Invoice</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>AG</th>
+                  <th class="text-center">Tanggal<br>Invoice</th>
                   <th class="text-center">Tanggal<br>Pembayaran<br>Client</th>
-                  <th style="white-space:nowrap;" class="text-center" width="250">Action</th>
+                  <th style="white-space:nowrap;" class="text-center" width="350">Action</th>
                 </tr>
               </thead>
             </table>
@@ -615,6 +661,25 @@
   </div>
 </main>
 <script>
+
+  $(document).ready(function() {
+    var max_fields      = 100; //maximum input boxes allowed
+    var wrapper         = $(".input_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div style="margin-top:3px;"><input type="text" class="form-control" name="keterangan[]" value="" placeholder="Pekerjaan" style="width:95% !important;float:left"><a href="#" class="btn btn-danger" style="margin-left:5px;" id="remove_field">X</a></div>'); //add input box
+        }
+    });
+
+    $(wrapper).on("click","#remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+  });
 
   $("#input-ke-1").fileinput({
     theme: "explorer",
@@ -692,7 +757,7 @@
             // },
             {
               "className": "dt-center",
-              "targets": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+              "targets": [2, 3, 4, 5, 6, 7, 8]
             }
           ],
       });
@@ -1083,13 +1148,37 @@
       dataType: "json",
       success: function(data) {
         $('id').html(data.progress_id);
+
+        $.ajax({
+          url: "<?=site_url('progress/getListPekerjaan')?>/" + data.progress_id,
+          type: "GET",
+          dataType: "json",
+          success: function(list) {
+            var img = '';
+            var rowl = '';
+            var angka = 1;
+            rowl+='<table class="table">';
+            for (var i = 0; i < list.length; i++) {
+              // console.log(evi[0][i].url)
+              rowl+='<tr><td>'+ list[i].pekerjaan +'</td></tr>';
+              angka++;
+            }
+            rowl+='</table>';
+
+            $('#list_val').html(rowl);
+          }, error: function(jqXHR, textStatus, errorThrown) {
+            var err = eval("(" + jqXHR.responseText + ")");
+            alert(err.Message);
+          }
+        });
+
         $('#created_by').html("Created by <b>" + data.name + "</b>");
         if (data.tanggal_mulai != null) {
           $('[id=tanggal_mulai_val]').html(moment(data.tanggal_mulai).format('dddd, D MMMM Y'));
         } else {
           $('[id=tanggal_mulai_val]').html("-");
         }
-        $('[id=project_val]').html(data.nama_project);
+        $('[id=tipe_val]').html(data.tipe_pekerjaan);
         if (data.tanggal_kontrak != null) {
           $('[id=tanggal_kontrak_val]').html(moment(data.tanggal_kontrak).format('dddd, D MMMM Y') + (data.tanggal_akhir_kontrak != null ? " - " + moment(data.tanggal_akhir_kontrak).format('dddd, D MMMM Y') : ""));
         } else {
@@ -1169,11 +1258,6 @@
         // $('[id=tanggal_pengajuan]').html(moment(data.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
         // $('[id=realisasi_pengajuan]').html(moment(data.realisasi_pengajuan).format('dddd, D MMMM Y'));
         // $('[id=pid_val]').html(data.id_site + ' / ' + data.nama_site);
-        if (data.keterangan != null) {
-          $('[id=keterangan_val]').html(data.keterangan);
-        } else {
-          $('[id=keterangan_val]').html("-");
-        }
 
         $.ajax({
           url: "<?=site_url('progress/getEvidenceProgressbyIDDokumen')?>/" + data.progress_id,
@@ -1318,11 +1402,39 @@
           $('.modal-backdrop').remove();
           $('body').removeClass('modal-open');
           $('#alert').modal('show');
-          swal("Success!", "Data staff berhasil diupdate!", "success");
+          swal("Success!", "Data progress berhasil diupdate!", "success");
           reload_table();
         }
         $('#btnUpdate').text('Update');
         $('#btnUpdate').attr('disabled', false);
+      }
+    });
+  }
+
+  function edit() {
+    $('#btnEdit').text('Updating...');
+    $('#btnEdit').attr('disabled', true);
+    var url;
+
+    url = "<?=site_url('progress/update_detail')?>";
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: $('#form_update_e').serialize(),
+      success: function(data) {
+        if (data.status = 'true') {
+          $('.modal').removeClass('show');
+          $('.modal').removeClass('in');
+          $('.modal').attr("aria-hidden","true");
+          $('.modal-backdrop').remove();
+          $('body').removeClass('modal-open');
+          $('#alert').modal('show');
+          swal("Success!", "Data progress berhasil diupdate!", "success");
+          reload_table();
+        }
+        $('#btnEdit').text('Update');
+        $('#btnEdit').attr('disabled', false);
       }
     });
   }
@@ -1339,6 +1451,47 @@
       dataType: "json",
       success: function(data) {
         $('[name=idp]').val(data.progress_id);
+      }
+    });
+  }
+
+  function editProgress(id) {
+
+    $.ajax({
+      url: "<?=site_url('progress/getProgressDetail/')?>" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        $('#project_vale option').attr('selected', false);
+        $('#project_vale').selectpicker('render');
+        $('#site_vale option').attr('selected', false);
+        $('#site_vale').selectpicker('refresh');
+        $('#site_vale').selectpicker('render');
+        $('[name=id]').val(data.progress_id);
+        if (data.keterangan != null) {
+          $('[name=pekerjaan_vale]').val(data.keterangan);
+        } else {
+          $('[name=pekerjaan_vale]').val("");
+        }
+        if (data.tanggal_mulai != null) {
+          $('[name=tanggal_mulai_pekerjaan_vale]').val(data.tanggal_mulai);
+        } else {
+          $('[name=tanggal_mulai_pekerjaan_vale]').val("");
+        }
+        // if (data.site_id != null) {
+        //   $('#site_vale option[value='+data.site_id+']').attr('selected', true);
+        // } else {
+        //   $('#site_vale option[value=default]').attr('selected', true);
+        // }
+        // if (data.project_id != null) {
+        //   $('#project_vale option[value='+data.project_id+']').attr('selected', true);
+        // } else {
+        //   $('#project_vale option[value=default]').attr('selected', true);
+        // }
+        // $('.selectpicker').selectpicker('refresh');
+        // $('.selectpicker').selectpicker('render');
+        // $('#project_vale').find('.bs-title-option').text($('#project_vale option:selected').text());
+        // $('#project_vale').selectpicker({title: $('#project_vale option:selected').text()}).selectpicker('render');
       }
     });
   }
