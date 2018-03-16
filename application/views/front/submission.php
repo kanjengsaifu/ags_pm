@@ -609,6 +609,7 @@
 									<h4 class="c-grey-900 mB-20">Custom Filter : </h4>
 				                <form id="form-filter" class="form-horizontal">
 
+														<input type="hidden" name="reject_val" id="reject_val" value="N">
 														<input type="hidden" name="belum_diapprove_val" id="belum_diapprove_val" value="N">
 														<input type="hidden" name="sudah_diapprove_val" id="sudah_diapprove_val" value="N">
 														<input type="hidden" name="belum_diproses_val" id="belum_diproses_val" value="N">
@@ -740,6 +741,9 @@
 										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
 	                    MENUNGGU APPROVE ANDA
 	                  </button>
+										<button type="button" class="btn cur-p btn-danger" id="rejected">
+	                    REJECTED
+	                  </button>
 										<?php if ($this->session->userdata('username') == "stadmaresi"): ?>
 											<button type="button" class="btn cur-p btn-success" id="belum_diproses">
 												BELUM DIPROSES
@@ -768,6 +772,16 @@
 										<button type="button" class="btn cur-p btn-success" id="history_btn">
 											HISTORY
 										</button>
+										<div class="" style="float:right">
+											<button type="button" class="btn cur-p btn-outline-default" name="button">
+												<a class="" href="#" target="_blank" id="exportExcel" style="text-decoration:none;color:inherit;">
+													<i class="fas fa-file-excel"></i>
+												</a>
+											</button>
+											<!-- <button type="button" class="btn cur-p btn-outline-default" id="export_print" onclick="exportPrint()">
+												<i class="fas fa-print"></i>
+											</button> -->
+										</div>
 									<?php endif; ?>
 									<?php if (isAdminTasik()): ?>
 										<button type="button" class="btn cur-p btn-primary" id="semua_pengajuan">
@@ -784,7 +798,7 @@
 										</button>
 									<?php endif; ?>
 									<?php if (isApproval()): ?>
-										<div class="" id="approve_terpilih">
+										<div class="" id="approve_terpilih" style="display:none">
 											<br>
 											<button type="button" class="btn cur-p btn-success" onclick="approveTerpilih()">
 		                    APPROVE YANG TERPILIH
@@ -847,7 +861,7 @@
 												<!-- <th class="text-center" id="invoiced_stat">Invoiced</th>
 												<th class="text-center" id="bayar_stat">Bayar</th>
 												<th class="text-center" id="client_stat">Bayar<br>Client</th> -->
-                        <th class="text-center" style="width:200px;">ACTION</th>
+                        <th class="text-center" style="width:250px;">ACTION</th>
 											</tr>
 										</thead>
 									</table>
@@ -1170,6 +1184,7 @@
 									}
 							});
 				});
+
 				$("#input-ke-1").fileinput({
 					minFileCount: 0,
 					showUpload: false,
@@ -1331,6 +1346,7 @@
 											data.progress_project = $('#progress_project_val').val();
 											data.semua_pengajuan = $('#semua_pengajuan_val').val();
 											data.belum_diapprove = $('#belum_diapprove_val').val();
+											data.reject = $('#reject_val').val();
 											data.sudah_diapprove = $('#sudah_diapprove_val').val();
 											data.belum_diproses = $('#belum_diproses_val').val();
 											data.sudah_diproses = $('#sudah_diproses_val').val();
@@ -1409,6 +1425,7 @@
 							document.getElementById("on_progress_val").value = "N";
 							document.getElementById("progress_project_val").value = "N";
 							document.getElementById("belum_diapprove_val").value = "N";
+							document.getElementById("reject_val").value = "N";
 							document.getElementById("sudah_diapprove_val").value = "N";
 							document.getElementById("belum_diproses_val").value = "N";
 							document.getElementById("sudah_diproses_val").value = "N";
@@ -1438,6 +1455,14 @@
 							$('#uncheck_all').hide();
 							$('#h_check_all').hide();
 							$('#h_uncheck_all').hide();
+							submission.ajax.reload();  //just reload table
+						});
+
+						$('#rejected').click(function() {
+							$('#menampilkan').text("Pengajuan yang diReject");
+							$("input[type=hidden]").val("N");
+							document.getElementById("reject_val").value = "Y";
+							$('#approve_terpilih').hide();
 							submission.ajax.reload();  //just reload table
 						});
 
@@ -1810,6 +1835,59 @@
 					});
 				});
 
+				$(document).ready(function() {
+					$('#exportExcel').click(function() {
+						var on_progress = document.getElementById('on_progress_val').value;
+						var belum_diprint = document.getElementById('belum_diprint_val').value;
+						var history = document.getElementById('history_val').value;
+						var progress_project = document.getElementById('progress_project_val').value;
+						var semua_pengajuan = document.getElementById('semua_pengajuan_val').value;
+						var belum_diapprove = document.getElementById('belum_diapprove_val').value;
+						var reject = document.getElementById('reject_val').value;
+						var sudah_diapprove = document.getElementById('sudah_diapprove_val').value;
+						var pengajuan = document.getElementById('pengajuan_filter').value;
+						// var kategori_pengajuan = document.getElementById('kategori_pengajuan_filter').value;
+						var jenis_pengajuan = document.getElementById('jenis_pengajuan_filter').value;
+						var tanggal_pengajuan = document.getElementById('tanggal_pengajuan_filter').value;
+						var tanggal_pengajuan_first = document.getElementById('tanggal_pengajuan_first_filter').value;
+						var tanggal_pengajuan_last = document.getElementById('tanggal_pengajuan_last_filter').value;
+						var realisasi_pengajuan = document.getElementById('realisasi_pengajuan_filter').value;
+						var realisasi_pengajuan_first = document.getElementById('realisasi_pengajuan_first_filter').value;
+						var realisasi_pengajuan_last = document.getElementById('realisasi_pengajuan_last_filter').value;
+						var nama_pengaju = document.getElementById('nama_pengaju_filter').value;
+
+						$.ajax({
+							url: "<?=site_url('submission/exportExcel')?>",
+							type: "POST",
+							dataType: "json",
+							beforeSend: function() {
+								window.open("<?=site_url('submission/exportExcel')?>
+										?on_progress="+on_progress+
+										"&belum_diprint="+belum_diprint+
+										"&history="+history+
+										"&progress_project="+progress_project+
+										"&semua_pengajuan="+semua_pengajuan+
+										"&belum_diapprove="+belum_diapprove+
+										"&sudah_diapprove="+sudah_diapprove+
+										"&pengajuan="+pengajuan+
+										"&jenis_pengajuan="+jenis_pengajuan+
+										"&tanggal_pengajuan="+tanggal_pengajuan+
+										"&tanggal_pengajuan_first="+tanggal_pengajuan_first+
+										"&tanggal_pengajuan_last="+tanggal_pengajuan_last+
+										"&realisasi_pengajuan="+realisasi_pengajuan+
+										"&realisasi_pengajuan_first="+realisasi_pengajuan_first+
+										"&realisasi_pengajuan_last="+realisasi_pengajuan_last+
+										"&nama_pengaju="+nama_pengaju
+										,'_blank');
+							},
+							success: function(result) {
+
+							}
+						});
+						return false;
+					});
+				});
+
 				// $(document).ready(function() {
 				// 	if ($('[name=bukti]').val().length != 0) {
 				// 		$('#upload').text('Change');
@@ -1992,6 +2070,35 @@
 							}
 						}
 					});
+				}
+
+				function rejectPengajuan(id) {
+					swal({
+			      title: "Are you sure?",
+			      text: "You will not be able to recover this data!",
+			      type: "warning",
+			      showCancelButton: true,
+			      confirmButtonClass: "btn-danger",
+			      confirmButtonText: "Yes, reject it!",
+			      cancelButtonText: "No, cancel pls!",
+			      closeOnConfirm: false,
+			      closeOnCancel: false
+			    },
+			    function(isConfirm) {
+			      if (isConfirm) {
+			        $.ajax({
+			          url: "<?=site_url('submission/rejectPengajuan/')?>" + id,
+			          type: "POST",
+			          data: {id: id},
+			          success: function(data) {
+			            swal("Rejected!", "Pengajuan berhasil direject.", "success");
+			            reload_table();
+			          }
+			        });
+			      } else {
+			        swal("Cancelled", "Pengajuan batal direject", "error");
+			      }
+			    });
 				}
 
 				function accPengajuanAkhir(id) {
@@ -2353,14 +2460,17 @@
 					      $('[id=keterangan]').html("-");
 					    }
 					    $('[id=pengaju]').html(data.pengajuan.name);
-							if (data.pengajuan.tanggal_approval != null) {
+							if (data.pengajuan.tanggal_approval != null || data.pengajuan.is_rejected != 'N') {
 								$('#approval_detail').show();
 								$.ajax({
-									url: "<?=site_url('submission/getApprovalName/')?>" + data.pengajuan.approved_by,
+									url: "<?=site_url('submission/getApprovalName/')?>" + (data.pengajuan.tanggal_approval != null ? data.pengajuan.approved_by : data.pengajuan.rejected_by),
 									type: "GET",
 									dataType: "json",
 									success: function(app) {
-										$('[id=approved_by]').html(moment(data.pengajuan.tanggal_approval).format('dddd, D MMMM Y') + ' by ' + app.name);
+										$('[id=approved_by]').
+										html(
+										(data.pengajuan.tanggal_approval != null ? '#1 '+ moment(data.pengajuan.tanggal_approval).format('dddd, D MMMM Y HH:mm:ss') +' by ' + app.name : (data.pengajuan.tanggal_approval == null && data.pengajuan.is_rejected != 'N' ? '#1 Rejected by ' + app.name : '')) +
+										(data.pengajuan.tanggal_approval == null && data.pengajuan.is_rejected != 'N' ? '' : (data.pengajuan.tanggal_approval_akhir != null ? '<br>#2 '+ moment(data.pengajuan.tanggal_approval_akhir).format('dddd, D MMMM Y HH:mm:ss') + ' by Pak Simon' : (data.pengajuan.tanggal_approval_akhir == null && data.pengajuan.is_rejected != 'N' ? '<br>#2 Rejected by Pak Simon' : ''))));
 									}
 								});
 							} else {

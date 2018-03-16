@@ -125,7 +125,7 @@ class Submission extends MY_Controller
                                     )
                                  ),
         'tanggal_approval_akhir' => ($this->session->userdata('username') == "stadmaresi" ? date('Y-m-d', time()) : NULL),
-        'tanggal_approval'    => (isApproval() ? date('Y-m-d', time()) : NULL),
+        'tanggal_approval'    => (isApproval() ? date('Y-m-d H:i:s', time()) : NULL),
         'approved_by'         => (isApproval() ? $this->session->userdata('useractive_id') : NULL)
       );
       $this->appModel->subSave($data_pengajuan);
@@ -247,10 +247,12 @@ class Submission extends MY_Controller
       } else if (isApproval()) {
         $row[]  = ($stfd->tanggal_approval != NULL ?
                     '<input type="checkbox" disabled readonly>' :
-                    ($stfd->is_checked == "Y" ?
-                      '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="rmvCBox('.$stfd->pengajuan_id.')" checked>'
-                      :
-                      '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="saveCBox('.$stfd->pengajuan_id.')">'
+                    ($stfd->is_rejected != 'Y' ?
+                      ($stfd->is_checked == "Y" ?
+                        '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="rmvCBox('.$stfd->pengajuan_id.')" checked>'
+                        :
+                        '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="saveCBox('.$stfd->pengajuan_id.')">'
+                      ) : ''
                     )
                   );
       }
@@ -288,15 +290,10 @@ class Submission extends MY_Controller
                     )
                     .''.
                     (isApproval() || isAdministrator() ?
-                      ($stfd->tanggal_approval != null ?
-                        '
-
-                        '
-                        :
-                        '
-                          <a style="float:right" href="#" onclick="accPengajuan('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-success">APPROVE</a>
-                        '
-                      ) : ''
+                      '<div style="float:right">
+                        '.($stfd->is_rejected != "Y" && $stfd->tanggal_approval == NULL ? '<a style="" href="#" onclick="rejectPengajuan('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-danger">REJECT</a>' : '').'
+                        '.($stfd->tanggal_approval == NULL && $stfd->is_rejected != 'Y' ? '<a style="" href="#" onclick="accPengajuan('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-success">APPROVE</a>' : '').'
+                      </div>' : ''
                     )
                     .''.
                     ($this->session->userdata('username') == "stadmaresi" ?
@@ -304,7 +301,10 @@ class Submission extends MY_Controller
                         ($stfd->tanggal_approval_akhir != null ?
                           '' :
                           '
-                            <a style="float:right" href="#" onclick="accPengajuanAkhir('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-success">PROSES</a>
+                            <div style="float:right">
+                              '.($stfd->is_rejected != 'Y' && $stfd->tanggal_approval_akhir == NULL ? '<a style="" href="#" onclick="rejectPengajuan('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-danger">REJECT</a>' : '').'
+                              '.($stfd->tanggal_approval_akhir == NULL && $stfd->is_rejected != 'Y' ? '<a style="" href="#" onclick="accPengajuanAkhir('."'".$stfd->pengajuan_id."'".')" class="text-center btn cur-p btn-outline-success">PROSES</a>' : '').'
+                            </div>
                           '
                         )
                         :
@@ -331,10 +331,9 @@ class Submission extends MY_Controller
                   .'
                   '.
                     (isAdminTasik() ?
-                      '
-                      <button type="button" href="" onclick="uploadBukti('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBukti">
+                      ($stfd->is_rejected != 'N' ? '' : '<button type="button" href="" onclick="uploadBukti('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBukti">
                         <i class="fas fa-upload"></i>
-                      </button> '.
+                      </button>').
                       ($stfd->tanggal_approval_keuangan != NULL ?
                         '<button onclick="reset_cam('."'".$stfd->pengajuan_id."'".')" type="button" href="" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#captureEvidence">
                           <i class="fa fa-camera"></i>
@@ -386,17 +385,26 @@ class Submission extends MY_Controller
 
   public function approve() {
     $data = array(
-      'tanggal_approval'        => date('Y-m-d', time()),
-      'tanggal_approval_akhir'  => ($this->session->userdata('username') == "stadmaresi" ? date('Y-m-d', time()) : NULL),
+      'tanggal_approval'        => date('Y-m-d H:i:s', time()),
+      'tanggal_approval_akhir'  => ($this->session->userdata('username') == "stadmaresi" ? date('Y-m-d H:i:s', time()) : NULL),
       'approved_by'             => $this->session->userdata('useractive_id')
     );
     $insert = $this->appModel->accPengajuan(array('pengajuan_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));
   }
 
+  public function rejectPengajuan() {
+    $data = array(
+      'is_rejected'        => "Y",
+      'rejected_by'        => $this->session->userdata('useractive_id')
+    );
+    $insert = $this->appModel->rejectPengajuan(array('pengajuan_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
   public function approveAkhir() {
     $data = array(
-      'tanggal_approval_akhir'  => date('Y-m-d', time())
+      'tanggal_approval_akhir'  => date('Y-m-d H:i:s', time())
     );
     $insert = $this->appModel->accPengajuan(array('pengajuan_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));
@@ -806,5 +814,29 @@ class Submission extends MY_Controller
 
   public function historyRemark($id) {
     $this->appModel->historyRemark($id);
+  }
+
+  public function exportExcel() {
+    $data = array(
+      'on_progress'               => $this->input->get('on_progress'),
+      'belum_diprint'             => $this->input->get('belum_diprint'),
+      'history'                   => $this->input->get('history'),
+      'progress_project'          => $this->input->get('progress_project'),
+      'semua_pengajuan'           => $this->input->get('semua_pengajuan'),
+      'belum_diapprove'           => $this->input->get('belum_diapprove'),
+      'sudah_diapprove'           => $this->input->get('sudah_diapprove'),
+      'pengajuan'                 => $this->input->get('pengajuan'),
+      'kategori_pengajuan'        => $this->input->get('kategori_pengajuan'),
+      'jenis_pengajuan'           => $this->input->get('jenis_pengajuan'),
+      'tanggal_pengajuan'         => $this->input->get('tanggal_pengajuan'),
+      'tanggal_pengajuan_first'   => $this->input->get('tanggal_pengajuan_first'),
+      'tanggal_pengajuan_last'    => $this->input->get('tanggal_pengajuan_last'),
+      'realisasi_pengajuan'       => $this->input->get('realisasi_pengajuan'),
+      'realisasi_pengajuan_first' => $this->input->get('realisasi_pengajuan_first'),
+      'realisasi_pengajuan_last'  => $this->input->get('realisasi_pengajuan_last'),
+      'nama_pengaju'              => $this->input->get('nama_pengaju')
+    );
+    $this->appModel->exportExcel($data);
+    // echo json_encode(array("status" => TRUE));
   }
 }

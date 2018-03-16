@@ -472,7 +472,7 @@
                   </span></a>
                 </li>
               <?php endif; ?>
-              <?php if (isAdm()): ?>
+              <?php if (isAdm() || $this->session->userdata('username') == "zahra"): ?>
                 <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('progress')?>"><span class="icon-holder"><i class="fas fa-tasks"></i></span> <span class="title">Progress</span></a>
                 </li>

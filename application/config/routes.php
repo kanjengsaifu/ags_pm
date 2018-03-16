@@ -80,5 +80,7 @@ $route['evidences/progress/document'] = 'progress/main_document';
 $route['evidences/progress/picture'] = 'progress/main_picture';
 
 $route['progress/report'] = 'progress/main_report';
+$route['progress/list/(:any)'] = 'progress/list';
+
 $route['monitoring/progress'] = 'progress/main_report';
 $route['monitoring/submission'] = 'submission/main_report';

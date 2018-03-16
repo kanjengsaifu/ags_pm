@@ -20,6 +20,13 @@ class Progress extends MY_Controller
     $this->loadPage($page, $config);
   }
 
+  public function list($page = 'list') {
+    isLoggedIn();
+    $config['title']  = "List Pekerjaan" . $this->title;
+    $config['subject']= $this->appModel->subjectP($this->uri->segment(3));
+    $this->loadPage($page, $config);
+  }
+
   public function main_report($page = 'progress_report') {
     isLoggedIn();
     $config['title']  = "Monitor Progress" . $this->title;
@@ -45,11 +52,14 @@ class Progress extends MY_Controller
     }
 
     $data_progress = array(
+      'subject'               => ($this->input->post('subject') != "" ? $this->input->post('subject') : NULL),
       'tanggal_mulai'         => ($this->input->post('tanggal_mulai') != "" ? $this->input->post('tanggal_mulai') : NULL),
       'no_corr'               => ($this->input->post('no_corr') != "" ? $this->input->post('no_corr') : NULL),
       'no_po'                 => ($this->input->post('no_po') != "" ? $this->input->post('no_po') : NULL),
       'tanggal_corr'          => ($this->input->post('tanggal_corr') != "" ? $this->input->post('tanggal_corr') : NULL),
       'tanggal_po'            => ($this->input->post('tanggal_po') != "" ? $this->input->post('tanggal_po') : NULL),
+      'nilai_corr'            => ($this->input->post('nilai_corr') != "" ? $this->input->post('nilai_corr') : NULL),
+      'nilai_progress'        => ($this->input->post('nilai_progress') != "" ? $this->input->post('nilai_progress') : NULL),
       'tanggal_kontrak'       => ($this->input->post('tanggal_kontrak') != "" ? $this->input->post('tanggal_kontrak') : NULL),
       'tanggal_akhir_kontrak' => ($this->input->post('tanggal_akhir_kontrak') != "" ? $this->input->post('tanggal_akhir_kontrak') : NULL),
       'deskripsi'             => ($this->input->post('deskripsi') != "" ? $this->input->post('deskripsi') : NULL),
@@ -75,6 +85,15 @@ class Progress extends MY_Controller
     // }
   }
 
+  public function save_pekerjaan() {
+    $data_pekerjaan = array(
+      'progress_id'           => $this->input->post('progress_id'),
+      'pekerjaan'             => ($this->input->post('pekerjaan') != "" ? $this->input->post('pekerjaan') : NULL),
+      'tanggal_selesai'       => ($this->input->post('tanggal_selesai') != "" ? $this->input->post('tanggal_selesai') : NULL),
+    );
+    $this->appModel->addPekerjaan($data_pekerjaan, $this->input->post('progress_id'));
+  }
+
   public function data() {
     $staff_data = $this->appModel->getProgressJSON();
     $data       = array();
@@ -95,13 +114,14 @@ class Progress extends MY_Controller
                     '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="saveCBox('.$stfd->progress_id.')">'
                   )
                 );
-      $row[]  = $no;
+      // $row[]  = $no;
       $row[]  = $stfd->id_site . ' ' . $stfd->id_site_telkom;
-      $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
-      $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
-      $row[]  = ($stfd->is_bayar != NULL ? date('Y-m-d', strtotime($stfd->is_bayar)) : 'PROGRESS');
-      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
-      $row[]  = ($stfd->is_bayarclient != NULL ? date('Y-m-d', strtotime($stfd->is_bayarclient)) : 'PROGRESS');
+      $row[]  = ($stfd->tipe_pekerjaan != null ? $stfd->tipe_pekerjaan : '-');
+      $row[]  = ($stfd->no_corr != null ? $stfd->no_corr : '-');
+      $row[]  = ($stfd->no_po != null ? $stfd->no_po : '-');
+      $row[]  = ($stfd->no_bast != null ? $stfd->no_bast : '-');
+      $row[]  = ($stfd->no_bapp != null ? $stfd->no_bapp : '-');
+      $row[]  = ($stfd->nilai_progress != null ? number_format($stfd->nilai_progress, '0','.','.') : '-');
       $row[]  = '
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
                   <i class="fas fa-search"></i>
@@ -114,24 +134,27 @@ class Progress extends MY_Controller
                   ''
                   :
                   '
-                  <button type="button" href="" onclick="remarkProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#remarkProgress">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                  <!--<button type="button" href="" onclick="remarkProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#remarkProgress">
-                    REMARK
-                  </button>-->
+                  '.
+                  (isAdm() ?
+                  '<a href="'.site_url('progress/list/'.$stfd->progress_id).'" target="_blank" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary">
+                    <i class="fas fa-external-link-square-alt"></i>
+                  </a>' : '')
+                  .'
                   <button type="button" href="" onclick="updateProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#updateProgress">
                     UPD
                   </button>
-                  <!--<button type="button" href="" onclick="editProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#editProgress">
-                    <i class="fas fa-pencil-alt"></i>
-                  </button>-->
-                  <button type="button" href="" onclick="uploadBuktiProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBuktiProgress">
+                  '.
+                  (isAdm() ?
+                  '<button type="button" href="" onclick="uploadBuktiProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBuktiProgress">
                     <i class="fas fa-upload"></i>
                   </button>
                   <button type="button" href="" onclick="deleteProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger" data-toggle="modal" data-target="#deleteProgress">
                     <i class="fas fa-trash"></i>
-                  </button>
+                  </button>' : ''
+                  )
+                  .'
+
+
                   '
                   )
                 .'
@@ -149,6 +172,38 @@ class Progress extends MY_Controller
     echo json_encode($output);
   }
 
+  public function list_data() {
+    $staff_data = $this->appModel->getListJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($staff_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = ($stfd->pekerjaan != null ? $stfd->pekerjaan : '-');
+      $row[]  = ($stfd->tanggal_selesai != null ? $stfd->tanggal_selesai : '-');
+      // $row[]  = ($stfd->is_done != "N" ? "DONE" : "NOT DONE YET");
+      $row[]  = '
+                <button type="button" href="" onclick="updatePekerjaan('."'".$stfd->pekerjaan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#updatePekerjaan">
+                  UPDATE
+                </button>
+                <button type="button" href="" onclick="deletePekerjaan('."'".$stfd->pekerjaan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-danger" data-toggle="modal" data-target="#deletePekerjaan">
+                  <i class="fas fa-trash"></i>
+                </button>
+                ';
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->appModel->countListData(),
+      "recordsFiltered" => $this->appModel->countListDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
+  }
+
   public function data_report() {
     $staff_data = $this->appModel->getProgressJSON();
     $data       = array();
@@ -156,15 +211,27 @@ class Progress extends MY_Controller
     foreach ($staff_data as $stfd) {
       $no++;
       $row = array();
-      $row[]  = $no;
-      $row[]  = $stfd->keterangan;
-      $row[]  = $stfd->nama_project;
+      $row[]  = ($stfd->is_bayarclient != NULL ?
+                  ($stfd->is_checked != "N" ?
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="h_rmvCBox('.$stfd->progress_id.')" checked>'
+                    :
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="h_saveCBox('.$stfd->progress_id.')">'
+                  )
+                  :
+                  ($stfd->is_checked != "N" ?
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="rmvCBox('.$stfd->progress_id.')" checked>'
+                    :
+                    '<input type="checkbox" name="checked[]" value="'.$stfd->progress_id.'" onclick="saveCBox('.$stfd->progress_id.')">'
+                  )
+                );
+      // $row[]  = $no;
       $row[]  = $stfd->id_site . ' ' . $stfd->id_site_telkom;
-      $row[]  = ($stfd->tanggal_corr != null ? $stfd->tanggal_corr : '-');
-      $row[]  = ($stfd->tanggal_po != null ? $stfd->tanggal_po : '-');
-      $row[]  = ($stfd->is_invoiced != NULL ? date('Y-m-d', strtotime($stfd->is_invoiced)) : 'PROGRESS');
-      $row[]  = ($stfd->is_bayar != NULL ? date('Y-m-d', strtotime($stfd->is_bayar)) : 'PROGRESS');
-      $row[]  = ($stfd->is_bayarclient != NULL ? date('Y-m-d', strtotime($stfd->is_bayarclient)) : 'PROGRESS');
+      $row[]  = ($stfd->tipe_pekerjaan != null ? $stfd->tipe_pekerjaan : '-');
+      $row[]  = ($stfd->no_corr != null ? $stfd->no_corr : '-');
+      $row[]  = ($stfd->no_po != null ? $stfd->no_po : '-');
+      $row[]  = ($stfd->no_bast != null ? $stfd->no_bast : '-');
+      $row[]  = ($stfd->no_bapp != null ? $stfd->no_bapp : '-');
+      $row[]  = ($stfd->nilai_progress != null ? number_format($stfd->nilai_progress, '0','.','.') : '-');
       $row[]  = '
                 <button type="button" href="" onclick="detailProgress('."'".$stfd->progress_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailProgress">
                   <i class="fas fa-search"></i>
@@ -186,6 +253,11 @@ class Progress extends MY_Controller
     echo json_encode($output);
   }
 
+  public function getPekerjaanDetail($id) {
+    $data = $this->appModel->getPekerjaanDetail($id);
+    echo json_encode($data);
+  }
+
   public function getProgressDetail($id) {
     $data = $this->appModel->getProgressByID($id);
     echo json_encode($data);
@@ -198,10 +270,14 @@ class Progress extends MY_Controller
 
   public function update() {
     $data = array(
+      'nilai_corr'              => ($this->input->post('nilai_corr_vale') != "" ? $this->input->post('nilai_corr_vale') : NULL),
+      'nilai_progress'          => ($this->input->post('nilai_progress_vale') != "" ? $this->input->post('nilai_progress_vale') : NULL),
       'tanggal_corr'            => ($this->input->post('tanggal_corr_vale') != null ? $this->input->post('tanggal_corr_vale') : NULL),
       'no_corr'                 => ($this->input->post('no_corr_vale') != null ? $this->input->post('no_corr_vale') : NULL),
       'tanggal_po'              => ($this->input->post('tanggal_po_vale') != null ? $this->input->post('tanggal_po_vale') : NULL),
       'no_po'                   => ($this->input->post('no_po_vale') != null ? $this->input->post('no_po_vale') : NULL),
+      'tanggal_bmhd'            => ($this->input->post('tanggal_bmhd_vale') != null ? $this->input->post('tanggal_bmhd_vale') : NULL),
+      'is_bymhd'                => ($this->input->post('no_po_vale') != "bymhd" ? 'N' : 'Y'),
       'tanggal_kontrak'         => ($this->input->post('tanggal_kontrak_vale') != null ? $this->input->post('tanggal_kontrak_vale') : NULL),
       'tanggal_akhir_kontrak'   => ($this->input->post('tanggal_akhir_kontrak_vale') != null ? $this->input->post('tanggal_akhir_kontrak_vale') : NULL),
       'tanggal_bapp'            => ($this->input->post('tanggal_bapp_vale') != null ? $this->input->post('tanggal_bapp_vale') : NULL),
@@ -211,9 +287,19 @@ class Progress extends MY_Controller
       'deskripsi'               => ($this->input->post('deskripsi_vale') != null ? $this->input->post('deskripsi_vale') : NULL),
       'is_invoiced'             => ($this->input->post('invoiced_vale') != null ? $this->input->post('invoiced_vale') : NULL),
       'is_bayar'                => ($this->input->post('bayar_vale') != null ? $this->input->post('bayar_vale') : NULL),
-      'is_bayarclient'          => ($this->input->post('bayarclient_vale') != null ? $this->input->post('bayarclient_vale') : NULL)
+      'is_bayarclient'          => ($this->input->post('bayarclient_vale') != null ? $this->input->post('bayarclient_vale') : NULL),
+      'remark'                  => ($this->input->post('remark') != null ? $this->input->post('remark') : NULL)
     );
     $insert = $this->appModel->updateProgress(array('progress_id' => $this->input->post('id')), $data);
+    echo json_encode(array("status" => TRUE));
+  }
+
+  public function update_list() {
+    $data = array(
+      'pekerjaan'              => ($this->input->post('pekerjaan_vale') != "" ? $this->input->post('pekerjaan_vale') : NULL),
+      'tanggal_selesai'        => ($this->input->post('tanggal_selesai_vale') != null ? $this->input->post('tanggal_selesai_vale') : NULL)
+    );
+    $insert = $this->appModel->updatePekerjaan(array('pekerjaan_id' => $this->input->post('id')), $data);
     echo json_encode(array("status" => TRUE));
   }
 
@@ -233,9 +319,14 @@ class Progress extends MY_Controller
     echo json_encode(array("status" => TRUE));
   }
 
+  public function deletePekerjaan() {
+    $delete_staff = $this->appModel->deletePekerjaan($this->input->post('id'));
+    echo json_encode(array("status" => TRUE));
+  }
+
   public function saveEvidence() {
-    if ($_FILES['bukti']['name']['0'] != "") {
-      $filesCount = count($_FILES['bukti']['name']);
+    if ($_FILES['buktiprog']['name']['0'] != "") {
+      $filesCount = count($_FILES['buktiprog']['name']);
 
       for ($i=0; $i < $filesCount; $i++) {
         unset($config);
@@ -243,13 +334,13 @@ class Progress extends MY_Controller
         $config['upload_path']    = './public/assets/evidence/progress/';
         $config['allowed_types']  = 'jpg|jpeg|png|pdf|xlsx|xls|doc|docx';
         $config['overwrite']      = FALSE;
-        $config['file_name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
+        $config['file_name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktiprog']['name'][$i]));
 
-        $_FILES['f']['name']      = str_replace(' ', '_', date('YmdHis', time()) . $_FILES['bukti']['name'][$i]);
-        $_FILES['f']['type']      = $_FILES['bukti']['type'][$i];
-        $_FILES['f']['tmp_name']  = $_FILES['bukti']['tmp_name'][$i];
-        $_FILES['f']['error']     = $_FILES['bukti']['error'][$i];
-        $_FILES['f']['size']      = $_FILES['bukti']['size'][$i];
+        $_FILES['f']['name']      = str_replace(" ", "_", date('YmdHis', time()) . trim($_FILES['buktiprog']['name'][$i]));
+        $_FILES['f']['type']      = $_FILES['buktiprog']['type'][$i];
+        $_FILES['f']['tmp_name']  = $_FILES['buktiprog']['tmp_name'][$i];
+        $_FILES['f']['error']     = $_FILES['buktiprog']['error'][$i];
+        $_FILES['f']['size']      = $_FILES['buktiprog']['size'][$i];
         // $ext = pathinfo($path, PATHINFO_EXTENSION);
 
         $this->load->library('upload', $config);
@@ -258,6 +349,7 @@ class Progress extends MY_Controller
           echo $this->upload->display_errors();
         } else {
           $data = $this->upload->data();
+          $digit = strlen(pathinfo($config['file_name'], PATHINFO_EXTENSION))+1;
           $data_evidence = array(
             'progress_id'     => $this->input->post('idp'),
             'url'             => $config['file_name'],
@@ -269,9 +361,9 @@ class Progress extends MY_Controller
           $this->appModel->evidenceProgressSave($data_evidence);
         }
       }
-
-      // echo "sukses";
     }
+    $this->session->set_flashdata('notification', "Evidence berhasil diupload!");
+    redirect('/progress');
   }
 
   public function getEvidenceProgressbyID($id) {

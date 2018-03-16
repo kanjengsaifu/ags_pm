@@ -31,6 +31,14 @@ class AppModel extends CI_Model
     return $this->db->count_all_results();
   }
 
+  public function subjectP($id) {
+    $this->db->select('subject');
+    $this->db->from('progress');
+    $this->db->where('progress_id', $id);
+    $data = $this->db->get()->row();
+    return $data->subject;
+  }
+
   public function progressBelumSelesai() {
     $this->db->where('is_bayarclient', NULL);
     $this->db->from('progress');
@@ -349,6 +357,12 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
+  public function deletePekerjaan($where) {
+    $this->db->where('pekerjaan_id', $where);
+    $this->db->delete('list_pekerjaan');
+    return $this->db->affected_rows();
+  }
+
   public function removeFromTeam($where) {
     $this->db->set('team_id', "");
     $this->db->where('staff_id', $where);
@@ -479,13 +493,6 @@ class AppModel extends CI_Model
   public function evidenceProgressSave($data) {
     $this->db->insert('evidence_progress', $data);
     $insert = $this->db->insert_id();
-    if ($insert) {
-      $this->session->set_flashdata('notification', "Evidence berhasil diupload!");
-      redirect('/progress');
-    } else {
-      $this->session->set_flashdata('notification', "Evidence gagal diupload!");
-      redirect('/progress');
-    }
   }
 
   public function evidencePengajuanSave($data) {
@@ -562,6 +569,14 @@ class AppModel extends CI_Model
       $this->db->where('tanggal_approval_keuangan', NULL);
     }
 
+    if (!isAdminTasik()) {
+      if ($this->input->post('reject') != 'N') {
+        $this->db->where('is_rejected', 'Y');
+      } else {
+        $this->db->where('is_rejected', 'N');
+      }
+    }
+
     if ($this->session->userdata('username') != "stadmaresi") {
       if ($this->input->post('belum_diapprove') != 'N') {
         $this->db->where('tanggal_approval', NULL);
@@ -576,7 +591,7 @@ class AppModel extends CI_Model
           $this->db->where('tanggal_approval_akhir !=', NULL);
         }
         if (isApproval()) {
-          $this->db->where('tanggal_approval', NULL);
+          // $this->db->where('tanggal_approval', NULL);
         }
       }
     } else if ($this->session->userdata('username') == "stadmaresi") {
@@ -689,7 +704,7 @@ class AppModel extends CI_Model
 
   public function getApprovalName($id) {
     $this->db->from('pengajuan');
-    $this->db->join('users', 'users.user_id = pengajuan.approved_by');
+    $this->db->join('users', 'users.user_id = "'.$id.'"');
     $this->db->where('users.user_id', $id);
     $query = $this->db->get();
     return $query->row();
@@ -729,6 +744,13 @@ class AppModel extends CI_Model
       $arr[] = $value['url'];
     }
     return array('pengajuan' => $q1, 'es' => $arr);
+  }
+
+  public function getPekerjaanDetail($id) {
+    $this->db->from('list_pekerjaan');
+    $this->db->where('pekerjaan_id', $id);
+    $query = $this->db->get();
+    return $query->row();
   }
 
   public function getProgressByID($id) {
@@ -838,6 +860,11 @@ class AppModel extends CI_Model
     return $this->db->affected_rows();
   }
 
+  public function rejectPengajuan($where, $data) {
+    $this->db->update('pengajuan', $data, $where);
+    return $this->db->affected_rows();
+  }
+
   public function saveCBox($where, $data) {
     $this->db->update('pengajuan', $data, $where);
     return $this->db->affected_rows();
@@ -912,7 +939,7 @@ class AppModel extends CI_Model
         <thead>
           <tr>
             <td style="width:20px">#</td>
-            <td style="width:70px;text-align:center"><b>ID</b></td>
+            <td style="width:70px;text-align:center"><b>TGL</b></td>
             <td><b>PEKERJAAN</b></td>
             <td style="width:100px;text-align:center"><b>SITE</b></td>
             <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
@@ -961,7 +988,7 @@ class AppModel extends CI_Model
           <tbody>
             <tr>
               <td style="width:20px;">'.$no.'</td>
-              <td style="width:70px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
+              <td style="width:70px;text-align:center">'.date('d M Y', strtotime($row2->tanggal_pengajuan)).'</td>
               <td>'.$row2->pengajuan.'</td>
               <td style="width:100px;text-align:center">'.($row2->site_id != "" ? $row2->id_site . ' ' . $row2->id_site_telkom : '').'</td>
               <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
@@ -1065,7 +1092,7 @@ class AppModel extends CI_Model
       <thead>
         <tr>
           <td style="width:20px">#</td>
-          <td style="width:50px;text-align:center"><b>ID</b></td>
+          <td style="width:50px;text-align:center"><b>TGL</b></td>
           <td><b>PEKERJAAN</b></td>
           <td style="width:100px;text-align:center"><b>SITE</b></td>
           <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
@@ -1122,7 +1149,7 @@ class AppModel extends CI_Model
         <tbody>
           <tr>
             <td style="width:20px;">'.$no.'</td>
-            <td style="width:50px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
+            <td style="width:70px;text-align:center">'.date('d M Y', strtotime($row2->tanggal_pengajuan)).'</td>
             <td>'.$row2->pengajuan.'</td>
             <td style="width:30px;text-align:center">'.($row2->site_id != "" ? $row2->id_site . ' ' . $row2->id_site_telkom : '').'</td>
             <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site).'</td>
@@ -1212,7 +1239,7 @@ class AppModel extends CI_Model
       <thead>
         <tr>
           <td style="width:20px">#</td>
-          <td style="width:50px;text-align:center"><b>ID</b></td>
+          <td style="width:50px;text-align:center"><b>TGL</b></td>
           <td><b>PEKERJAAN</b></td>
           <td style="width:100px;text-align:center"><b>SITE</b></td>
           <td style="width:120px;text-align:center"><b>NAMA SITE</b></td>
@@ -1265,7 +1292,7 @@ class AppModel extends CI_Model
         <tbody>
           <tr>
             <td style="width:20px;">'.$no.'</td>
-            <td style="width:50px;text-align:center">#ADP'.sprintf('%04d', $row2->pengajuan_id).'</td>
+            <td style="width:70px;text-align:center">'.date('d M Y', strtotime($row2->tanggal_pengajuan)).'</td>
             <td>'.$row2->pengajuan.'</td>
             <td style="width:30px;text-align:center">'.($row2->site_id != "" ? $row2->id_site . ' ' . $row2->id_site_telkom : '').'</td>
             <td style="width:90px;text-align:center">'.($row2->nama_site == "" ? "-" : $row2->nama_site ).'</td>
@@ -1401,13 +1428,19 @@ class AppModel extends CI_Model
         'is_bayar'                  => $data['is_bayar'],
         'is_bayarclient'            => $data['is_bayarclient'],
         'updated_by'                => $this->session->userdata('useractive_id'),
-        'updated_at'                => date('Y-m-d H:i:s', time())
+        'updated_at'                => date('Y-m-d H:i:s', time()),
+        'remark'                    => $data['remark']
       );
       $this->db->insert('progress_history', $data_arr);
       return $this->db->affected_rows();
     } else {
       return $this->db->affected_rows();
     }
+  }
+
+  public function updatePekerjaan($where, $data) {
+    $update = $this->db->update('list_pekerjaan', $data, $where);
+    return $this->db->affected_rows();
   }
 
   public function editProgress($where, $data) {
@@ -1467,6 +1500,19 @@ class AppModel extends CI_Model
     }
   }
 
+  public function addPekerjaan($data, $id) {
+    $this->db->insert('list_pekerjaan', $data);
+    $insert = $this->db->insert_id();
+    if ($insert) {
+      $this->session->set_flashdata('notification', "Pekerjaan berhasil dibuat!");
+      redirect('/progress/list/'.$id);
+    } else {
+      // echo "gagal";
+      $this->session->set_flashdata('notification', "Pekerjaan gagal dibuat!");
+      redirect('/progress/list/'.$id);
+    }
+  }
+
   public function progressData() {
     return $this->db->get('progress');
   }
@@ -1491,11 +1537,10 @@ class AppModel extends CI_Model
     $this->db->join('project', 'progress.project_id = project.project_id', 'left outer');
     $this->db->join('site', 'progress.site_id = site.site_id', 'left outer');
 
-
     if ($this->input->post('sudah_selesai') != "N") {
       $this->db->where('progress.is_bayarclient !=', NULL);
     } else {
-      $this->db->where('progress.is_bayarclient', NULL);
+
     }
 
     if ($this->input->post('belum_selesai') != "N") {
@@ -1622,6 +1667,60 @@ class AppModel extends CI_Model
 
   public function countProgressData() {
     $this->db->from('staff');
+    return $this->db->count_all_results();
+  }
+
+  // LIST
+  public function getListJSON() {
+    $this->listJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function listJSON_query() {
+    $table = 'list_pekerjaan';
+    $column_order = array(null, 'pekerjaan', null);
+    $column_search = array('pekerjaan');
+    $order = array('pekerjaan_id' => 'desc');
+
+    $this->db->from($table);
+    $this->db->where('progress_id', $this->uri->segment(3));
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countListDataFiltered() {
+    $this->listJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countListData() {
+    $this->db->from('list_pekerjaan');
     return $this->db->count_all_results();
   }
 
@@ -2616,6 +2715,115 @@ class AppModel extends CI_Model
     foreach (array_filter($arr) as $key => $value) {
       return '<a href="'.base_url('public/assets/evidence/'.$value->url).'" data-ngthumb="'.base_url('public/assets/evidence/'.$value->url).'">Title Image1</a>';
     }
+  }
+
+  public function exportExcel($data) {
+    $this->load->library('Excel');
+    $this->excel->setActiveSheetIndex(0);
+
+    // $this->excel->getActiveSheet()->setTitle('test worksheet');
+
+    $this->db->from('pengajuan');
+    // $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
+
+    if ($data['on_progress'] != 'N') {
+      $this->db->where('is_printed', 'Y');
+      $this->db->where('success_print', 'Y');
+      $this->db->where('status_admin_dmt !=', NULL);
+      $this->db->where('tanggal_approval_keuangan', NULL);
+    }
+
+    if ($data['history'] != 'N') {
+      $this->db->where('is_printed', 'Y');
+      $this->db->where('success_print', 'Y');
+      $this->db->where('status_admin_dmt !=', NULL);
+      $this->db->where('tanggal_approval_keuangan !=', NULL);
+    }
+
+    if ($data['belum_diprint'] != 'N') {
+      $this->db->where('is_printed', 'N');
+      $this->db->where('success_print', 'N');
+      $this->db->where('success_print', 'N');
+      $this->db->where('status_admin_dmt', NULL);
+      $this->db->where('tanggal_approval_keuangan', NULL);
+      $this->db->where('tanggal_approval !=', NULL);
+    }
+
+    if ($data['progress_project'] != 'N') {
+      $this->db->where('is_printed', 'Y');
+      $this->db->where('success_print', 'Y');
+      $this->db->where('kategori_pengajuan', 'Project');
+      $this->db->where('status_admin_dmt !=', NULL);
+      $this->db->where('tanggal_approval_keuangan !=', NULL);
+    }
+
+    if ($data['semua_pengajuan'] != 'N') {
+    }
+
+    if ($data['belum_diapprove'] != 'N') {
+      $this->db->where('tanggal_approval', NULL);
+      $this->db->where('is_printed', 'N');
+    }
+
+    if ($data['sudah_diapprove'] != 'N') {
+      $this->db->where('tanggal_approval !=', NULL);
+      $this->db->where('is_printed', 'N');
+    }
+
+    if ($data['pengajuan'] != "") {
+      $this->db->like('pengajuan', $data['pengajuan']);
+    }
+    if ($data['kategori_pengajuan'] != "") {
+      $this->db->where('kategori_pengajuan', $data['kategori_pengajuan']);
+    }
+    if ($data['jenis_pengajuan'] != "") {
+      $this->db->where('jenis_pengajuan', $data['jenis_pengajuan']);
+    }
+    if ($data['tanggal_pengajuan'] != "") {
+      $this->db->where('tanggal_pengajuan', $data['tanggal_pengajuan']);
+    }
+    if ($data['tanggal_pengajuan_first'] != "") {
+      $this->db->where('tanggal_pengajuan_first >=', $data['tanggal_pengajuan_first']);
+        $this->db->where('tanggal_pengajuan_last <=', $data['tanggal_pengajuan_last']);
+    }
+    if ($data['realisasi_pengajuan'] != "") {
+      $this->db->where('realisasi_pengajuan', $data['realisasi_pengajuan']);
+    }
+    if ($data['realisasi_pengajuan_first'] != "") {
+      $this->db->where('realisasi_pengajuan_first >=', $data['realisasi_pengajuan_first']);
+      $this->db->where('realisasi_pengajuan_last <=', $data['realisasi_pengajuan_last']);
+    }
+    if ($data['nama_pengaju'] != "") {
+      $this->db->where('pengaju_id', $data['nama_pengaju']);
+    }
+
+    $row = $this->db->get()->result();
+
+    $this->excel->getActiveSheet()->setCellValue("A1", "No");
+    $this->excel->getActiveSheet()->setCellValue("B1", "Tanggal");
+    $this->excel->getActiveSheet()->setCellValue("C1", "Keterangan");
+    $this->excel->getActiveSheet()->setCellValue("D1", "Nilai");
+
+    $no = 2;
+    $angka = 1;
+    foreach ($row as $key => $value)
+    {
+      $this->excel->getActiveSheet()->setCellValue("A$no", $angka)
+      ->setCellValue("B$no", ($value->tanggal_pengajuan != NULL ? date('d-m-Y', strtotime($value->tanggal_pengajuan)) : "-"))
+      ->setCellValue("C$no", ($value->pengajuan != NULL ? $value->pengajuan : "-"))
+      ->setCellValue("D$no", ($value->nilai_pengajuan != NULL ? $value->nilai_pengajuan : "-"));
+      $no++;
+      $angka++;
+    }
+
+    $filename = 'exported_data.xls';
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment;filename="'.$filename.'"');
+    header('Cache-Control: max-age=0');
+
+    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+    $objWriter->save('php://output');
+    echo "<script>window.close();</script>";
   }
 
 }

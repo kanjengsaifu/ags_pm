@@ -75,24 +75,29 @@
               <h4 class="c-grey-900 mB-20">Custom Filter : </h4>
                     <form id="form-filter" class="form-horizontal">
 
+                        <input type="hidden" name="show_all_val" id="show_all_val" value="N">
                         <input type="hidden" name="belum_selesai_val" id="belum_selesai_val" value="N">
                         <input type="hidden" name="sudah_selesai_val" id="sudah_selesai_val" value="N">
 
 
                         <div class="form-group">
-                            <label for="FirstName" class="col-sm-2 control-label">Keterangan Progress</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Nama Pekerjaan</label>
                             <div class="col-sm-6">
                                 <input type="text" name="keterangan_filter" class="form-control" id="keterangan_filter">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="FirstName" class="col-sm-2 control-label">Project</label>
+                            <label for="FirstName" class="col-sm-2 control-label">Tipe Pekerjaan</label>
                             <div class="col-sm-6">
                               <select class="selectpicker form-control" name="project_filter" id="project_filter" data-live-search="true">
-                                <option selected disabled readonly>PILIH PROJECT</option>
-                                <?php foreach ($project_list->result() as $project_data): ?>
-                                  <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
-                                <?php endforeach; ?>
+                                <option selected disabled readonly>PILIH TIPE PEKERJAAN</option>
+                                <option value="CSR">CSR</option>
+                                <option value="Iuran Warga">IURAN WARGA</option>
+                                <option value="Imbas Petir">IMBAS PETIR</option>
+                                <option value="Corrective">CORRECTIVE</option>
+                                <option value="Kontribusi Sewa Lahan">KONTRIBUSI SEWA LAHAN</option>
+                                <option value="Penjaga Site">PENJAGA SITE</option>
+                                <option value="Jasa">JASA</option>
                               </select>
                             </div>
                         </div>
@@ -130,6 +135,13 @@
                             <div class="col-sm-6">
                                 <input type="text" name="no_corr_filter" class="form-control" id="no_corr_filter">
                             </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="" class="col-sm-2 control-label">Nilai/nominal COR</label>
+                          <div class="input-group col-sm-6">
+                            <div class="input-group-addon" style="width: 40px;">Rp.</div>
+                            <input name="nilai_corr_filter" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai/nominal COR">
+                          </div>
                         </div>
                         <div class="form-group">
                           <label for="LastName" class="col-sm-2 control-label">Tanggal PO</label>
@@ -229,23 +241,39 @@
                   </div>
                   <div class="modal-body">
                     <form class="" method="post" action="<?=site_url('progress/save')?>">
-                      <div class="form-group">
-                        <label for="">Keterangan Progress</label>
-                        <input type="text" class="form-control" name="keterangan" value="" placeholder="Keterangan Progress">
+                      <div class="form-group input_wrap">
+                        <button class="btn btn-outline-primary add_field_button">Tambah List Pekerjaan</button>
+                        <br><label style="margin-top:10px;" for="">Daftar Pekerjaan</label>
+                        <input type="text" class="form-control" name="keterangan[]" value="" placeholder="eg: GEMBOK ABUS 30MM TITALIUM KWH DAN ACPDB, JASA PEMASANGAN">
                       </div>
                       <div class="form-group">
-                        <label for="">Tanggal Mulai Progress</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Progress">
+                        <label for="">Subject Pekerjaan</label>
+                        <input type="text" class="form-control" name="subject" value="" placeholder="eg: Honor PJS Juni, Pekerjaan non rutin periode Desember 2017">
+                      </div>
+                      <div class="form-group">
+                        <label for="">Total nilai/nominal Pekerjaan</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                          <div class="input-group-addon" style="width: 40px;">Rp.</div>
+                          <input name="nilai_progress_vale" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Total nilai/nominal Pekerjaan">
+                        </div>
                       </div>
                       <hr>
-                      <div class="form-group" id="project_id_div">
-                        <label for="">Pilih Project</label>
-                        <select class="selectpicker form-control" name="project_id" id="project_id" data-live-search="true">
-                          <option selected disabled readonly>PILIH PROJECT</option>
-                          <option value="new_project">New Project</option>
-                          <?php foreach ($project_list->result() as $project_data): ?>
-                            <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
-                          <?php endforeach; ?>
+                      <div class="form-group">
+                        <label for="">Tanggal Mulai Pekerjaan</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai" placeholder="Tanggal Mulai Pekerjaan">
+                      </div>
+                      <hr>
+                      <div class="form-group">
+                        <label for="FirstName">Tipe Pekerjaan</label>
+                        <select class="selectpicker form-control" name="tipe_pekerjaan" id="tipe_pekerjaan" data-live-search="true">
+                          <option selected disabled readonly>PILIH TIPE PEKERJAAN</option>
+                          <option value="CSR">CSR</option>
+                          <option value="Iuran Warga">IURAN WARGA</option>
+                          <option value="Imbas Petir">IMBAS PETIR</option>
+                          <option value="Corrective">CORRECTIVE</option>
+                          <option value="Kontribusi Sewa Lahan">KONTRIBUSI SEWA LAHAN</option>
+                          <option value="Penjaga Site">PENJAGA SITE</option>
+                          <option value="Jasa">JASA</option>
                         </select>
                       </div>
                       <div class="" id="new_project_div">
@@ -264,19 +292,14 @@
                           <?php endforeach; ?>
                         </select>
                       </div>
-                      <hr>
-                      <div class="form-group">
-                        <label for="">Tanggal Awal Kontrak</label>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
-                      </div>
-                      <div class="form-group">
-                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
-                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
-                      </div>
                       <div class="" id="new_site_div">
                         <div class="form-group">
                           <label for="">Site ID</label>
-                          <input type="text" class="form-control" name="id_site" value="" placeholder="ID Site">
+                          <input type="text" class="form-control" name="id_site" value="" placeholder="Site ID">
+                        </div>
+                        <div class="form-group">
+                          <label for="">PID</label>
+                          <input type="text" class="form-control" name="id_site_telkom" value="" placeholder="PID">
                         </div>
                         <div class="form-group">
                           <label for="">Nama Site</label>
@@ -293,6 +316,15 @@
                       </div>
                       <hr>
                       <div class="form-group">
+                        <label for="">Tanggal Awal Kontrak</label>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_kontrak" placeholder="Tanggal Awal Kontrak">
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Akhir Kontrak</label> <i>*optional</i>
+                        <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_akhir_kontrak" placeholder="Tanggal Akhir Kontrak">
+                      </div>
+                      <hr>
+                      <div class="form-group">
                         <label for="">Nomor COR</label>
                         <input type="text" class="form-control" name="no_corr" value="" placeholder="Nomor COR">
                       </div>
@@ -301,17 +333,24 @@
                         <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_corr" placeholder="Tanggal Corr">
                       </div>
                       <div class="form-group">
+                        <label for="">Nilai/nominal COR</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                          <div class="input-group-addon" style="width: 40px;">Rp.</div>
+                          <input name="nilai_corr" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai/nominal COR">
+                        </div>
+                      </div>
+                      <!-- <div class="form-group">
                         <label for="">Nomor PO</label>
                         <input type="text" class="form-control" name="no_po" value="" placeholder="Nomor PO">
                       </div>
                       <div class="form-group">
                         <label for="">Tanggal PO</label>
                         <input type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_po" placeholder="Tanggal PO">
-                      </div>
+                      </div> -->
                       <hr>
                       <div class="form-group">
                         <label for="">Deskripsi Progress</label>
-                        <textarea name="deskripsi" rows="8" cols="80" class="form-control" placeholder="Deskripsi Progress"></textarea>
+                        <textarea name="deskripsi" rows="8" cols="80" class="form-control" placeholder="eg: BYMHD 2017, Rembes"></textarea>
                       </div>
                   </div>
                   <div class="modal-footer">
@@ -323,26 +362,6 @@
               </div>
             </div>
             <!-- END OF CREATE PROGRESS -->
-            <!-- UPDATE HISTORY PROGRESS -->
-            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="historyProgress" role="dialog" tabindex="-1">
-              <div class="modal-dialog modal-lg" role="document" id="modalDetail">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">History Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
-                  </div>
-                  <div class="modal-body">
-                    <i class="fas fa-info-circle"></i> <b> HISTORY PROGRESS</b>
-                    <br><br>
-                    <div id="history"></div>
-                    <div id="history_cr"></div>
-                  </div>
-                  <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- END OF PROGRESS DETAIL -->
             <!-- PROGRESS DETAIL -->
             <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="detailProgress" role="dialog" tabindex="-1">
               <div class="modal-dialog modal-lg" role="document" id="modalDetail">
@@ -351,26 +370,31 @@
                     <h5 class="modal-title" id="exampleModalLabel">Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                   </div>
                   <div class="modal-body">
-                    <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
                     <span style="float:right" id="created_by"></span>
+                    <i class="fas fa-info-circle"></i> <b> LIST PEKERJAAN</b>
+                    <br><br>
+                    <div id="list_val"></div>
+                    <br>
+
+                    <i class="fas fa-info-circle"></i> <b> DETAIL PROGRESS</b>
                     <br><br>
                     <table class="table">
                       <tbody>
                         <tr>
-                          <th width="250">Tanggal Mulai Progress</th>
-                          <td><span id="tanggal_mulai_val"></span></td>
+                          <th width="250">Subject Pekerjaan</th>
+                          <td><span id="subject_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Keterangan Progress</th>
-                          <td><span id="keterangan_val"></span></td>
+                          <th width="250">Tanggal Mulai Pekerjaan</th>
+                          <td><span id="tanggal_mulai_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Tanggal Kontrak</th>
                           <td><span id="tanggal_kontrak_val"></span></td>
                         </tr>
                         <tr>
-                          <th width="250">Project</th>
-                          <td><span id="project_val"></span></td>
+                          <th width="250">Tipe Pekerjaan</th>
+                          <td><span id="tipe_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Site</th>
@@ -383,6 +407,14 @@
                         <tr>
                           <th width="250">Lokasi Site</th>
                           <td><span id="lokasi_site_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Nilai Cormo</th>
+                          <td><span id="nilai_corr_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Nilai PO/Akhir</th>
+                          <td><span id="nilai_progress_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Deskripsi</th>
@@ -493,8 +525,28 @@
               </div>
             </div>
             <!-- END OF PROGRESS DETAIL -->
+            <!-- UPDATE HISTORY PROGRESS -->
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="historyProgress" role="dialog" tabindex="-1">
+              <div class="modal-dialog modal-lg" role="document" id="modalDetail">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">History Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <i class="fas fa-info-circle"></i> <b> HISTORY PROGRESS</b>
+                    <br><br>
+                    <div id="history"></div>
+                    <div id="history_cr"></div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END OF PROGRESS DETAIL -->
             <!-- UPDATE PROGRESS -->
-            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="updateProgress" role="dialog" tabindex="-1">
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="updateProgress" role="dialog" tabindex="-1" style="padding-bottom: 180px;">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -504,20 +556,59 @@
                     <form class="" id="form_update" action="#">
                       <input type="hidden" name="id" value="">
                       <div class="form-group">
-                        <label for="">Tanggal Corr</label>
-                        <input id="tanggal_corr_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_corr_vale" placeholder="Tanggal Corr">
+                        <label for="">Remark/Keterangan Update Ini</label>
+                        <textarea name="remark" class="form-control" rows="8" cols="80" placeholder="eg: Nomor Corr baru dikeluarkan satu hari yang lalu"></textarea>
                       </div>
+
+                      <div class="form-group">
+                        <label for="">Total nilai/nominal Pekerjaan</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                          <div class="input-group-addon" style="width: 40px;">Rp.</div>
+                          <input name="nilai_progress_vale" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Total nilai/nominal Pekerjaan">
+                        </div>
+                      </div>
+
                       <div class="form-group">
                         <label for="inputAddress2">Nomor CORMO</label>
                         <input id="no_corr_vale" type="text" class="form-control" name="no_corr_vale" placeholder="Nomor CORMO" required>
                       </div>
                       <div class="form-group">
-                        <label for="">Tanggal PO</label>
-                        <input id="tanggal_po_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_po_vale" placeholder="Tanggal PO">
+                        <label for="">Tanggal Corr</label>
+                        <input id="tanggal_corr_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_corr_vale" placeholder="Tanggal Corr">
                       </div>
                       <div class="form-group">
-                        <label for="inputAddress2">Nomor PO</label>
-                        <input id="no_po_vale" type="text" class="form-control" name="no_po_vale" placeholder="Nomor PO" required>
+                        <label for="">Nilai/nominal COR</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                          <div class="input-group-addon" style="width: 40px;">Rp.</div>
+                          <input name="nilai_corr_vale" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai/nominal COR">
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="form-group">
+                          <label for="LastName">PO</label>
+                          <select class="form-control selectpicker" name="" id="po_select">
+                            <option value="" selected disabled readonly>SELECT PO</option>
+                            <option value="po_s">Nomor PO</option>
+                            <option value="bymhd">BYMHD</option>
+                          </select>
+                        </div>
+                        <div id="isian_po">
+                          <div class="form-group">
+                            <label for="inputAddress2">Nomor PO</label>
+                            <input id="no_po_vale" type="text" class="form-control" name="no_po_vale" placeholder="Nomor PO" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="">Tanggal PO</label>
+                            <input id="tanggal_po_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_po_vale" placeholder="Tanggal PO">
+                          </div>
+                        </div>
+                        <div id="tanggal_bmhd_div">
+                          <div class="form-group">
+                            <label for="">Tanggal MHD</label>
+                            <input id="tanggal_bmhd_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_bmhd_vale" placeholder="Tanggal MHD">
+                          </div>
+                        </div>
                       </div>
                       <hr>
                       <div class="form-group">
@@ -547,22 +638,22 @@
                       </div>
                       <div class="form-group">
                         <label for="inputAddress2">Deskripsi</label>
-                        <textarea id="deskripsi_vale" name="deskripsi_vale" rows="8" cols="80" class="form-control" placeholder="Deskripsi Progress"></textarea>
+                        <textarea id="deskripsi_vale" name="deskripsi_vale" rows="8" cols="80" class="form-control" placeholder="eg: BYMHD 2017, Rembes"></textarea>
                       </div>
                       <hr>
                       <table class="table">
                         <tbody>
                           <tr>
-                            <td style="width:100px;text-align:center;">INVOICED</td>
-                            <td style="width:100px;text-align:center;">SUDAH DIBAYAR</td>
-                            <td style="width:100px;text-align:center;">SUDAH DIBAYAR CLIENT</td>
+                            <td style="width:100px;text-align:center;">TANGGAL INVOICE</td>
+                            <td style="width:100px;text-align:center;">TANGGAL PEMBAYARAN AG</td>
+                            <td style="width:100px;text-align:center;">TANGGAL PEMBAYARAN CLIENT</td>
                           </tr>
                           <tr>
                             <form class="" action="index.html" method="post">
                               <input type="hidden" name="id" value="">
-                              <td style="text-align:center;"> <label><input type="checkbox" style="text-align:center" class="" id="invoiced_vale" name="invoiced_vale" value="<?=date('Y-m-d', time())?>"></label> <br> <span id="tanggal_invoiced"></span> </td>
-                              <td style="text-align:center;"> <label><input type="checkbox" style="text-align:center" class="" id="bayar_vale" name="bayar_vale" value="<?=date('Y-m-d', time())?>"></label> <br> <span id="tanggal_bayar"></span> </td>
-                              <td style="text-align:center;"> <label><input type="checkbox" style="text-align:center" class="" id="bayarclient_vale" name="bayarclient_vale" value="<?=date('Y-m-d', time())?>"></label> <br> <span id="tanggal_bayarclient"></span> </td>
+                              <td style="text-align:center;"> <label><input id="is_invoiced_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="invoiced_vale"></span> </td>
+                              <td style="text-align:center;"> <label><input id="is_bayar_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="bayar_vale"></span> </td>
+                              <td style="text-align:center;"> <label><input id="is_bayarclient_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="bayarclient_vale"></span> </td>
                             </form>
                           </tr>
                         </tbody>
@@ -578,29 +669,81 @@
               </div>
             </div>
             <!-- END OF UPDATE PROGRESS -->
+            <!-- UPDATE PROGRESS -->
+            <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editProgress" role="dialog" tabindex="-1">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="" id="form_update_e" action="#">
+                      <input type="hidden" name="id" value="">
+                      <div class="form-group">
+                        <label for="inputAddress2">Nama Pekerjaan</label>
+                        <input id="pekerjaan_vale" type="text" class="form-control" name="pekerjaan_vale" placeholder="Nama Pekerjaan" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Tanggal Mulai Pekerjaan</label>
+                        <input id="tanggal_mulai_pekerjaan_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="tanggal_mulai_pekerjaan_vale" placeholder="Tanggal Mulai Pekerjaan">
+                      </div>
+                      <hr>
+                      <!-- <div class="form-group">
+                        <label for="FirstName">Project</label>
+                        <select class="selectpicker form-control" id="project_vale" name="project_vale" data-live-search="true">
+                          <option value="default">PILIH PROJECT</option>
+                          <?php foreach ($project_list->result() as $project_data): ?>
+                            <option value="<?=$project_data->project_id?>"><?=$project_data->nama_project?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Site ID</label>
+                        <select class="form-control selectpicker" id="site_vale" name="site_vale" data-live-search="true">
+                          <option value="default">PILIH SITE</option>
+                          <?php foreach ($site_list->result() as $site_data): ?>
+                            <option value="<?=$site_data->site_id?>"><?=$site_data->id_site?> / <?=$site_data->lokasi?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div> -->
+                    </div>
+                    </form>
+                    <div class="modal-footer">
+                      <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                      <button class="btn btn-primary" data-dismiss="modal" type="button" id="btnEdit" onclick="edit()">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- END OF UPDATE PROGRESS -->
             <!-- EVIDENCE PROGRESS -->
             <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="uploadBuktiProgress" role="dialog" tabindex="-1">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update Progress</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Bukti Pekerjaan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                   </div>
                   <div class="modal-body">
-                    <form class="" id="form_updatep" action="<?=site_url('progress/saveEvidence')?>" method="post"  enctype="multipart/form-data">
+                    <form class="" id="form_updatep" action="<?=site_url('progress/saveEvidence')?>" method="post" enctype="multipart/form-data">
                       <input type="hidden" name="idp" value="">
                       <div class="form-group">
-                         <label for="">Bukti (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label> <i>*optional</i>
+                         <label for="">Bukti Pekerjaan (allowed file types: .jpg, .jpeg, .png, .pdf, .doc/x, .xls/x, .txt)</label>
                          <!-- <div class="input-files">
                           <input type="file" name="file_upload-1">
                          </div>
                          <a id="add_more"><i class="fas fa-plus"></i> Add More</a> -->
-                         <div class="file-loading">
-                           <input id="input-ke-1" name="bukti[]" type="file" multiple>
-                         </div>
+                         <!-- <div class="file-loading">
+                           <input id="buktisusulan" name="buktisusulan[]" type="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.txt" multiple="multiple">
+                         </div> -->
+                         <br>
+                         <a class="file_input btn btn-outline-primary" data-jfiler-name="buktiprog" data-jfiler-extensions="jpg, jpeg, png, pdf, doc, docx, xls, xlsx, txt">
+                         <i class="icon-jfi-paperclip"></i> Attach a file</a>
                       </div>
                       <div class="modal-footer">
                         <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                        <input type="submit" name="" value="Upload Evidence" class="btn btn-outline-primary">
+                        <!-- <input type="reset" name="" value="Reset" class="btn btn-primary"> -->
+                        <input type="submit" name="" value="Upload Bukti Pekerjaan" class="btn btn-outline-primary">
                       </div>
                     </form>
                   </div>
@@ -619,6 +762,9 @@
             <button type="button" class="btn cur-p btn-outline-primary" style="" onclick="reload_table()">
 							<i class="fas fa-sync-alt"></i>
             </button>
+            <button type="button" class="btn cur-p btn-outline-primary" style="" id="show_all">
+							SHOW ALL
+            </button>
             <button type="button" class="btn cur-p btn-outline-danger" style="" id="belum_selesai">
 							BELUM SELESAI
             </button>
@@ -632,34 +778,35 @@
                 </a>
               </button>
             </div> -->
-            <br><br>
-            <a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('progress/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
-            <a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('progress/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT YANG TERPILIH</a>
-            <button type="button" class="btn cur-p btn-outline-primary" id="check_all">
-              CHECK ALL
-            </button>
-            <button type="button" class="btn cur-p btn-outline-primary" id="uncheck_all">
-              UNCHECK ALL
-            </button>
-            <button type="button" class="btn cur-p btn-outline-primary" id="h_check_all">
-              CHECK ALL
-            </button>
-            <button type="button" class="btn cur-p btn-outline-primary" id="h_uncheck_all">
-              UNCHECK ALL
-            </button>
+            <div class="" style="display:none;">
+              <br><br>
+              <a id="print" class="btn btn-outline-primary" target="_blank" href="<?=site_url('progress/print')?>"><i class="fas fa-print"></i>&nbsp; PRINT</a>
+              <a id="print_c" class="btn btn-outline-primary" target="_blank" href="<?=site_url('progress/printTerpilih')?>"><i class="fas fa-print"></i>&nbsp; PRINT YANG TERPILIH</a>
+              <button type="button" class="btn cur-p btn-outline-primary" id="check_all">
+                CHECK ALL
+              </button>
+              <button type="button" class="btn cur-p btn-outline-primary" id="uncheck_all">
+                UNCHECK ALL
+              </button>
+              <button type="button" class="btn cur-p btn-outline-primary" id="h_check_all">
+                CHECK ALL
+              </button>
+              <button type="button" class="btn cur-p btn-outline-primary" id="h_uncheck_all">
+                UNCHECK ALL
+              </button>
+            </div>
             <hr>
             <table cellspacing="0" class="table table-striped table-bordered" id="progress" width="100%">
               <thead>
                 <tr>
-                  <th class="text-center">No</th>
-                  <th class="text-center">Ket</th>
-                  <th class="text-center">Nama Project</th>
-                  <th class="text-center">Site</th>
-                  <th class="text-center">Tanggal<br>CORMO</th>
-                  <th class="text-center">Tanggal<br>PO</th>
-                  <th class="text-center">Tanggal<br>Invoice</th>
-                  <th class="text-center">Tanggal<br>Pembayaran<br>AG</th>
-                  <th class="text-center">Tanggal<br>Pembayaran<br>Client</th>
+                  <th class="text-center"></th>
+                  <th class="text-center" width="50">Site</th>
+                  <th class="text-center">Tipe</th>
+                  <th class="text-center">No CORMO</th>
+                  <th class="text-center">Nomor PO</th>
+                  <th class="text-center">BAST</th>
+                  <th class="text-center">BAPP</th>
+                  <th class="text-center">Nominal</th>
                   <th style="white-space:nowrap;" class="text-center" width="100">Action</th>
                 </tr>
               </thead>
@@ -671,6 +818,199 @@
   </div>
 </main>
 <script>
+
+  $(document).ready(function() {
+    var max_fields      = 100; //maximum input boxes allowed
+    var wrapper         = $(".input_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div style="margin-top:3px;"><input type="text" class="form-control" name="keterangan[]" value="" placeholder="Pekerjaan" style="width:95% !important;float:left"><a href="#" class="btn btn-danger" style="margin-left:5px;" id="remove_field">X</a></div>'); //add input box
+        }
+    });
+
+    $(wrapper).on("click","#remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+  });
+
+  $(document).ready(function() {
+        $('#input1').filer();
+        $('.file_input').filer({
+            showThumbs: true,
+            templates: {
+                box: '<ul class="jFiler-item-list"></ul>',
+                item: '<li class="jFiler-item">\
+                            <div class="jFiler-item-container">\
+                                <div class="jFiler-item-inner">\
+                                    <div class="jFiler-item-thumb">\
+                                        <div class="jFiler-item-status"></div>\
+                                        <div class="jFiler-item-info">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                    </div>\
+                                    <div class="jFiler-item-assets jFiler-row">\
+                                        <ul class="list-inline pull-left">\
+                                            <li><span class="jFiler-item-others">{{fi-icon}} {{fi-size2}}</span></li>\
+                                        </ul>\
+                                        <ul class="list-inline pull-right">\
+                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                        </ul>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </li>',
+                itemAppend: '<li class="jFiler-item">\
+                            <div class="jFiler-item-container">\
+                                <div class="jFiler-item-inner">\
+                                    <div class="jFiler-item-thumb">\
+                                        <div class="jFiler-item-status"></div>\
+                                        <div class="jFiler-item-info">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                    </div>\
+                                    <div class="jFiler-item-assets jFiler-row">\
+                                        <ul class="list-inline pull-left">\
+                                            <span class="jFiler-item-others">{{fi-icon}} {{fi-size2}}</span>\
+                                        </ul>\
+                                        <ul class="list-inline pull-right">\
+                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                        </ul>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </li>',
+                progressBar: '<div class="bar"></div>',
+                itemAppendToEnd: true,
+                removeConfirmation: true,
+                _selectors: {
+                    list: '.jFiler-item-list',
+                    item: '.jFiler-item',
+                    progressBar: '.bar',
+                    remove: '.jFiler-item-trash-action',
+                }
+            },
+            addMore: true,
+            files: []
+        });
+
+        $('#buktiprog').filer({
+            limit: null,
+            maxSize: null,
+            extensions: null,
+            changeInput: '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div><div class="jFiler-input-text"><h3>Drag&Drop files here</h3> <span style="display:inline-block; margin: 15px 0">or</span></div><a class="jFiler-input-choose-btn blue">Browse Files</a></div></div>',
+            showThumbs: true,
+            appendTo: null,
+            theme: "dragdropbox",
+            templates: {
+                box: '<ul class="jFiler-item-list"></ul>',
+                item: '<li class="jFiler-item">\
+                            <div class="jFiler-item-container">\
+                                <div class="jFiler-item-inner">\
+                                    <div class="jFiler-item-thumb">\
+                                        <div class="jFiler-item-status"></div>\
+                                        <div class="jFiler-item-info">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                    </div>\
+                                    <div class="jFiler-item-assets jFiler-row">\
+                                        <ul class="list-inline pull-left">\
+                                            <li>{{fi-progressBar}}</li>\
+                                        </ul>\
+                                        <ul class="list-inline pull-right">\
+                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                        </ul>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </li>',
+                itemAppend: '<li class="jFiler-item">\
+                            <div class="jFiler-item-container">\
+                                <div class="jFiler-item-inner">\
+                                    <div class="jFiler-item-thumb">\
+                                        <div class="jFiler-item-status"></div>\
+                                        <div class="jFiler-item-info">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                    </div>\
+                                    <div class="jFiler-item-assets jFiler-row">\
+                                        <ul class="list-inline pull-left">\
+                                            <span class="jFiler-item-others">{{fi-icon}} {{fi-size2}}</span>\
+                                        </ul>\
+                                        <ul class="list-inline pull-right">\
+                                            <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                        </ul>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </li>',
+                progressBar: '<div class="bar"></div>',
+                itemAppendToEnd: false,
+                removeConfirmation: false,
+                _selectors: {
+                    list: '.jFiler-item-list',
+                    item: '.jFiler-item',
+                    progressBar: '.bar',
+                    remove: '.jFiler-item-trash-action',
+                }
+            },
+            uploadFile: {
+                url: "upload.php",
+                data: {},
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                beforeSend: function(){},
+                success: function(data, el){
+                    var parent = el.find(".jFiler-jProgressBar").parent();
+                    el.find(".jFiler-jProgressBar").fadeOut("slow", function(){
+                        $("<div class=\"jFiler-item-others text-success\"><i class=\"icon-jfi-check-circle\"></i> Success</div>").hide().appendTo(parent).fadeIn("slow");
+                    });
+                },
+                error: function(el){
+                    var parent = el.find(".jFiler-jProgressBar").parent();
+                    el.find(".jFiler-jProgressBar").fadeOut("slow", function(){
+                        $("<div class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</div>").hide().appendTo(parent).fadeIn("slow");
+                    });
+                },
+                statusCode: {},
+                onProgress: function(){},
+            },
+            dragDrop: {
+                dragEnter: function(){},
+                dragLeave: function(){},
+                drop: function(){},
+            },
+            addMore: true,
+            clipBoardPaste: true,
+            excludeName: null,
+            beforeShow: function(){return true},
+            onSelect: function(){},
+            afterShow: function(){},
+            onRemove: function(){},
+            onEmpty: function(){},
+            captions: {
+                button: "Choose Files",
+                feedback: "Choose files To Upload",
+                feedback2: "files were chosen",
+                drop: "Drop file here to Upload",
+                removeConfirmation: "Are you sure you want to remove this file?",
+                errors: {
+                    filesLimit: "Only {{fi-limit}} files are allowed to be uploaded.",
+                    filesType: "Only Images are allowed to be uploaded.",
+                    filesSize: "{{fi-name}} is too large! Please upload file up to {{fi-maxSize}} MB.",
+                    filesSizeAll: "Files you've choosed are too large! Please upload files up to {{fi-maxSize}} MB."
+                }
+            }
+        });
+  });
 
   $("#input-ke-1").fileinput({
     theme: "explorer",
@@ -748,7 +1088,7 @@
             // },
             {
               "className": "dt-center",
-              "targets": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+              "targets": [1, 2, 3, 4, 5, 6, 7, 8]
             }
           ],
       });
@@ -771,6 +1111,8 @@
   $('#tanggal_bapp_range').hide();
   $('#h_check_all').hide();
   $('#h_uncheck_all').hide();
+  $('#isian_po').hide();
+  $('#tanggal_bmhd_div').hide();
 
   $('#check_all').click(function() {
     $.ajax({
@@ -818,6 +1160,19 @@
         console.log(errorThrown);
       }
     });
+  });
+
+  $('#show_all').click(function() {
+    $('#menampilkan').text("Semua Progress Pekerjaan");
+    $('#h_check_all').hide();
+    $('#h_uncheck_all').hide();
+    $('#check_all').show();
+    $('#uncheck_all').show();
+    $("input[type=hidden]").val("N");
+    document.getElementById("show_all_val").value = "Y";
+    document.getElementById("print").href = "<?=site_url('progress/print')?>";
+    document.getElementById("print_c").href = "<?=site_url('progress/printTerpilih')?>";
+    progress.ajax.reload();
   });
 
   $('#belum_selesai').click(function() {
@@ -904,6 +1259,24 @@
         document.getElementById('tanggal_po_last_filter').value = "";
       }
     });
+  });
+
+  $(document).ready(function() {
+    $('#po_select').change(function() {
+      if ($(this).val() === 'po_s') {
+        $('#isian_po').show();
+        $('#tanggal_bmhd_div').hide();
+        document.getElementById('no_po_vale').value = "";
+        document.getElementById('tanggal_po_vale').value = "";
+        document.getElementById('tanggal_bmhd_vale').value = "";
+      } else {
+        $('#isian_po').hide();
+        $('#tanggal_bmhd_div').show();
+        document.getElementById('no_po_vale').value = "BYMHD";
+        document.getElementById('tanggal_po_vale').value = "";
+        document.getElementById('tanggal_bmhd_vale').value = "";
+      }
+    })
   });
 
   $(document).ready(function() {
@@ -1020,6 +1393,10 @@
     progress.ajax.reload();  //just reload table
   });
 
+  function currency_format(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
   function saveCBox(id) {
     url = "<?=site_url('progress/savecbox')?>";
     $.ajax({
@@ -1088,6 +1465,51 @@
     });
   }
 
+  function historyProgress(id) {
+    $.ajax({
+      url: "<?=site_url('progress/getProgressDetail/')?>" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        var row = '';
+        row+='<div class="text-center" style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;"><b>Dibuat pada '+moment(data.created_at).format('dddd, D MMMM Y') +' oleh '+ data.name +'</b></div>';
+        $('#history_cr').html(row);
+      }
+    });
+
+    $.ajax({
+      url: "<?=site_url('progress/historyProgress/')?>" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        $('id').html(data.progress_id);
+        var row1 = '';
+        var row = '';
+        for (var i = 0; i < data.length; i++) {
+          if (data[i] != null) {
+            row1+='<div style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;"><b>'+moment(data[i].updated_at).format('dddd, D MMMM Y HH:mm:ss') +' oleh '+ data[i].name +'</b><hr>'+
+              '<table class="table">'+
+              '<tr><td width="150">Corr</td><td colspan="2">'+ (data[i].tanggal_corr != null ? moment(data[i].tanggal_corr).format('dddd, D MMMM Y') : '-') + (data[i].no_corr != null ? ' - ' + data[i].no_corr : '') +'</td></tr>'+
+              '<tr><td width="150">PO</td><td colspan="2">'+(data[i].no_po != "BYMHD" ? (data[i].tanggal_po != null ? moment(data[i].tanggal_po).format('dddd, D MMMM Y') : '-') : moment(data[i].tanggal_bmhd).format('dddd, D MMMM Y')) + (data[i].no_po != null ? ' - ' + data[i].no_po : '') +'</td></tr>'+
+              '<tr><td width="150">BAST</td><td colspan="2">'+ (data[i].tanggal_bast != null ? moment(data[i].tanggal_bast).format('dddd, D MMMM Y') : '-') + (data[i].no_bast != null ? ' - ' + data[i].no_bast : '') +'</td></tr>'+
+              '<tr><td width="150">BAPP</td><td colspan="2">'+ (data[i].tanggal_bapp != null ? moment(data[i].tanggal_bapp).format('dddd, D MMMM Y') : '-') + (data[i].no_bapp != null ? ' - ' + data[i].no_bapp : '') +'</td></tr>'+
+              '<tr><td width="150">Remark</td><td colspan="2">'+ (data[i].remark != null ? data[i].remark : '') +'</td></tr>'+
+              '<tr>'+
+              '<td colspan="3" class="text-center">'+ (data[i].is_invoiced != null ? '<i class=\'fas fa-check text-success\'></i> Invoiced' : '<i class=\'fas fa-times text-danger\'></i> Invoiced') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
+              (data[i].is_bayar != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar AG' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar AG') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
+              (data[i].is_bayarclient != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar Client' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar Client') +'</td>'+
+              '</tr>'+
+              '</table>'+
+            '</div>';
+          } else {
+            $('#history').html("Belum ada update.");
+          }
+        }
+        $('#history').html(row1);
+      }
+    });
+  }
+
   function detailProgress(id) {
     $.ajax({
       url: "<?=site_url('progress/getProgressDetail/')?>/" + id,
@@ -1095,13 +1517,41 @@
       dataType: "json",
       success: function(data) {
         $('id').html(data.progress_id);
+
+        $.ajax({
+          url: "<?=site_url('progress/getListPekerjaan')?>/" + data.progress_id,
+          type: "GET",
+          dataType: "json",
+          success: function(list) {
+            var img = '';
+            var rowl = '';
+            var angka = 1;
+            rowl+='<table class="table"><tr><td style="text-align:center;font-weight:bold">DAFTAR PEKERJAAN</td><td style="text-align:center;font-weight:bold">STATUS</td></tr>';
+            for (var i = 0; i < list.length; i++) {
+              // console.log(evi[0][i].url)
+              rowl+='<tr><td>'+ list[i].pekerjaan +'</td><td width="150" style="text-align:center">'+ (list[i].tanggal_selesai != null ? "<i class='fas fa-check text-success'></i> DONE" : "<i class='fas fa-times text-danger'></i> NOT DONE YET") +'</td></tr>';
+              angka++;
+            }
+            rowl+='</table>';
+
+            $('#list_val').html(rowl);
+          }, error: function(jqXHR, textStatus, errorThrown) {
+            var err = eval("(" + jqXHR.responseText + ")");
+            alert(err.Message);
+          }
+        });
         $('#created_by').html("Created by <b>" + data.name + "</b>");
+        if (data.subject != null) {
+          $('[id=subject_val]').html(data.subject);
+        } else {
+          $('[id=subject_val]').html("-");
+        }
         if (data.tanggal_mulai != null) {
           $('[id=tanggal_mulai_val]').html(moment(data.tanggal_mulai).format('dddd, D MMMM Y'));
         } else {
           $('[id=tanggal_mulai_val]').html("-");
         }
-        $('[id=project_val]').html(data.nama_project);
+        $('[id=tipe_val]').html(data.tipe_pekerjaan);
         if (data.tanggal_kontrak != null) {
           $('[id=tanggal_kontrak_val]').html(moment(data.tanggal_kontrak).format('dddd, D MMMM Y') + (data.tanggal_akhir_kontrak != null ? " - " + moment(data.tanggal_akhir_kontrak).format('dddd, D MMMM Y') : ""));
         } else {
@@ -1112,11 +1562,21 @@
         } else {
           $('[id=deskripsi_val]').html("-");
         }
+        if (data.nilai_corr != null) {
+          $('[id=nilai_corr_val]').html("Rp. " + currency_format(data.nilai_corr));
+        } else {
+          $('[id=nilai_corr_val]').html("-");
+        }
+        if (data.nilai_progress != null) {
+          $('[id=nilai_progress_val]').html("Rp. " + currency_format(data.nilai_progress));
+        } else {
+          $('[id=nilai_progress_val]').html("-");
+        }
         if (data.site_id != "") {
           $('[id=pid_val]').html(data.id_site + ' ' + data.id_site_telkom + ' / ' + data.nama_site);
-          $('#pid_div_det').show();
+          $("#pid_div_det").show();
         } else {
-          $('#pid_div_det').hide();
+          $("#pid_div_det").hide();
         }
         $('[id=nama_site_val]').html(data.nama_site);
         $('[id=lokasi_site_val]').html(data.lokasi);
@@ -1131,7 +1591,11 @@
           $('[id=tanggal_corr_val]').html("<i class='fas fa-times text-danger'></i> ");
         }
         if (data.no_po != null) {
-          $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po);
+          if (data.no_po != "BYMHD") {
+            $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po);
+          } else {
+            $('[id=no_po_val]').html("<i class='fas fa-check text-success'></i> " + data.no_po + ' ' + data.tanggal_bmhd);
+          }
         } else {
           $('[id=no_po_val]').html("<i class='fas fa-times text-danger'></i>");
         }
@@ -1140,6 +1604,13 @@
         } else {
           $('[id=tanggal_po_val]').html("<i class='fas fa-times text-danger'></i> ");
         }
+
+        if (data.tanggal_bmhd != null) {
+          $('[id=tanggal_bmhd_val]').html("<i class='fas fa-check text-success'></i> " + moment(data.tanggal_bmhd).format('dddd, D MMMM Y'));
+        } else {
+          $('[id=tanggal_bmhd_val]').html("<i class='fas fa-times text-danger'></i> ");
+        }
+
         if (data.no_bast != null) {
           $('[id=no_bast_val]').html("<i class='fas fa-check text-success'></i> " + data.no_bast);
         } else {
@@ -1180,11 +1651,6 @@
         // $('[id=tanggal_pengajuan]').html(moment(data.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
         // $('[id=realisasi_pengajuan]').html(moment(data.realisasi_pengajuan).format('dddd, D MMMM Y'));
         // $('[id=pid_val]').html(data.id_site + ' / ' + data.nama_site);
-        if (data.keterangan != null) {
-          $('[id=keterangan_val]').html(data.keterangan);
-        } else {
-          $('[id=keterangan_val]').html("-");
-        }
 
         $.ajax({
           url: "<?=site_url('progress/getEvidenceProgressbyIDDokumen')?>/" + data.progress_id,
@@ -1196,9 +1662,7 @@
             var angka = 1;
             for (var i = 0; i < evi[0][0].length; i++) {
               // console.log(evi[0][i].url)
-              if (evi[0][0][i] != null) {
-                row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
-              }
+                row4+='<div class="" style="'+ (i == 0 ? '' : '+ "line-height:25px" +') +'"><i class="fas fa-file"></i> <a href="../public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" target="_blank">'+ evi[0][0][i].url.slice(14) +'</a></div>';
               angka++;
             }
 
@@ -1220,24 +1684,21 @@
             var row3 = '';
             var angka = 1;
               if (evi[0][0].length > 0) {
-                $('#bukti_src_div').show();
                 for (var i = 0; i < evi[0][0].length; i++) {
                   // console.log(evi[0][i].url)
                     row1+= (i == 0 ? '<br>' : '') + '<div class="column">'+
-                      '<img src="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
+                      '<img src="../public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="openModal();currentSlide(\''+ angka +'\')" class="hover-shadow cursor">'+
                     '</div>';
 
                     row2+='<div class="mySlides">'+
-                        '<img src="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
+                        '<img src="../public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%">'+
                       '</div>';
 
                     row3+='<div class="column">'+
-                        '<img class="demo cursor" src="public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
+                        '<img class="demo cursor" src="../public/assets/evidence/progress/'+ escape(evi[0][0][i].url) +'" style="width:100%" onclick="currentSlide(\''+ angka +'\')" alt="'+ evi[0][0][i].keterangan +'">'+
                       '</div>';
                   angka++;
                 }
-              } else {
-                $('#bukti_src_div').hide();
               }
 
             console.log(evi[0][0].length);
@@ -1254,50 +1715,6 @@
         $('.modal-title').text('Progress ' + "#ADPR" + pad(data.progress_id, 4));
       }, error: function(jqXHR, textStatus, errorThrown) {
         alert('Error get data from ajax');
-      }
-    });
-  }
-
-  function historyProgress(id) {
-    $.ajax({
-      url: "<?=site_url('progress/getProgressDetail/')?>" + id,
-      type: "GET",
-      dataType: "json",
-      success: function(data) {
-        var row = '';
-        row+='<div class="text-center" style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;"><b>Dibuat pada '+moment(data.created_at).format('dddd, D MMMM Y') +' oleh '+ data.name +'</b></div>';
-        $('#history_cr').html(row);
-      }
-    });
-
-    $.ajax({
-      url: "<?=site_url('progress/historyProgress/')?>" + id,
-      type: "GET",
-      dataType: "json",
-      success: function(data) {
-        $('id').html(data.progress_id);
-        var row1 = '';
-        var row = '';
-        for (var i = 0; i < data.length; i++) {
-          if (data[i] != null) {
-            row1+='<div style="border:solid 1px green;border-radius:4px;padding:10px;margin-bottom:5px;"><b>'+moment(data[i].updated_at).format('dddd, D MMMM Y HH:mm:ss') +' oleh '+ data[i].name +'</b><hr>'+
-              '<table class="table">'+
-              '<tr><td width="150">Corr</td><td colspan="2">'+ (data[i].tanggal_corr != null ? moment(data[i].tanggal_corr).format('dddd, D MMMM Y') : '-') + (data[i].no_corr != null ? ' - ' + data[i].no_corr : '') +'</td></tr>'+
-              '<tr><td width="150">PO</td><td colspan="2">'+ (data[i].tanggal_po != null ? moment(data[i].tanggal_po).format('dddd, D MMMM Y') : '-') + (data[i].no_po != null ? ' - ' + data[i].no_po : '') +'</td></tr>'+
-              '<tr><td width="150">BAST</td><td colspan="2">'+ (data[i].tanggal_bast != null ? moment(data[i].tanggal_bast).format('dddd, D MMMM Y') : '-') + (data[i].no_bast != null ? ' - ' + data[i].no_bast : '') +'</td></tr>'+
-              '<tr><td width="150">BAPP</td><td colspan="2">'+ (data[i].tanggal_bapp != null ? moment(data[i].tanggal_bapp).format('dddd, D MMMM Y') : '-') + (data[i].no_bapp != null ? ' - ' + data[i].no_bapp : '') +'</td></tr>'+
-              '<tr>'+
-              '<td colspan="3" class="text-center">'+ (data[i].is_invoiced != null ? '<i class=\'fas fa-check text-success\'></i> Invoiced' : '<i class=\'fas fa-times text-danger\'></i> Invoiced') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
-              (data[i].is_bayar != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar AG' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar AG') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
-              (data[i].is_bayarclient != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar Client' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar Client') +'</td>'+
-              '</tr>'+
-              '</table>'+
-            '</div>';
-          } else {
-            $('#history').html("Belum ada update.");
-          }
-        }
-        $('#history').html(row1);
       }
     });
   }
@@ -1378,11 +1795,39 @@
           $('.modal-backdrop').remove();
           $('body').removeClass('modal-open');
           $('#alert').modal('show');
-          swal("Success!", "Data staff berhasil diupdate!", "success");
+          swal("Success!", "Data progress berhasil diupdate!", "success");
           reload_table();
         }
         $('#btnUpdate').text('Update');
         $('#btnUpdate').attr('disabled', false);
+      }
+    });
+  }
+
+  function edit() {
+    $('#btnEdit').text('Updating...');
+    $('#btnEdit').attr('disabled', true);
+    var url;
+
+    url = "<?=site_url('progress/update_detail')?>";
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: $('#form_update_e').serialize(),
+      success: function(data) {
+        if (data.status = 'true') {
+          $('.modal').removeClass('show');
+          $('.modal').removeClass('in');
+          $('.modal').attr("aria-hidden","true");
+          $('.modal-backdrop').remove();
+          $('body').removeClass('modal-open');
+          $('#alert').modal('show');
+          swal("Success!", "Data progress berhasil diupdate!", "success");
+          reload_table();
+        }
+        $('#btnEdit').text('Update');
+        $('#btnEdit').attr('disabled', false);
       }
     });
   }
@@ -1399,6 +1844,47 @@
       dataType: "json",
       success: function(data) {
         $('[name=idp]').val(data.progress_id);
+      }
+    });
+  }
+
+  function editProgress(id) {
+
+    $.ajax({
+      url: "<?=site_url('progress/getProgressDetail/')?>" + id,
+      type: "GET",
+      dataType: "json",
+      success: function(data) {
+        $('#project_vale option').attr('selected', false);
+        $('#project_vale').selectpicker('render');
+        $('#site_vale option').attr('selected', false);
+        $('#site_vale').selectpicker('refresh');
+        $('#site_vale').selectpicker('render');
+        $('[name=id]').val(data.progress_id);
+        if (data.keterangan != null) {
+          $('[name=pekerjaan_vale]').val(data.keterangan);
+        } else {
+          $('[name=pekerjaan_vale]').val("");
+        }
+        if (data.tanggal_mulai != null) {
+          $('[name=tanggal_mulai_pekerjaan_vale]').val(data.tanggal_mulai);
+        } else {
+          $('[name=tanggal_mulai_pekerjaan_vale]').val("");
+        }
+        // if (data.site_id != null) {
+        //   $('#site_vale option[value='+data.site_id+']').attr('selected', true);
+        // } else {
+        //   $('#site_vale option[value=default]').attr('selected', true);
+        // }
+        // if (data.project_id != null) {
+        //   $('#project_vale option[value='+data.project_id+']').attr('selected', true);
+        // } else {
+        //   $('#project_vale option[value=default]').attr('selected', true);
+        // }
+        // $('.selectpicker').selectpicker('refresh');
+        // $('.selectpicker').selectpicker('render');
+        // $('#project_vale').find('.bs-title-option').text($('#project_vale option:selected').text());
+        // $('#project_vale').selectpicker({title: $('#project_vale option:selected').text()}).selectpicker('render');
       }
     });
   }
@@ -1431,14 +1917,33 @@
           $('[name=no_bast_vale]').val("");
         }
         if (data.tanggal_po != null) {
+          $('#tanggal_bmhd_div').hide();
+          $('#isian_po').show();
           $('[name=tanggal_po_vale]').val(data.tanggal_po);
         } else {
           $('[name=tanggal_po_vale]').val("");
+        }
+        if (data.tanggal_bmhd != null) {
+          $('#tanggal_bmhd_div').show();
+          $('#isian_po').hide();
+          $('[name=tanggal_bmhd_vale]').val(data.tanggal_bmhd);
+        } else {
+          $('[name=tanggal_bmhd_vale]').val("");
         }
         if (data.tanggal_corr != null) {
           $('[name=tanggal_corr_vale]').val(data.tanggal_corr);
         } else {
           $('[name=tanggal_corr_vale]').val("");
+        }
+        if (data.nilai_progress != null) {
+          $('[name=nilai_progress_vale]').val(data.nilai_progress);
+        } else {
+          $('[name=nilai_progress_vale]').val("");
+        }
+        if (data.nilai_corr != null) {
+          $('[name=nilai_corr_vale]').val(data.nilai_corr);
+        } else {
+          $('[name=nilai_corr_vale]').val("");
         }
         if (data.tanggal_bapp != null) {
           $('[name=tanggal_bapp_vale]').val(data.tanggal_bapp);
@@ -1460,6 +1965,11 @@
         } else {
           $('[name=no_bast_vale]').val("");
         }
+        if (data.deskripsi != null) {
+          $('[name=deskripsi_vale]').val(data.deskripsi);
+        } else {
+          $('[name=deskripsi_vale]').val("");
+        }
         if (data.tanggal_kontrak != null) {
           $('[name=tanggal_kontrak_vale]').val(data.tanggal_kontrak);
         } else {
@@ -1480,26 +1990,21 @@
         } else {
           $('[name=tanggal_bast_vale]').val("");
         }
+
         if (data.is_invoiced != null) {
-          document.getElementById("invoiced_vale").checked = true;
-          $('#tanggal_invoiced').html(data.is_invoiced);
+          $('[name=invoiced_vale]').val(data.is_invoiced);
         } else {
-          document.getElementById("invoiced_vale").checked = false;
-          $('#tanggal_invoiced').html("");
+          $('[name=invoiced_vale]').val("");
         }
         if (data.is_bayar != null) {
-          document.getElementById("bayar_vale").checked = true;
-          $('#tanggal_bayar').html(data.is_bayar);
+          $('[name=bayar_vale]').val(data.is_bayar);
         } else {
-          document.getElementById("bayar_vale").checked = false;
-          $('#tanggal_bayar').html("");
+          $('[name=bayar_vale]').val("");
         }
-        if (data.is_bayarclient != null) {
-          document.getElementById("bayarclient_vale").checked = true;
-          $('#tanggal_bayarclient').html(data.is_bayarclient);
+        if (data.is_bayar_client != null) {
+          $('[name=bayarclient_vale]').val(data.is_bayar_client);
         } else {
-          document.getElementById("bayarclient_vale").checked = false;
-          $('#tanggal_bayarclient').html("");
+          $('[name=bayarclient_vale]').val("");
         }
         $('#updateProgress').modal('show');
         $('.modal-title').text('Update Progress ' + "#ADPR" + pad(data.progress_id, 4));
@@ -1547,4 +2052,5 @@
     dots[slideIndex-1].className += " active";
     captionText.innerHTML = dots[slideIndex-1].alt;
   }
+
 </script>
