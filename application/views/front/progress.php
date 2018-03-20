@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label for="FirstName" class="col-sm-2 control-label">Tipe Pekerjaan</label>
                             <div class="col-sm-6">
-                              <select class="selectpicker form-control" name="project_filter" id="project_filter" data-live-search="true">
+                              <select class="selectpicker form-control" name="tipe_pekerjaan_filter" id="tipe_pekerjaan_filter" data-live-search="true">
                                 <option selected disabled readonly>PILIH TIPE PEKERJAAN</option>
                                 <option value="CSR">CSR</option>
                                 <option value="Iuran Warga">IURAN WARGA</option>
@@ -79,9 +79,14 @@
                         </div>
                         <div class="form-group">
                           <label for="" class="col-sm-2 control-label">Nilai/nominal COR</label>
-                          <div class="input-group col-sm-6">
-                            <div class="input-group-addon" style="width: 40px;">Rp.</div>
+                          <div class="col-sm-6">
                             <input name="nilai_corr_filter" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai/nominal COR">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="" class="col-sm-2 control-label">Total nilai/nominal Pekerjaan</label>
+                          <div class="col-sm-6">
+                            <input name="nilai_progress_filter" type="number" class="form-control currency" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Total nilai/nominal Pekerjaan">
                           </div>
                         </div>
                         <div class="form-group">
@@ -158,8 +163,8 @@
                         <div class="form-group">
                           <label for="LastName" class="col-sm-2 control-label">Progress Pengajuan</label>
                           <div class="col-sm-6">
-                            <label class="form-check-label"> <input type="checkbox" id="check_invoiced" name="check_invoiced" value="N"> Invoiced </label> &nbsp;&nbsp;&nbsp;
                             <label class="form-check-label"> <input type="checkbox" id="check_bayar" name="check_bayar" value="N"> Sudah Dibayar AG </label> &nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label"> <input type="checkbox" id="check_invoiced" name="check_invoiced" value="N"> Invoiced </label> &nbsp;&nbsp;&nbsp;
                             <label class="form-check-label"> <input type="checkbox" id="check_bayarclient" name="check_bayarclient" value="N"> Sudah Dibayar Client </label> &nbsp;&nbsp;&nbsp;
                           </div>
                         </div>
@@ -446,12 +451,12 @@
                     <table class="table">
                       <tbody>
                         <tr>
-                          <th width="250">Tanggal Invoice</th>
-                          <td><span id="sudah_invoice_val"></span></td>
-                        </tr>
-                        <tr>
                           <th width="250">Tanggal Pembayaran AG</th>
                           <td><span id="sudah_dibayarkan_val"></span></td>
+                        </tr>
+                        <tr>
+                          <th width="250">Tanggal Invoice</th>
+                          <td><span id="sudah_invoice_val"></span></td>
                         </tr>
                         <tr>
                           <th width="250">Tanggal Pembayaran Client</th>
@@ -594,8 +599,8 @@
                           <tr>
                             <form class="" action="index.html" method="post">
                               <input type="hidden" name="id" value="">
-                              <td style="text-align:center;"> <label><input id="is_invoiced_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="invoiced_vale"></span> </td>
                               <td style="text-align:center;"> <label><input id="is_bayar_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="bayar_vale"></span> </td>
+                              <td style="text-align:center;"> <label><input id="is_invoiced_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="invoiced_vale"></span> </td>
                               <td style="text-align:center;"> <label><input id="is_bayarclient_vale" type="text" class="form-control datepicker-here user-success" style="z-index: 99999 !important;" data-language="en" name="bayarclient_vale"></span> </td>
                             </form>
                           </tr>
@@ -761,6 +766,13 @@
   </div>
 </main>
 <script>
+
+  // CURRENCY SEPARATOR
+  webshims.setOptions('forms-ext', {
+    replaceUI: 'auto',
+    types: 'number'
+  });
+  webshims.polyfill('forms forms-ext');
 
   $(document).ready(function() {
     var max_fields      = 100; //maximum input boxes allowed
@@ -984,10 +996,12 @@
                 data.sudah_selesai = $('#sudah_selesai_val').val();
 
                 data.keterangan = $('#keterangan_filter').val();
-                data.project = $('#project_filter').val();
+                data.tipe_pekerjaan = $('#tipe_pekerjaan_filter').val();
                 data.site = $('#site_id_filter').val();
                 data.no_corr = $('#no_corr_filter').val();
                 data.no_po = $('#no_po_filter').val();
+                data.nilai_corr = $('#nilai_corr_filter').val();
+                data.nilai_progress = $('#nilai_progress_filter').val();
                 data.tanggal_corr = $('#tanggal_corr_filter').val();
                 data.tanggal_corr_first = $('#tanggal_corr_first_filter').val();
                 data.tanggal_corr_last = $('#tanggal_corr_last_filter').val();
@@ -1315,8 +1329,8 @@
 
   $('#btn-reset').click(function() { //button reset event click
     $('#form-filter')[0].reset();
-    $("#project_filter").val('default');
-    $("#project_filter").selectpicker("refresh");
+    $("#tipe_pekerjaan_filter").val('default');
+    $("#tipe_pekerjaan_filter").selectpicker("refresh");
     $("#site_id_filter").val('default');
     $("#site_id_filter").selectpicker("refresh");
     $("#tanggal_corr_jns_op").val('default');
@@ -1440,8 +1454,9 @@
               '<tr><td width="150">BAPP</td><td colspan="2">'+ (data[i].tanggal_bapp != null ? moment(data[i].tanggal_bapp).format('dddd, D MMMM Y') : '-') + (data[i].no_bapp != null ? ' - ' + data[i].no_bapp : '') +'</td></tr>'+
               '<tr><td width="150">Remark</td><td colspan="2">'+ (data[i].remark != null ? data[i].remark : '') +'</td></tr>'+
               '<tr>'+
-              '<td colspan="3" class="text-center">'+ (data[i].is_invoiced != null ? '<i class=\'fas fa-check text-success\'></i> Invoiced' : '<i class=\'fas fa-times text-danger\'></i> Invoiced') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
+              '<td colspan="3" class="text-center">'+
               (data[i].is_bayar != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar AG' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar AG') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
+              (data[i].is_invoiced != null ? '<i class=\'fas fa-check text-success\'></i> Invoiced' : '<i class=\'fas fa-times text-danger\'></i> Invoiced') + '&nbsp;&nbsp;&nbsp;&nbsp;'+
               (data[i].is_bayarclient != null ? '<i class=\'fas fa-check text-success\'></i> Sudah Dibayar Client' : '<i class=\'fas fa-times text-danger\'></i> Sudah Dibayar Client') +'</td>'+
               '</tr>'+
               '</table>'+
@@ -1846,8 +1861,14 @@
         $('[name=id]').val(data.progress_id);
         if (data.no_po != null) {
           $('[name=no_po_vale]').val(data.no_po);
+          // $('#po_select option[value='+data.no_po+']').attr('selected', true);
+          // $('.selectpicker').selectpicker('refresh');
+          // $('.selectpicker').selectpicker('render');
         } else {
           $('[name=no_po_vale]').val("");
+          // $('#po_select option[value=po_s').attr('selected', true);
+          // $('.selectpicker').selectpicker('refresh');
+          // $('.selectpicker').selectpicker('render');
         }
         if (data.no_corr != null) {
           $('[name=no_corr_vale]').val(data.no_corr);

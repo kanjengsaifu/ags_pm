@@ -1419,6 +1419,7 @@ class AppModel extends CI_Model
         'no_bast'                   => $data['no_bast'],
         'no_po'                     => $data['no_po'],
         'tanggal_po'                => $data['tanggal_po'],
+        'tanggal_bmhd'              => $data['tanggal_bmhd'],
         'tanggal_corr'              => $data['tanggal_corr'],
         'no_corr'                   => $data['no_corr'],
         'tanggal_kontrak'           => $data['tanggal_kontrak'],
@@ -1551,6 +1552,10 @@ class AppModel extends CI_Model
       $this->db->where('progress.project_id', $this->input->post('project'));
     }
 
+    if ($this->input->post('tipe_pekerjaan')) {
+      $this->db->where('progress.tipe_pekerjaan', $this->input->post('tipe_pekerjaan'));
+    }
+
     if ($this->input->post('site')) {
       $this->db->where('progress.site_id', $this->input->post('site'));
     }
@@ -1565,6 +1570,14 @@ class AppModel extends CI_Model
 
     if ($this->input->post('no_po')) {
       $this->db->where('progress.no_po', $this->input->post('no_po'));
+    }
+
+    if ($this->input->post('nilai_corr')) {
+      $this->db->where('progress.nilai_corr', $this->input->post('nilai_corr'));
+    }
+
+    if ($this->input->post('nilai_progress')) {
+      $this->db->where('progress.nilai_progress', $this->input->post('nilai_progress'));
     }
 
     if ($this->input->post('tanggal_corr')) {

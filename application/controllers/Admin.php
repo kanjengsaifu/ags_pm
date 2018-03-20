@@ -20,33 +20,30 @@ class Admin extends MY_Controller
       $row = array();
       $row[]  = $no;
       $row[]  = $stfd->pengajuan;
-      $row[]  = strtoupper($stfd->jenis_pengajuan);
+      $row[]  = ($stfd->nama_project != "" ? $stfd->nama_project : "-");
       $row[]  = date('l, d-m-Y', strtotime($stfd->tanggal_pengajuan));
-      $row[]  = date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan));
-      $row[]  = ($stfd->nilai_corr == "0" ? "-" : number_format($stfd->nilai_corr, '0','.','.'));
-      $row[]  = ($stfd->nilai_po == "0" ? "-" : number_format($stfd->nilai_po, '0','.','.'));
-      $row[]  = ($stfd->nilai_pengajuan == "0" ? "-" : number_format($stfd->nilai_pengajuan, '0','.','.'));
-      // if (!(isAdminJakarta() || isApproval())) {
-      //   $row[]  = ($stfd->tanggal_approval != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval)) : "<span class=\"btn btn-outline-danger\">BELUM DIAPPROVE</span>");
-      //   $row[]  = ($stfd->status_admin_dmt != "" ?
-      //               ($stfd->tanggal_approval_keuangan != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_keuangan)) : "<span class=\"btn btn-outline-danger\">ON PROGRESS</span>")
-      //               :
-      //               "<span class=\"btn btn-outline-danger\">". (!isAdminJakarta() ? 'PENDING' : 'BELUM DI PRINT') ."</span>"
-      //             );
-      // }
-      // $row[]  = ($stfd->realisasi_pengajuan <= date('Y-m-d') ?
-      //             '<span class="btn btn-outline-danger">'.date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan)).'</span>'
-      //             :
-      //             date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan))
-      //           );
+      // $row[]  = date('l, d-m-Y H:m:s', strtotime($stfd->tanggal_pengajuan));
+      if (!(isAdminJakarta() || isApproval())) {
+        $row[]  = ($stfd->tanggal_approval != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval)) : "<span class=\"btn btn-outline-danger\">BELUM DIAPPROVE</span>");
+        $row[]  = ($stfd->status_admin_dmt != "" ?
+                    ($stfd->tanggal_approval_keuangan != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_keuangan)) : "<span class=\"btn btn-outline-danger\">ON PROGRESS</span>")
+                    :
+                    "<span class=\"btn btn-outline-danger\">". (!isAdminJakarta() ? 'PENDING' : 'BELUM DI PRINT') ."</span>"
+                  );
+      }
+      $row[]  = ($stfd->realisasi_pengajuan != NULL ?
+                  ($stfd->realisasi_pengajuan <= date('Y-m-d') ?
+                    '<span class="btn btn-outline-danger">'.date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan)).'</span>'
+                    :
+                    date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan))
+                  ) : '-'
+                );
       // $row[]  = ($stfd->is_invoiced == "N" ? "&#x2714" : '');
       // $row[]  = ($stfd->is_bayar == "N" ? "&#x2714" : '');
       // $row[]  = ($stfd->is_bayarclient == "N" ? "&#x2714" : '');
-      $row[]  = '
-                  <button type="button" href="" onclick="detailPengajuan('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailPengajuan">
+      $row[]   = '<button type="button" href="" id="detailPengajuan" onclick="detailPengajuan('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#detailPengajuan">
                     <i class="fas fa-search"></i>
-                  </button>
-                ';
+                  </button>';
       $data[]  = $row;
     }
 
@@ -67,6 +64,7 @@ class Admin extends MY_Controller
   public function exportExcel() {
     $data = array(
       'on_progress'               => $this->input->get('on_progress'),
+      'reject'                    => $this->input->get('reject'),
       'belum_diprint'             => $this->input->get('belum_diprint'),
       'history'                   => $this->input->get('history'),
       'progress_project'          => $this->input->get('progress_project'),

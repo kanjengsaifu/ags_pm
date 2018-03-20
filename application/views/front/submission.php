@@ -2470,7 +2470,7 @@
 										$('[id=approved_by]').
 										html(
 										(data.pengajuan.tanggal_approval != null ? '#1 '+ moment(data.pengajuan.tanggal_approval).format('dddd, D MMMM Y HH:mm:ss') +' by ' + app.name : (data.pengajuan.tanggal_approval == null && data.pengajuan.is_rejected != 'N' ? '#1 Rejected by ' + app.name : '')) +
-										(data.pengajuan.tanggal_approval == null && data.pengajuan.is_rejected != 'N' ? '' : (data.pengajuan.tanggal_approval_akhir != null ? '<br>#2 '+ moment(data.pengajuan.tanggal_approval_akhir).format('dddd, D MMMM Y HH:mm:ss') + ' by Pak Simon' : (data.pengajuan.tanggal_approval_akhir == null && data.pengajuan.is_rejected != 'N' ? '<br>#2 Rejected by Pak Simon' : ''))));
+										(data.pengajuan.tanggal_approval == null && data.pengajuan.is_rejected != 'N' ? '' : (data.pengajuan.tanggal_approval_akhir != null ? '<br>#2 '+ moment(data.pengajuan.tanggal_approval_akhir).format('dddd, D MMMM Y HH:mm:ss') + ' by Simon Tambunan' : (data.pengajuan.tanggal_approval_akhir == null && data.pengajuan.is_rejected != 'N' ? '<br>#2 Rejected by Simon Tambunan' : ''))));
 									}
 								});
 							} else {

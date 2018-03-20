@@ -79,7 +79,7 @@ class Submission extends MY_Controller
 
       $data_pengajuan = array(
         'pengajuan'           => $this->input->post('pengajuan'),
-        'realisasi_pengajuan' => date('Y-m-d', strtotime($this->input->post('realisasi_pengajuan'))),
+        'realisasi_pengajuan' => ($this->input->post('realisasi_pengajuan') != "" ? date('Y-m-d', strtotime($this->input->post('realisasi_pengajuan'))) : NULL),
         'jenis_pengajuan'     => $this->input->post('jenis_pengajuan'),
         'nama_project'        => (
                                   $this->input->post('project_id') == "" ?
@@ -152,7 +152,7 @@ class Submission extends MY_Controller
 
       $data = array(
         'pengajuan'           => $this->input->post('pengajuan'),
-        'realisasi_pengajuan' => date('Y-m-d', strtotime($this->input->post('realisasi_pengajuan'))),
+        'realisasi_pengajuan' => ($this->input->post('realisasi_pengajuan') != "" ? date('Y-m-d', strtotime($this->input->post('realisasi_pengajuan'))) : NULL),
         'jenis_pengajuan'     => $this->input->post('jenis_pengajuan'),
         'nama_project'        => (
                                   $this->input->post('project_id') == "" ?

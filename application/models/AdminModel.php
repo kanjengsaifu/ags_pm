@@ -20,18 +20,10 @@ class AdminModel extends CI_Model
     $table = 'pengajuan';
     $column_order = array(null, 'pengajuan_id', 'pengajuan', 'tanggal_pengajuan', 'tanggal_approval', 'tanggal_approval_keuangan');
     $column_search = array('pengajuan_id', 'pengajuan_id', 'pengajuan');
-    $order = array('realisasi_pengajuan' => 'asc');
-    // if (isAdminJakarta()) {
-    // } else {
-    //   $order = array('tanggal_pengajuan' => 'desc');
-    // }
-    //
+    $order = array('tanggal_pengajuan' => 'desc');
+
     $this->db->from($table);
-    // if (isAdminJakarta()) {
-    //   $this->db->where('tanggal_approval !=', NULL);
-    // }
-    //
-    //
+
     if ($this->input->post('on_progress') != 'N') {
       $this->db->where('is_printed', 'Y');
       $this->db->where('success_print', 'Y');
@@ -51,7 +43,7 @@ class AdminModel extends CI_Model
       $this->db->where('success_print', 'N');
       $this->db->where('status_admin_dmt', NULL);
       $this->db->where('tanggal_approval_keuangan', NULL);
-      $this->db->where('tanggal_approval !=', NULL);
+      $this->db->where('tanggal_approval_akhir !=', NULL);
     }
 
     if ($this->input->post('progress_project') != 'N') {
@@ -64,19 +56,22 @@ class AdminModel extends CI_Model
 
     if ($this->input->post('semua_pengajuan') != 'N') {
 
+    } else {
+      if ($this->input->post('reject') != 'N') {
+        $this->db->where('is_rejected', 'Y');
+      } else {
+        $this->db->where('is_rejected', 'N');
+      }
     }
 
+
+
     if ($this->input->post('belum_diapprove') != 'N') {
-      $this->db->where('tanggal_approval', NULL);
+      $this->db->where('tanggal_approval_akhir', NULL);
     }
 
     if ($this->input->post('sudah_diapprove') != 'N') {
-      $this->db->where('tanggal_approval !=', NULL);
-      $this->db->where('is_printed', 'N');
-    }
-
-    if (isAdminTasik()) {
-      $this->db->where('pengaju_id', $this->session->userdata('useractive_id'));
+      $this->db->where('tanggal_approval_akhir !=', NULL);
     }
 
     if ($this->input->post('pengajuan')) {
@@ -164,47 +159,53 @@ class AdminModel extends CI_Model
     $this->db->join('site', 'pengajuan.site_id = site.site_id', 'left');
 
     if ($data['on_progress'] != 'N') {
-      $this->db->where('progress.is_printed', 'Y');
-      $this->db->where('progress.success_print', 'Y');
-      $this->db->where('progress.status_admin_dmt !=', NULL);
-      $this->db->where('progress.tanggal_approval_keuangan', NULL);
+      $this->db->where('is_printed', 'Y');
+      $this->db->where('success_print', 'Y');
+      $this->db->where('status_admin_dmt !=', NULL);
+      $this->db->where('tanggal_approval_keuangan', NULL);
     }
 
     if ($data['history'] != 'N') {
-      $this->db->where('progress.is_printed', 'Y');
-      $this->db->where('progress.success_print', 'Y');
-      $this->db->where('progress.status_admin_dmt !=', NULL);
-      $this->db->where('progress.tanggal_approval_keuangan !=', NULL);
+      $this->db->where('is_printed', 'Y');
+      $this->db->where('success_print', 'Y');
+      $this->db->where('status_admin_dmt !=', NULL);
+      $this->db->where('tanggal_approval_keuangan !=', NULL);
     }
 
     if ($data['belum_diprint'] != 'N') {
-      $this->db->where('progress.is_printed', 'N');
-      $this->db->where('progress.success_print', 'N');
-      $this->db->where('progress.success_print', 'N');
-      $this->db->where('progress.status_admin_dmt', NULL);
-      $this->db->where('progress.tanggal_approval_keuangan', NULL);
-      $this->db->where('progress.tanggal_approval !=', NULL);
+      $this->db->where('is_printed', 'N');
+      $this->db->where('success_print', 'N');
+      $this->db->where('success_print', 'N');
+      $this->db->where('status_admin_dmt', NULL);
+      $this->db->where('tanggal_approval_keuangan', NULL);
+      $this->db->where('tanggal_approval_akhir !=', NULL);
     }
 
     if ($data['progress_project'] != 'N') {
-      $this->db->where('progress.is_printed', 'Y');
-      $this->db->where('progress.success_print', 'Y');
-      $this->db->where('progress.kategori_pengajuan', 'Project');
-      $this->db->where('progress.status_admin_dmt !=', NULL);
-      $this->db->where('progress.tanggal_approval_keuangan !=', NULL);
+      $this->db->where('is_printed', 'Y');
+      $this->db->where('success_print', 'Y');
+      $this->db->where('kategori_pengajuan', 'Project');
+      $this->db->where('status_admin_dmt !=', NULL);
+      $this->db->where('tanggal_approval_keuangan !=', NULL);
     }
 
     if ($data['semua_pengajuan'] != 'N') {
+    } else {
+      if ($data['reject'] != 'N') {
+        $this->db->where('is_rejected', 'Y');
+      } else {
+        $this->db->where('is_rejected', 'N');
+      }
     }
 
     if ($data['belum_diapprove'] != 'N') {
-      $this->db->where('progress.tanggal_approval', NULL);
-      $this->db->where('progress.is_printed', 'N');
+      $this->db->where('tanggal_approval_akhir', NULL);
+      $this->db->where('is_printed', 'N');
     }
 
     if ($data['sudah_diapprove'] != 'N') {
-      $this->db->where('progress.tanggal_approval !=', NULL);
-      $this->db->where('progress.is_printed', 'N');
+      $this->db->where('tanggal_approval_akhir !=', NULL);
+      $this->db->where('is_printed', 'N');
     }
 
     if ($data['pengajuan'] != "") {
@@ -323,15 +324,21 @@ class AdminModel extends CI_Model
     return $this->db->count_all_results();
   }
 
+  public function countrejected() {
+    $this->db->from('pengajuan');
+    $this->db->where('is_rejected', 'Y');
+    return $this->db->count_all_results();
+  }
+
   public function countsudahdiapprove() {
     $this->db->from('pengajuan');
-    $this->db->where('tanggal_approval !=', NULL);
+    $this->db->where('tanggal_approval_akhir !=', NULL);
     return $this->db->count_all_results();
   }
 
   public function countbelumdiapprove() {
     $this->db->from('pengajuan');
-    $this->db->where('tanggal_approval', NULL);
+    $this->db->where('tanggal_approval_akhir', NULL);
     return $this->db->count_all_results();
   }
 

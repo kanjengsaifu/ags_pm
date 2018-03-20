@@ -27,6 +27,7 @@ class App extends MY_Controller
     $config['belumsemua'] = $this->adminModel->countbelumsemua();
     $config['sudahdiapprove'] = $this->adminModel->countsudahdiapprove();
     $config['belumdiapprove'] = $this->adminModel->countbelumdiapprove();
+    $config['rejected'] = $this->adminModel->countrejected();
     $this->loadPage($page, $config);
   }
 
