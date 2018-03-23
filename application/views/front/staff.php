@@ -442,11 +442,22 @@
 							$('[id=telp]').html(data.telp);
 							$('[id=address]').html(data.alamat);
 							$('[id=information]').html(data.keterangan);
-							$('[id=dob]').html(data.dob);
+							if (data.dob != null) {
+								$('[id=dob]').html(data.dob);
+							} else {
+								$('[id=dob]').html("-");
+							}
 							$('[id=kybd]').html(data.keluarga_yg_bisa_dihub);
 							$('[id=telp_kybd]').html(data.telp_keluarga_yg_bisa_dihub);
-							if (data.team_id != "") {
-								$('[id=team_pos]').html("#ADT" + pad(data.team_id, 3));
+							if (data.team_id != null) {
+								$.ajax({
+									url: "<?=site_url('staff/getCluster/')?>" + data.team_id,
+									type: "GET",
+									dataType: "json",
+									success: function(datacl) {
+										$('[id=team_pos]').html(datacl[0].homebase + " - " + datacl[0].wilayah);
+									}
+								});
 							} else {
 								$('[id=team_pos]').html("-");
 							}

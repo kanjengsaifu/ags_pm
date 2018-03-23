@@ -251,16 +251,14 @@
                 					<h5 class="modal-title" id="exampleModalLabel">Pengajuan</h5><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
                 				</div>
                 				<div class="modal-body">
-													<?php if (!isAdminTasik()): ?>
-														<b>Remark</b><br>
-														<table class="table">
-															<tbody>
-																<input id="id_val" type="hidden" value="">
-																<div id="history_k"></div>
-															</tbody>
-															<br><br>
-														</table>
-													<?php endif; ?>
+													<b>Remark</b><br>
+													<table class="table">
+														<tbody>
+															<input id="id_val" type="hidden" value="">
+															<div id="history_k"></div>
+														</tbody>
+														<br><br>
+													</table>
 													<b>KATEGORI</b>
 													<table class="table">
 														<tbody>
@@ -741,14 +739,14 @@
 										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
 	                    MENUNGGU APPROVE ANDA
 	                  </button>
-										<button type="button" class="btn cur-p btn-danger" id="rejected">
-	                    REJECTED
-	                  </button>
 										<?php if ($this->session->userdata('username') == "stadmaresi"): ?>
 											<button type="button" class="btn cur-p btn-success" id="belum_diproses">
 												BELUM DIPROSES
 											</button>
 										<?php endif; ?>
+										<button type="button" class="btn cur-p btn-danger" id="rejected">
+	                    REJECTED
+	                  </button>
 										<?php if ($this->session->userdata('username') == "stadmaresi") { ?>
 											<button type="button" class="btn cur-p btn-secondary" id="sudah_diproses">
 		                    SUDAH DIAPPROVE / HISTORY
@@ -790,8 +788,14 @@
 										<button type="button" class="btn cur-p btn-success" id="belum_diapprove">
 	                    BELUM DIAPPROVE
 	                  </button>
+										<button type="button" class="btn cur-p btn-success" id="belum_diprint">
+											PENDING KEUANGAN
+										</button>
 										<button type="button" class="btn cur-p btn-secondary" id="on_progress">
 	                    ON PROGRESS
+	                  </button>
+										<button type="button" class="btn cur-p btn-danger" id="rejected">
+	                    REJECTED
 	                  </button>
 										<button type="button" class="btn cur-p btn-success" id="history_btn">
 											HISTORY
@@ -1327,7 +1331,7 @@
 			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
 			               "<'row'<'col-sm-12'tr>>" +
 			               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-			          "pageLength": 5,
+			          "pageLength": 15,
 								// rowReorder: {
 				        // 	selector: 'td:nth-child(2)'
 				        // },

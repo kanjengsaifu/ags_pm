@@ -586,7 +586,7 @@
                   </ul>
                 </li>
               <?php endif; ?>
-              <?php if (isAdministrator() || isApproval()) { ?>
+              <?php if (isAdministrator() || isApproval() || isAdminTasik()) { ?>
                 <hr>
                 <li class="nav-item">
                   <a class="sidebar-link" href="<?=site_url('staff')?>"><span class="icon-holder"><i class="fas fa-user"></i></span> <span class="title">Staff</span></a>

@@ -339,6 +339,7 @@ class AdminModel extends CI_Model
   public function countbelumdiapprove() {
     $this->db->from('pengajuan');
     $this->db->where('tanggal_approval_akhir', NULL);
+    $this->db->where('is_rejected', 'N');
     return $this->db->count_all_results();
   }
 

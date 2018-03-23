@@ -118,9 +118,7 @@
                         <!-- <th class="text-center">Genset<br>7,5 KVA</th>
                         <th class="text-center">Genset<br>10 KVA</th>
 												<th class="text-center">Genset<br>12 KVA</th> -->
-												<?php if (isAdministrator() || isApproval()): ?>
-                          <th class="text-center" width="150">Action</th>
-                        <?php endif; ?>
+                        <th class="text-center" width="150">Action</th>
 											</tr>
 										</thead>
 									</table>
@@ -282,12 +280,14 @@
 							$('[name=genset_mobile_12_e]').val(data.genset_mobile_12);
 							$('#cluster_id_e option[value='+data.cluster_id+']').attr('selected', true);
 							$('.selectpicker').selectpicker('render');
+							console.log(data.kendaraan_id);
 							var input = data.kendaraan_id;
 							var output = input.replace(",", "\",\"");
 							var akhir = output;
 							// console.log("\[\""+akhir+"\"\]");
-							console.log(akhir);
-							$('#kendaraan_e').select2("val", '["'+akhir+'"]');
+							// console.log(akhir);
+							// console.log([akhir]);
+							$('#kendaraan_e').select2("val", input.split(','));
 						}
 					});
 				}

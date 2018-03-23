@@ -238,6 +238,16 @@ class AppModel extends CI_Model
     }
   }
 
+  public function getClusterperStaff($id) {
+    $this->db->from('team');
+    $this->db->where('team_id', $id);
+    $cluster_id = $this->db->get()->row()->cluster_id;
+
+    $this->db->from('cluster');
+    $this->db->where('cluster_id', $cluster_id);
+    return $this->db->get()->result();
+  }
+
   public function countTeamDataFiltered() {
     $this->teamJSON_query();
     $query = $this->db->get();
@@ -567,31 +577,32 @@ class AppModel extends CI_Model
       $this->db->where('success_print', 'N');
       $this->db->where('status_admin_dmt', NULL);
       $this->db->where('tanggal_approval_keuangan', NULL);
-    }
-
-    if (!isAdminTasik()) {
-      if ($this->input->post('reject') != 'N') {
-        $this->db->where('is_rejected', 'Y');
-      } else {
-        $this->db->where('is_rejected', 'N');
-      }
+      $this->db->where('tanggal_approval_akhir !=', NULL);
+      $this->db->where('is_rejected !=', 'Y');
     }
 
     if ($this->session->userdata('username') != "stadmaresi") {
       if ($this->input->post('belum_diapprove') != 'N') {
-        $this->db->where('tanggal_approval', NULL);
+        $this->db->where('is_rejected', 'N');
+        $this->db->where('tanggal_approval_akhir', NULL);
       }
 
       if ($this->input->post('sudah_diapprove') != 'N') {
         $this->db->where('tanggal_approval !=', NULL);
         $this->db->where('target_approval', $this->session->userdata('useractive_id'));
-      } else {
+        $this->db->where('is_rejected', 'N');
+      } else {;
         if (isAdminJakarta()) {
           $this->db->where('tanggal_approval !=', NULL);
           $this->db->where('tanggal_approval_akhir !=', NULL);
         }
         if (isApproval()) {
           // $this->db->where('tanggal_approval', NULL);
+          // if ($this->input->post('belum_diprint') != 'N') {
+          if ($this->input->post('reject') == 'N') {
+            $this->db->where('is_rejected', 'N');
+          }
+          // }
         }
       }
     } else if ($this->session->userdata('username') == "stadmaresi") {
@@ -600,6 +611,7 @@ class AppModel extends CI_Model
       } else if ($this->input->post('belum_diproses') != 'N') {
         $this->db->where('tanggal_approval !=', NULL);
         $this->db->where('tanggal_approval_akhir', NULL);
+        $this->db->where('is_rejected', 'N');
       } else if ($this->input->post('sudah_diproses') != 'N') {
         $this->db->where('tanggal_approval !=', NULL);
         $this->db->where('tanggal_approval_akhir !=', NULL);
@@ -620,6 +632,14 @@ class AppModel extends CI_Model
     if ($this->input->post('semua_pengajuan') != 'N') {
       if (!isAdminJakarta()) {
         $this->db->where('pengaju_id', $this->session->userdata('useractive_id'));
+      }
+    } else {
+      if ($this->input->post('reject') != 'N') {
+        $this->db->where('is_rejected', 'Y');
+      } else {
+        if (isApproval()) {
+          // $this->db->where('is_rejected', 'N');
+        }
       }
     }
 
@@ -1803,7 +1823,7 @@ class AppModel extends CI_Model
   }
 
   public function countSiteData() {
-    $this->db->from('team');
+    $this->db->from('site');
     return $this->db->count_all_results();
   }
 
@@ -2837,6 +2857,66 @@ class AppModel extends CI_Model
     $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
     $objWriter->save('php://output');
     echo "<script>window.close();</script>";
+  }
+
+  public function getRemarkJSON() {
+    $this->remarkJSON_query();
+    if ($_POST['length'] != -1) {
+      $this->db->limit($_POST['length'], $_POST['start']);
+    }
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function remarkJSON_query() {
+    $table = 'remark_history';
+    $column_order = array(null, 'remark_history.remark', 'users.name', 'pengajuan.pengajuan', 'remark_history.remark_at', null);
+    $column_search = array('remark_history.remark', 'users.name', 'pengajuan.pengajuan', 'remark_history.remark_at');
+    $order = array('remark_id' => 'desc');
+
+    $this->db->select('remark_history.remark, users.name, pengajuan.pengajuan, remark_history.remark_at');
+    $this->db->from($table);
+    $this->db->join('users', 'remark_history.remark_by = users.user_id', 'left');
+    $this->db->join('pengajuan', 'remark_history.pengajuan_id = pengajuan.pengajuan_id', 'left');
+
+    if (isAdminTasik()) {
+      $this->db->where('pengaju_id', $this->session->userdata('useractive_id'));
+    }
+
+
+    $i = 0;
+    foreach ($column_search as $item) {
+      if ($_POST['search']['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $_POST['search']['value']);
+        } else {
+          $this->db->or_like($item, $_POST['search']['value']);
+        }
+
+        if (count($column_search) - 1 == $i) {
+          $this->db->group_end();
+        }
+      }
+      $i++;
+    }
+
+    if (isset($_POST['order'])) {
+      $this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+    } else if (isset($order)) {
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function countRemarkDataFiltered() {
+    $this->remarkJSON_query();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function countRemarkData() {
+    $this->db->from('remark_history');
+    return $this->db->count_all_results();
   }
 
 }

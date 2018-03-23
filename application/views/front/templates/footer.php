@@ -10,7 +10,7 @@
   <span>2017 | Admaresi Globalindo</span>
 </footer>
 <?php if (isAdminJakarta() || isAdminTasik()): ?>
-  <?=js('js/webcam.min.js')?>
+  <?php //echo js('js/webcam.min.js')?>
   <script language="JavaScript">
     $('.ui.modal')
       .modal('show')
@@ -28,31 +28,32 @@
       });
 
       <?php if (isAdminTasik()) { ?>
-        Webcam.set({
-          width: 500,
-          height: 400,
-          image_format: 'jpeg',
-          jpeg_quality: 90
-        });
-        Webcam.attach('#my_camera');
+        // INI
+        // Webcam.set({
+        //   width: 500,
+        //   height: 400,
+        //   image_format: 'jpeg',
+        //   jpeg_quality: 90
+        // });
+        // Webcam.attach('#my_camera');
       <?php } ?>
-
-      function take_snapshot() {
-        // take snapshot and get image data
-        Webcam.snap( function(data_uri) {
-          // display results in page
-          document.getElementById('results').innerHTML =
-            '<br><hr><h2>Preview sebelum upload :</h2>' +
-            '<img id="imageprev" src="'+data_uri+'"/>';
-        });
-      }
-
-      function reset_cam(id) {
-        Webcam.reset();
-        Webcam.attach( '#my_camera' );
-        document.getElementById("id_val").value = id;
-        document.getElementById("imageprev").src = "";
-      }
+      // INI
+      // function take_snapshot() {
+      //   // take snapshot and get image data
+      //   Webcam.snap( function(data_uri) {
+      //     // display results in page
+      //     document.getElementById('results').innerHTML =
+      //       '<br><hr><h2>Preview sebelum upload :</h2>' +
+      //       '<img id="imageprev" src="'+data_uri+'"/>';
+      //   });
+      // }
+      // INI
+      // function reset_cam(id) {
+      //   Webcam.reset();
+      //   Webcam.attach( '#my_camera' );
+      //   document.getElementById("id_val").value = id;
+      //   document.getElementById("imageprev").src = "";
+      // }
 
       // Webcam.set({
       //   width: 420,
@@ -69,16 +70,16 @@
       //
       //   Webcam.reset();
       // }
-
-      function saveSnap() {
-        // console.log(document.getElementById('imageprev'));
-         var base64image = document.getElementById("imageprev").src;
-         var pengajuan_id = document.getElementById("id_val").value;
-
-         Webcam.upload( base64image, '<?=base_url('submission/capture/')?>'+pengajuan_id, function(code, text) {
-           swal("Success!", "Evidence berhasil diupload!", "success");
-         });
-       }
+      // INI
+      // function saveSnap() {
+      //   // console.log(document.getElementById('imageprev'));
+      //    var base64image = document.getElementById("imageprev").src;
+      //    var pengajuan_id = document.getElementById("id_val").value;
+      //
+      //    Webcam.upload( base64image, '<?=base_url('submission/capture/')?>'+pengajuan_id, function(code, text) {
+      //      swal("Success!", "Evidence berhasil diupload!", "success");
+      //    });
+      //  }
   </script>
 <?php endif; ?>
 <script type="text/javascript">

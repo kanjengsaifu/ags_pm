@@ -252,7 +252,7 @@ class Submission extends MY_Controller
                         '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="rmvCBox('.$stfd->pengajuan_id.')" checked>'
                         :
                         '<input type="checkbox" name="checked[]" value="'.$stfd->pengajuan_id.'" onclick="saveCBox('.$stfd->pengajuan_id.')">'
-                      ) : ''
+                      ) : '<input type="checkbox" disabled readonly>'
                     )
                   );
       }
@@ -264,17 +264,25 @@ class Submission extends MY_Controller
       }
       // $row[]  = date('l, d-m-Y H:m:s', strtotime($stfd->tanggal_pengajuan));
       if (!(isAdminJakarta() || isApproval())) {
-        $row[]  = ($stfd->tanggal_approval != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval)) : "<span class=\"btn btn-outline-danger\">BELUM DIAPPROVE</span>");
-        $row[]  = ($stfd->status_admin_dmt != "" ?
-                    ($stfd->tanggal_approval_keuangan != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_keuangan)) : "<span class=\"btn btn-outline-danger\">ON PROGRESS</span>")
-                    :
-                    "<span class=\"btn btn-outline-danger\">". (!isAdminJakarta() ? 'PENDING' : 'BELUM DI PRINT') ."</span>"
+        $row[]  = ($stfd->is_rejected != 'N' ?
+                  '<span class=\'btn btn-danger\'>REJECTED</span>' :
+                    ($stfd->tanggal_approval_akhir != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_akhir)) : "<span class=\"btn btn-outline-danger\">BELUM DIAPPROVE</span>")
+                  );
+        $row[]  = ($stfd->is_rejected != "N" ?
+                    '<span class=\'btn btn-danger\'>REJECTED</span>' :
+                    ($stfd->status_admin_dmt != "" ?
+                      ($stfd->tanggal_approval_keuangan != "" ? date('l, d-m-Y', strtotime($stfd->tanggal_approval_keuangan)) : "<span class=\"btn btn-outline-danger\">ON PROGRESS</span>")
+                      :
+                      "<span class=\"btn btn-outline-danger\">". (!isAdminJakarta() ? 'PENDING' : 'BELUM DI PRINT') ."</span>"
+                    )
                   );
       }
-      $row[]  = ($stfd->realisasi_pengajuan <= date('Y-m-d') ?
-                  '<span class="btn btn-outline-danger">'.date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan)).'</span>'
-                  :
-                  date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan))
+      $row[]  = ($stfd->realisasi_pengajuan != NULL ?
+                  ($stfd->realisasi_pengajuan <= date('Y-m-d') ?
+                    '<span class="btn btn-outline-danger">'.date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan)).'</span>'
+                    :
+                    date('l, d-m-Y', strtotime($stfd->realisasi_pengajuan))
+                  ) : '-'
                 );
       // $row[]  = ($stfd->is_invoiced == "N" ? "&#x2714" : '');
       // $row[]  = ($stfd->is_bayar == "N" ? "&#x2714" : '');
@@ -333,16 +341,22 @@ class Submission extends MY_Controller
                     (isAdminTasik() ?
                       ($stfd->is_rejected != 'N' ? '' : '<button type="button" href="" onclick="uploadBukti('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBukti">
                         <i class="fas fa-upload"></i>
-                      </button>').
+                      </button>&nbsp;').
                       ($stfd->tanggal_approval_keuangan != NULL ?
                         '<button onclick="reset_cam('."'".$stfd->pengajuan_id."'".')" type="button" href="" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#captureEvidence">
                           <i class="fa fa-camera"></i>
-                        </button>
-                        <button type="button" href="" onclick="uploadBuktiTransaksi('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBuktiTransaksi">
-                          <i class="fas fa-paperclip"></i>
                         </button>' : ''
                       ) : ''
                     )
+                  .'
+                  '.
+                  (!isApproval() ?
+                    ($stfd->tanggal_approval_keuangan != NULL ?
+                      '<button type="button" href="" onclick="uploadBuktiTransaksi('."'".$stfd->pengajuan_id."'".')" style="margin:0 auto;" class="text-center btn cur-p btn-outline-primary" data-toggle="modal" data-target="#uploadBuktiTransaksi">
+                        <i class="fas fa-paperclip"></i>
+                      </button>' : ''
+                    ) : ''
+                  )
                   .'
                 ';
       $data[]  = $row;
@@ -838,5 +852,30 @@ class Submission extends MY_Controller
     );
     $this->appModel->exportExcel($data);
     // echo json_encode(array("status" => TRUE));
+  }
+
+  public function remarks() {
+    $site_data  = $this->appModel->getRemarkJSON();
+    $data       = array();
+    $no         = $_POST['start'];
+    foreach ($site_data as $stfd) {
+      $no++;
+      $row = array();
+      $row[]  = $no;
+      $row[]  = $stfd->remark;
+      $row[]  = $stfd->pengajuan;
+      $row[]  = $stfd->name;
+      $row[]  = date('Y-m-d', strtotime($stfd->remark_at));
+      $data[]  = $row;
+    }
+
+    $output = array(
+      "draw"            => $_POST['draw'],
+      "recordsTotal"    => $this->appModel->countRemarkData(),
+      "recordsFiltered" => $this->appModel->countRemarkDataFiltered(),
+      "data"            => $data
+    );
+
+    echo json_encode($output);
   }
 }

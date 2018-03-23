@@ -103,6 +103,11 @@ class Staff extends MY_Controller
     echo json_encode($data);
   }
 
+  public function getCluster($id) {
+    $data = $this->appModel->getClusterperStaff($id);
+    echo json_encode($data);
+  }
+
   public function update() {
     $data = array(
       'telp'                         => $this->input->post('telp_e'),

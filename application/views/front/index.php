@@ -100,6 +100,7 @@
 												</div>
 											</div>
 										</div>
+
 										<!-- <div class="col-md-3">
 											<div class="layers bd bgc-white p-20">
 												<div class="layer w-100 mB-10">
@@ -120,6 +121,25 @@
 											</div>
 										</div> -->
 									</div>
+
+									<?php if (isAdminTasik() || isAdminJakarta()): ?>
+										<br><br>
+
+										<div class="bgc-white bd bdrs-3 p-20 mB-20">
+											<table cellspacing="0" class="table table-striped table-bordered" id="remark_tab" width="100%">
+												<thead>
+													<tr>
+														<th class="text-center" style="width:30px">NO</th>
+														<th class="text-center">Remark</th>
+														<th class="text-center">Pengajuan</th>
+														<th class="text-center" width="150px;">By</th>
+														<th class="text-center" width="150px;">Tgl</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+									<?php endif; ?>
+
 									<?php if (isViewer() || $this->session->userdata('username') == "stadmaresi"): ?>
 										<!-- <div class="col-md-12" id="chart">
 											<div class="col-md-6">
@@ -627,6 +647,42 @@
 									}, {
 										"className"	: "dt-center",
 										"targets"		: [2, 3, 4, 5]
+									}
+								],
+						});
+
+						remark_tab = $('#remark_tab').DataTable({
+								"processing": true,
+								"serverSide": true,
+			          dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+			               "<'row'<'col-sm-12'tr>>" +
+			               "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+			          "pageLength": 15,
+								// "language"	: {
+								// 	"info": "Menampilkan halaman _PAGE_ of _PAGES_"
+								// },
+								"order": [],
+								"ajax": {
+										"url": "<?php echo site_url('submission/remarks')?>",
+										"type": "POST",
+										"data": function(data) {
+										}
+								}, "columnDefs": [
+									// {
+									// 	"className": "stat",
+									// 	"targets": [6,7,8]
+									// },
+									{
+										"targets": 0,
+										"checkboxes": true,
+										"orderable": false
+									},
+									{
+										"targets": [ -1 ],
+										"orderable": false
+									}, {
+										"className"	: "dt-center",
+										"targets"		: [4]
 									}
 								],
 						});
