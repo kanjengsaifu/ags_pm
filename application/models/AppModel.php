@@ -1758,8 +1758,26 @@ class AppModel extends CI_Model
   }
 
   public function updateNilaiPengajuan($id, $data) {
-    $this->db->update('pengajuan', $data, $id);
-    return $this->db->affected_rows();
+
+    $this->db->select('nilai_pengajuan');
+    $this->db->from('pengajuan');
+    $this->db->where('pengajuan_id', $id['pengajuan_id']);
+    $np = $this->db->get()->row()->nilai_pengajuan;
+
+    $datar = array(
+      'pengajuan_id'  => $id['pengajuan_id'],
+      'remark'        => 'Merubah nilai pengajuan dari ' . number_format($np, '0','.','.') . ' ke ' . number_format($data['nilai_pengajuan'], '0','.','.'),
+      'remark_by'     => $this->session->userdata('useractive_id'),
+      'remark_at'     => date('Y-m-d', time())
+    );
+    $this->db->insert('remark_history', $datar);
+    $insert = $this->db->insert_id();
+
+    if ($insert) {
+      $this->db->update('pengajuan', $data, $id);
+      return $this->db->affected_rows();
+    }
+
   }
 
   // SITE
