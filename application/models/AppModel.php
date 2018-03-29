@@ -591,14 +591,16 @@ class AppModel extends CI_Model
         $this->db->where('tanggal_approval !=', NULL);
         $this->db->where('target_approval', $this->session->userdata('useractive_id'));
         $this->db->where('is_rejected', 'N');
-      } else {;
+      } else {
         if (isAdminJakarta()) {
           $this->db->where('tanggal_approval !=', NULL);
           $this->db->where('tanggal_approval_akhir !=', NULL);
         }
         if (isApproval()) {
           // $this->db->where('tanggal_approval', NULL);
-          // if ($this->input->post('belum_diprint') != 'N') {
+          if ($this->input->post('belum_diapprove') != 'N') {
+            $this->db->where('tanggal_approval', NULL);
+          }
           if ($this->input->post('reject') == 'N') {
             $this->db->where('is_rejected', 'N');
           }
@@ -999,8 +1001,8 @@ class AppModel extends CI_Model
           $nilai_sph+= $row2->nilai_sph;
           $nilai_corr+= $row2->nilai_corr;
           $nilai_po+= $row2->nilai_po;
-          $pengajuan_total+= $row2->nilai_pengajuan;
-          $tot_np += $row2->nilai_pengajuan;
+          $pengajuan_total+= $row2->nilai_pengajuan+$row2->biaya_penyelesaian;
+          $tot_np += $row2->nilai_pengajuan+$row2->biaya_penyelesaian;
           if ($row2->jenis_pengajuan != $current_cat) {
             $current_cat = $row2->jenis_pengajuan;
           }
@@ -1016,7 +1018,7 @@ class AppModel extends CI_Model
               <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
               <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
               <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
-              <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
+              <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan+$row2->biaya_penyelesaian, '0','.','.')).'</td>
 
             <tr>
           </tbody>';
@@ -1160,8 +1162,8 @@ class AppModel extends CI_Model
         $nilai_sph+= $row2->nilai_sph;
         $nilai_corr+= $row2->nilai_corr;
         $nilai_po+= $row2->nilai_po;
-        $pengajuan_total+= $row2->nilai_pengajuan;
-        $tot_np += $row2->nilai_pengajuan;
+        $pengajuan_total+= $row2->nilai_pengajuan+$row2->biaya_penyelesaian;
+        $tot_np += $row2->nilai_pengajuan+$row2->biaya_penyelesaian;
         if ($row2->jenis_pengajuan != $current_cat) {
           $current_cat = $row2->jenis_pengajuan;
         }
@@ -1177,7 +1179,7 @@ class AppModel extends CI_Model
             <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
-            <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
+            <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan+$row2->biaya_penyelesaian, '0','.','.')).'</td>
 
           <tr>
         </tbody>';
@@ -1300,11 +1302,11 @@ class AppModel extends CI_Model
       $nilai_po = 0;
       $pengajuan_total = 0;
       foreach ($data2->result() as $row2) {
-        $tot_np += $row2->nilai_pengajuan;
+        $tot_np += $row2->nilai_pengajuan+$row2->biaya_penyelesaian;
         $nilai_sph+= $row2->nilai_sph;
         $nilai_corr+= $row2->nilai_corr;
         $nilai_po+= $row2->nilai_po;
-        $pengajuan_total+= $row2->nilai_pengajuan;
+        $pengajuan_total+= $row2->nilai_pengajuan+$row2->biaya_penyelesaian;
         if ($row2->jenis_pengajuan != $current_cat) {
           $current_cat = $row2->jenis_pengajuan;
         }
@@ -1320,7 +1322,7 @@ class AppModel extends CI_Model
             <!--<td style="width:90px;text-align:right">'.($row2->nilai_sph == '0' ? '' : number_format($row2->nilai_sph, '0','.','.')).'</td>-->
             <td style="width:90px;text-align:right">'.($row2->nilai_corr == '0' ? '' : number_format($row2->nilai_corr, '0','.','.')).'</td>
             <td style="width:90px;text-align:right">'.($row2->nilai_po == '0' ? '' : number_format($row2->nilai_po, '0','.','.')).'</td>
-            <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan, '0','.','.')).'</td>
+            <td style="width:90px;text-align:right">'.($row2->nilai_pengajuan == '0' ? '' : number_format($row2->nilai_pengajuan+$row2->biaya_penyelesaian, '0','.','.')).'</td>
 
           <tr>
         </tbody>';

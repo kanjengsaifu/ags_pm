@@ -205,6 +205,13 @@
 														    <input name="nilai_pengajuan" type="number" class="form-control currency" id="c1" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai Pengajuan">
 														  </div>
 														</div>
+														<div class="form-group" id="biaya_penyelesaian" >
+															<label for="">Biaya Penyelesaian</label>
+															<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+														    <div class="input-group-addon" style="width: 40px;">Rp.</div>
+														    <input name="biaya_penyelesaian" type="number" class="form-control currency" id="c1" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Biaya Penyelesaian">
+														  </div>
+														</div>
 														<div class="form-group">
 															<label for="">Realisasi Pengajuan</label>
 															<input type="text" class="form-control datepicker-here" style="z-index: 99999 !important;" data-language='en' name="realisasi_pengajuan" placeholder="Realisasi Pengajuan" />
@@ -422,6 +429,12 @@
 																			<input style="width:100%;" name="nilai_pengajuan_edit" type="number" class="form-control currency" id="c1" min="0" step="0.01" data-number-stepfactor="100" id="inlineFormInputGroup" placeholder="Nilai Pengajuan">
 																		</div>
 																	<?php endif; ?>
+																</td>
+															</tr>
+															<tr id="biaya_penyelesaian_div_det">
+																<th width="250">Biaya Penyelesaian</th>
+																<td>
+																	<span id="biaya_penyelesaian_val"></span>
 																</td>
 															</tr>
 														</tbody>
@@ -2400,20 +2413,26 @@
 					      }
 					      if (data.pengajuan.nilai_corr != "0") {
 					        $('[id=nilai_corr_val]').html("Rp. " + currency_format(data.pengajuan.nilai_corr));
-					        $('[id=no_corr_val]').html(data.pengajuan.no_corr);
 					        $('#nilai_corr_div_det').show();
-					        $('#no_corr_div_det').show();
 					      } else {
 					        $('#nilai_corr_div_det').hide();
-					        $('#no_corr_div_det').hide();
 					      }
+								if (data.pengajuan.no_corr != null) {
+									$('[id=no_corr_val]').html(data.pengajuan.no_corr);
+									$('#no_corr_div_det').show();
+								} else {
+									$('#no_corr_div_det').hide();
+								}
 					      if (data.pengajuan.nilai_po != "0") {
 					        $('[id=nilai_po_val]').html("Rp. " + currency_format(data.pengajuan.nilai_po));
-					        $('[id=no_po_val]').html(data.pengajuan.no_po);
 					        $('#nilai_po_div_det').show();
-					        $('#no_po_div_det').show();
 					      } else {
 					        $('#nilai_po_div_det').hide();
+					      }
+								if (data.pengajuan.no_po != "") {
+					        $('[id=no_po_val]').html(data.pengajuan.no_po);
+					        $('#no_po_div_det').show();
+					      } else {
 					        $('#no_po_div_det').hide();
 					      }
 					      $('[id=nama_project_val]').html(data.pengajuan.nama_project);
@@ -2426,7 +2445,13 @@
 					    } else {
 					      $('#editNilaiPengajuan').show();
 					    }
-					    $('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.pengajuan.nilai_pengajuan));
+							$('[id=nilai_pengajuan_val]').html("Rp. " + currency_format(data.pengajuan.nilai_pengajuan));
+							if (data.pengajuan.biaya_penyelesaian != null) {
+								$('[id=biaya_penyelesaian_val]').html("Rp. " + currency_format(data.pengajuan.biaya_penyelesaian));
+								$('#biaya_penyelesaian_div_det').show();
+							} else {
+								$('#biaya_penyelesaian_div_det').hide();
+							}
 					    $('[id=tanggal_pengajuan]').html(moment(data.pengajuan.tanggal_pengajuan).format('dddd, D MMMM Y HH:m:s'));
 					    $('[id=realisasi_pengajuan]').html(moment(data.pengajuan.realisasi_pengajuan).format('dddd, D MMMM Y'));
 					    if (data.pengajuan.tanggal_approval_keuangan != null) {
